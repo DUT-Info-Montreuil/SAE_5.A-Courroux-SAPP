@@ -33,7 +33,6 @@
 
     .image{
         display: none;
-        border: 1px solid red;
     }
 
     .textinput {
@@ -55,6 +54,7 @@
     .login{
         float: left;
         width: 50%;
+        padding-left: 8%;
     }
 
     .image{
@@ -90,11 +90,14 @@
 }
 
 //peut importe l'écran
+.image{
+    padding-right: 10px;
+}
+
 .login{
     margin: auto;
     display: flex;
     height: 98%;
-    padding-left: 8%;
 }
 
 .content{
