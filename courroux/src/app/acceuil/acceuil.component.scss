@@ -1,8 +1,98 @@
+@media screen and (max-width: 310px) {
+    .login{
+        font-size: small;
+    }
+}
+
+//taille telephone et en dessous
+@media screen and (max-width: 767px) {
+    .login{
+        width: 100%;
+        text-align: center;
+    }
+
+    .content{
+        width: 100%;
+        margin: auto;
+    }
+
+    #logo{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+
+    #connecter{
+        font-size: large;
+    }
+
+    #art{
+        display: none;
+    }
+
+    .image{
+        display: none;
+        border: 1px solid red;
+    }
+
+    .textinput {
+        margin-top: 5%;
+        position: relative;
+        width: 75%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    
+}
+
+//au dessus de la taille telephone
+@media screen and (min-width: 767px) {
+    #logo{ width: 75%; }
+
+    .login{
+        float: left;
+        width: 50%;
+    }
+
+    .image{
+        width: 50%;
+        display: flex;
+        padding-top: 1%;
+        margin: auto;
+        height: 98%;
+    }
+
+    .textinput {
+        margin-top: 5%;
+        position: relative;
+        width: 75%;
+        display: block;
+    }
+
+    #connecter{
+        font-size: 1vw;
+    }
+
+    #id, #welcome{
+        font-size: 1.2vw;
+    }
+
+    .input{
+        font-size: 1vw;
+    }
+
+    .label{
+        font-size: 1vw;
+    }
+}
+
+//peut importe l'écran
 .login{
-    float: left;
     margin: auto;
     display: flex;
-    width: 40%;
     height: 98%;
     padding-left: 8%;
 }
@@ -13,49 +103,22 @@
     max-height: 100%;
 }
 
-.image{
-    margin: auto;
-    display: flex;
-    width: 45%;
-    height: 98%;
-}
-
-#logo{ width: 70%; }
-
 #art{
     margin: auto;
     max-width: 100%;
     max-height: 100%;
 }
 
-#id, #welcome{
-    font-size: 1vw;
-}
-
 #id{
     color: #8692A6;
 }
-
-.champs{
-    display: flex;
-    margin-top: 10%;
-    width: 70%;
-}
-
-.textinput {
-    position: relative;
-    width: 260px;
-    display: block;
-}
   
 .input {
-    padding-top: 10%;
     border: none;
     margin: 0;
     padding: 10px 0;
     outline: none;
     border-bottom: solid 1px #8692A6;
-    font-size: 15px;
     margin-top: 12px;
     width: 100%;
     color: #8692A6;
@@ -64,7 +127,6 @@
 }
   
 .label {
-    font-size: 15px;
     position: absolute;
     left: 0;
     top: 22px;
