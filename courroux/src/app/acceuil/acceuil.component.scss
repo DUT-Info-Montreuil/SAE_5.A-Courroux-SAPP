@@ -1,3 +1,22 @@
+@media (prefers-color-scheme: dark){
+    #id{
+        color: #8692A6;
+    }
+    .input{
+
+    }
+}
+
+@media (prefers-color-scheme: light){
+    #id{
+        color: #3e4450;
+    }
+    .input{
+        
+    }
+}
+
+
 @media screen and (max-width: 310px) {
     .login{
         font-size: small;
@@ -110,10 +129,6 @@
     margin: auto;
     max-width: 100%;
     max-height: 100%;
-}
-
-#id{
-    color: #8692A6;
 }
   
 .input {
