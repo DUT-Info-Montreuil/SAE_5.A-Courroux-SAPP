@@ -4,17 +4,36 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AcceuilComponent } from './acceuil/acceuil.component';
+import { EdtComponent, momentAdapterFactory } from './edt/edt.component';
+import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, DateAdapter, DateFormatterParams } from 'angular-calendar';
+
+import localeFr from '@angular/common/locales/fr';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeFr, 'fr');
+
+class CustomDateFormater extends CalendarNativeDateFormatter {
+
+  public override dayViewHour({ date, locale }: DateFormatterParams): string {
+      return new Intl.DateTimeFormat(locale, {hour: 'numeric', minute:'numeric'}).format(date);
+  }
+
+}
 
 @NgModule({
   declarations: [
     AppComponent,
-    AcceuilComponent
+    AcceuilComponent,
+    EdtComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory })
   ],
-  providers: [],
+  providers: [
+    {provide: CalendarDateFormatter, useClass:CustomDateFormater}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
