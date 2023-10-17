@@ -7,10 +7,11 @@ import { AcceuilComponent } from './acceuil/acceuil.component';
 import { EdtComponent, momentAdapterFactory } from './edt/edt.component';
 import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, DateAdapter, DateFormatterParams } from 'angular-calendar';
 
+
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import localeFr from '@angular/common/locales/fr';
-import { registerLocaleData } from '@angular/common';
+import { registerLocaleData, DatePipe } from '@angular/common';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -26,16 +27,17 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
   declarations: [
     AppComponent,
     AcceuilComponent,
-    EdtComponent
+    EdtComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
+    DatePipe,
     {provide: CalendarDateFormatter, useClass:CustomDateFormater}
   ],
   bootstrap: [AppComponent]

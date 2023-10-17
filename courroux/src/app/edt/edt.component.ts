@@ -3,7 +3,8 @@ import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -17,7 +18,7 @@ export function momentAdapterFactory() {
 
 export class EdtComponent {
 
-  eventSelectionne: any = null;
+  public eventSelectionne: any = null;
 
   showModal = false;
 
@@ -28,7 +29,7 @@ export class EdtComponent {
 
   refresh = new Subject<void>()
 
-  constructor() {
+  constructor(private datePipe: DatePipe) {
     this.loadEvents();
   }
 
@@ -76,13 +77,35 @@ export class EdtComponent {
 
     this.events.push(newEvent);
     this.refresh.next();
-    console.log(newEvent);
   }
 
-  eventClicked(event: any){
+  eventClicked(event: any) {
     this.eventSelectionne = event;
-    this.openModal();
-    console.log(event);
+  
+    Promise.all([this.loadEventStart(this.eventSelectionne), this.loadEventEnd(this.eventSelectionne)])
+      .then(([loadedEventStart, loadedEventEnd]) => {
+        this.updateDateStart(loadedEventStart);
+        this.updateDateEnd(loadedEventEnd);
+        this.openModal();
+      });
+  }
+  
+  loadEventStart(event: any): Promise<Date> {
+    return new Promise<Date>((resolve, reject) => {
+      setTimeout(() => {
+        const loadedEventStart = event.event.start;
+        resolve(loadedEventStart);
+      }, 100);
+    });
+  }
+  
+  loadEventEnd(event: any): Promise<Date> {
+    return new Promise<Date>((resolve, reject) => {
+      setTimeout(() => {
+        const loadedEventEnd = event.event.end;
+        resolve(loadedEventEnd);
+      }, 100);
+    });
   }
 
   buttonClicked(){
@@ -90,9 +113,28 @@ export class EdtComponent {
     //this.events.push(cours);
   }
 
+  onSubmit(){
+    this.closeModal();
+  }
+
   eventTimesChanged(event: any) {
     event.event.start = event.newStart;
     event.event.end = event.newEnd;
-    this.refresh.next();
+  }
+
+  startTimeChanged(event: any) {
+    event.event.start = event.newStart;
+  }
+
+  endTimeChanged(event: any) {
+    event.event.end = event.newEnd;
+  }
+
+  updateDateStart(date: Date) {
+    this.eventSelectionne.event.start = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+  }
+
+  updateDateEnd(date: Date) {
+    this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
   }
 }
