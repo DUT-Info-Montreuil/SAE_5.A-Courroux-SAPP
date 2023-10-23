@@ -29,6 +29,10 @@ export class EdtComponent {
 
   refresh = new Subject<void>()
 
+  getIndex(event: any){
+    return this.events.indexOf(event.event);
+  }
+
   constructor(private datePipe: DatePipe) {
     this.loadEvents();
   }
@@ -46,8 +50,8 @@ export class EdtComponent {
       title: "Prog avancée",
       salle: "A1-01",
       professeur: "abossard",
-      start: new Date("2023-10-16T10:30"),
-      end: new Date("2023-10-16T12:30"),
+      start: new Date("2023-10-23T10:30"),
+      end: new Date("2023-10-23T12:30"),
       draggable: true,
       resizable: {
         beforeStart: true,
@@ -108,26 +112,30 @@ export class EdtComponent {
     });
   }
 
-  buttonClicked(){
-    //var cours = new Cours()
-    //this.events.push(cours);
-  }
-
   onSubmit(){
     this.closeModal();
   }
 
   eventTimesChanged(event: any) {
-    event.event.start = event.newStart;
-    event.event.end = event.newEnd;
+    if (event.event.start != event.newStart) {
+      event.event.start = event.newStart;
+    }
+    if (event.event.end != event.newEnd) {
+      event.event.end = event.newEnd;
+    }
+    this.refresh.next();
   }
 
-  startTimeChanged(event: any) {
-    event.event.start = event.newStart;
+  startTimeChanged(newEvent: any, ancienneDate: string) {
+    newEvent.event.start = Date.parse(ancienneDate);
+    this.refresh.next();
+    this.updateDateStart(newEvent.event.start);
   }
 
-  endTimeChanged(event: any) {
-    event.event.end = event.newEnd;
+  endTimeChanged(newEvent: any, ancienneDate: string) {
+    newEvent.event.end = Date.parse(ancienneDate);
+    this.refresh.next();
+    this.updateDateEnd(newEvent.event.end);
   }
 
   updateDateStart(date: Date) {
@@ -136,5 +144,12 @@ export class EdtComponent {
 
   updateDateEnd(date: Date) {
     this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+  }
+
+  supprimerCours(event: any){
+    this.events.splice(this.getIndex(event), 1);
+    this.refresh.next();
+    this.closeModal();
+    console.log(this.events);
   }
 }
