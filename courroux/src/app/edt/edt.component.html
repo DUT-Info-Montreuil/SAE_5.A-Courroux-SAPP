@@ -47,7 +47,7 @@
                 <form class="space-y-6" (ngSubmit)="onSubmit()" *ngIf="eventSelectionne">
                     <div>
                         <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du cours</label>
-                        <input type="text" [(ngModel)]="eventSelectionne.event.title" name="cours" id="cours" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                        <input type="text" [(ngModel)]="eventSelectionne.event.title" name="cours" id="cours" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                     </div>
                     <div>
                         <label for="salle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salle</label>
@@ -56,6 +56,14 @@
                     <div>
                         <label for="professeur" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
                         <input type="text" [(ngModel)]="eventSelectionne.event.professeur" name="professeur" id="professeur" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                    </div>
+                    <div>
+                        <label for="couleurP" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Couleur secondaire</label>
+                        <input type="color" [(ngModel)]="eventSelectionne.event.color.primary" name="couleurP" id="couleurP" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                    </div>
+                    <div>
+                        <label for="couleurS" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Couleur principale</label>
+                        <input type="color" [(ngModel)]="eventSelectionne.event.color.secondary" name="couleurS" id="couleurS" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                     </div>
                     <div>
                         <label for="debut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Commence à</label>

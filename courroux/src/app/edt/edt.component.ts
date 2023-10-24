@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { EventColor } from 'calendar-utils';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -17,6 +18,7 @@ export function momentAdapterFactory() {
 })
 
 export class EdtComponent {
+  
 
   public eventSelectionne: any = null;
 
@@ -50,6 +52,10 @@ export class EdtComponent {
       title: "Prog avancée",
       salle: "A1-01",
       professeur: "abossard",
+      color: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3',
+      },
       start: new Date("2023-10-23T10:30"),
       end: new Date("2023-10-23T12:30"),
       draggable: true,
@@ -71,6 +77,10 @@ export class EdtComponent {
       salle: "salle",
       professeur: "professeur",
       start: start,
+      color: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3',
+      },
       end: new Date(start.getTime() + 2 * 60 * 60 * 1000),
       draggable: true,
       resizable: {
