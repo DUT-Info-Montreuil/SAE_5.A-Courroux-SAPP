@@ -3,7 +3,7 @@ import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
-import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EventColor } from 'calendar-utils';
 
@@ -18,11 +18,26 @@ export function momentAdapterFactory() {
 })
 
 export class EdtComponent {
+
+  formAddEvent = new FormGroup({
+    cours: new FormControl(""),
+    salle: new FormControl(""),
+    professeur: new FormControl(""),
+    couleur: new FormGroup({
+      couleurP: new FormControl(""),
+      couleurS: new FormControl(""),
+    }),
+    debut: new FormControl(""),
+    fin: new FormControl("")
+  })
   
+  // minEndTime!: string;
+  // maxStartTime!: string;
 
   public eventSelectionne: any = null;
 
-  showModal = false;
+  showModalMod = false;
+  showModalAdd = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -39,13 +54,23 @@ export class EdtComponent {
     this.loadEvents();
   }
 
-  openModal() {
-    this.showModal = true;
+  openModalMod() {
+    this.showModalMod = true;
   }
   
-  closeModal() {
-    this.showModal = false;
-  }  
+  closeModalMod() {
+    this.showModalMod = false;
+    this.eventSelectionne.event.start = Date.parse(this.eventSelectionne.event.start);
+    this.eventSelectionne.event.end = Date.parse(this.eventSelectionne.event.end);
+  }
+
+  openModalAdd() {
+    this.showModalAdd = true;
+  }
+  
+  closeModalAdd() {
+    this.showModalAdd = false;
+  }
 
   loadEvents(){
     const event1 = {
@@ -68,39 +93,52 @@ export class EdtComponent {
   }
 
   addEvent() {
-    let start = new Date();
-    start.setHours(8);
-    start.setMinutes(0);
-    start.setSeconds(0);
-    const newEvent = {
-      title: "nom du cours",
-      salle: "salle",
-      professeur: "professeur",
-      start: start,
-      color: {
-        primary: '#ad2121',
-        secondary: '#FAE3E3',
-      },
-      end: new Date(start.getTime() + 2 * 60 * 60 * 1000),
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      }
-    };
+    const debutString = this.formAddEvent.value.debut;
+    const finString = this.formAddEvent.value.fin;
 
-    this.events.push(newEvent);
-    this.refresh.next();
+    if (typeof debutString === 'string' && typeof finString === 'string') {
+      const debutDate = new Date(debutString);
+      const finDate = new Date(finString);
+
+      const newEvent = {
+        title: this.formAddEvent.value.cours,
+        salle: this.formAddEvent.value.salle,
+        professeur: this.formAddEvent.value.professeur,
+        color: {
+          primary: this.formAddEvent.value.couleur?.couleurP,
+          secondary: this.formAddEvent.value.couleur?.couleurS,
+        },
+        start: debutDate,
+        end: finDate,
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        }
+      };
+      this.events.push(newEvent);
+      this.refresh.next();
+    } else {
+      console.error("valeur de debut ou de fin n'est pas une chaine valide")
+    }
+  }
+
+  print(){
+    console.log(this.events);
   }
 
   eventClicked(event: any) {
     this.eventSelectionne = event;
+    // this.maxStartTime = new Date(this.eventSelectionne.event.start - 15 * 60 * 1000).toISOString().slice(0, 16);
+    // this.minEndTime = new Date(this.eventSelectionne.event.end + 15 * 60 * 1000).toISOString().slice(0, 16);
+    // console.log(this.maxStartTime);
+    // console.log(this.minEndTime);
   
     Promise.all([this.loadEventStart(this.eventSelectionne), this.loadEventEnd(this.eventSelectionne)])
       .then(([loadedEventStart, loadedEventEnd]) => {
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
-        this.openModal();
+        this.openModalMod();
       });
   }
   
@@ -122,8 +160,13 @@ export class EdtComponent {
     });
   }
 
-  onSubmit(){
-    this.closeModal();
+  onSubmitMod(){
+    this.closeModalMod();
+  }
+
+  onSubmitAdd(){
+    this.closeModalAdd();
+    this.addEvent();
   }
 
   eventTimesChanged(event: any) {
@@ -159,7 +202,7 @@ export class EdtComponent {
   supprimerCours(event: any){
     this.events.splice(this.getIndex(event), 1);
     this.refresh.next();
-    this.closeModal();
+    this.closeModalMod();
     console.log(this.events);
   }
 }
