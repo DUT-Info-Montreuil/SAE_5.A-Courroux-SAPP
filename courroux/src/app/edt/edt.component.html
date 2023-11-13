@@ -14,17 +14,16 @@
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
             (click)="openModalAdd()"
             >Ajouter</button>
-            <button (click)="print()" >oui</button>
         </div>
     </div>
-    <mwl-calendar-week-view 
+    <mwl-calendar-week-view
         [viewDate]="viewDate"
         class="week-view" 
         [events]="events"
         [excludeDays]="[0, 6]"
         locale="fr"
         [dayStartHour]="8"
-        [dayEndHour]="19"
+        [dayEndHour]="18"
         (eventClicked)="eventClicked($event)"
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
@@ -117,16 +116,25 @@
                 <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Ajouter un cours</h3>
                 <form class="space-y-6" [formGroup]="formAddEvent" (ngSubmit)="onSubmitAdd() ">
                     <div>
-                        <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du cours</label>
-                        <input type="text" name="cours" id="cours" formControlName="cours" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                        <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ressource</label>
+                        <select name="cours"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option *ngFor="let cours of ressources" [value]="cours">{{ cours }}</option>
+                        </select>
+                        <!-- <input type="text" name="cours" id="cours" formControlName="cours" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="salle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salle</label>
-                        <input type="text" name="salle" id="salle" formControlName="salle" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                        <select name="salle"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option *ngFor="let salle of salles" [value]="salle">{{ salle }}</option>
+                        </select>
+                        <!-- <input type="text" name="salle" id="salle" formControlName="salle" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="professeur" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
-                        <input type="text" name="professeur" id="professeur" formControlName="professeur" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
+                        <select name="professeur"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option *ngFor="let prof of profs" [value]="prof">{{ prof }}</option>
+                        </select>
+                        <!-- <input type="text" name="professeur" id="professeur" formControlName="professeur" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div formGroupName="couleur">
                         <div>

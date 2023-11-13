@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EventColor } from 'calendar-utils';
+import { EdtService } from '../services/edt.service';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -31,6 +32,10 @@ export class EdtComponent {
     fin: new FormControl("")
   })
   
+  profs!: string[];
+  salles!: string[];
+  ressources!: string[];
+
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -44,13 +49,13 @@ export class EdtComponent {
 
   events: CalendarEvent[] = [];
 
-  refresh = new Subject<void>()
+  refresh = new Subject<void>();
 
   getIndex(event: any){
     return this.events.indexOf(event.event);
   }
 
-  constructor(private datePipe: DatePipe) {
+  constructor(private datePipe: DatePipe, private edtService: EdtService) {
     this.loadEvents();
   }
 
@@ -65,6 +70,10 @@ export class EdtComponent {
   }
 
   openModalAdd() {
+
+    this.profs = this.edtService.getProfs();
+    this.ressources = this.edtService.getNoms();
+    this.salles = this.edtService.getSalles();
     this.showModalAdd = true;
   }
   
@@ -73,23 +82,10 @@ export class EdtComponent {
   }
 
   loadEvents(){
-    const event1 = {
-      title: "Prog avancée",
-      salle: "A1-01",
-      professeur: "abossard",
-      color: {
-        primary: '#ad2121',
-        secondary: '#FAE3E3',
-      },
-      start: new Date("2023-10-23T10:30"),
-      end: new Date("2023-10-23T12:30"),
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
-      }
+    let cours = this.edtService.getCours();
+    for (var val of cours) {
+      this.events.push(val);
     }
-    this.events.push(event1);
   }
 
   addEvent() {
@@ -170,25 +166,22 @@ export class EdtComponent {
   }
 
   eventTimesChanged(event: any) {
-    if (event.event.start != event.newStart) {
-      event.event.start = event.newStart;
-    }
-    if (event.event.end != event.newEnd) {
-      event.event.end = event.newEnd;
-    }
+    event.event.start = event.newStart;
+    event.event.end = event.newEnd;
     this.refresh.next();
-  }
-
-  startTimeChanged(newEvent: any, ancienneDate: string) {
-    newEvent.event.start = Date.parse(ancienneDate);
-    this.refresh.next();
-    this.updateDateStart(newEvent.event.start);
   }
 
   endTimeChanged(newEvent: any, ancienneDate: string) {
     newEvent.event.end = Date.parse(ancienneDate);
     this.refresh.next();
     this.updateDateEnd(newEvent.event.end);
+    this.print();
+  }
+
+  startTimeChanged(newEvent: any, ancienneDate: string) {
+    newEvent.event.start = Date.parse(ancienneDate);
+    this.refresh.next();
+    this.updateDateStart(newEvent.event.start);
   }
 
   updateDateStart(date: Date) {
