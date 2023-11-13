@@ -46,4 +46,6 @@ export class EdtService {
     let cours = [event1];
     return cours;
   }
+
+  
 }
