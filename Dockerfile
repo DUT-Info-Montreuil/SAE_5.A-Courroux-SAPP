@@ -1,23 +1,17 @@
-# Étape 1 : Construire l'application Angular
-FROM node:18.13.0 as build
+# Utiliser une image Node.js basée sur Alpine comme base
+FROM node:21-alpine3.18
 
-WORKDIR /app
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /usr/src/app
 
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Installez Angular CLI de manière globale
-RUN npm install -g @angular/cli
-
+# Copier le package.json et le package-lock.json dans le conteneur
 COPY . .
 
-RUN ng build --configuration=production
+# Installer les dépendances
+RUN npm install
 
-# Étape 2 : Exécuter l'application dans un serveur HTTP léger
-FROM nginx:alpine
+RUN npm install -g @angular/cli
 
-# Copiez les fichiers de build de l'étape précédente dans le répertoire de travail de Nginx
-COPY --from=build /app/dist/* /usr/share/nginx/html/
 
-# Exposez le port 80 pour le serveur HTTP Nginx
-EXPOSE 80
+# Commande pour démarrer l'application avec npm start au lancement du conteneur
+CMD ["ng", "serve", "--host", "0.0.0.0"]
