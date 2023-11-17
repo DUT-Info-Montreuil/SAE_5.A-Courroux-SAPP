@@ -7,6 +7,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { DatePipe } from '@angular/common';
 import { EventColor } from 'calendar-utils';
 import { EdtService } from '../services/edt.service';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -97,12 +98,12 @@ export class EdtComponent {
       const finDate = new Date(finString);
 
       const newEvent = {
-        title: this.formAddEvent.value.cours,
-        salle: this.formAddEvent.value.salle,
-        professeur: this.formAddEvent.value.professeur,
+        title: this.formAddEvent.value.cours!,
+        salle: this.formAddEvent.value.salle!,
+        professeur: this.formAddEvent.value.professeur!,
         color: {
-          primary: this.formAddEvent.value.couleur?.couleurP,
-          secondary: this.formAddEvent.value.couleur?.couleurS,
+          primary: this.formAddEvent.value.couleur?.couleurP!,
+          secondary: this.formAddEvent.value.couleur?.couleurS!,
         },
         start: debutDate,
         end: finDate,

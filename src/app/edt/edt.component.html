@@ -1,9 +1,11 @@
+<app-sidebar></app-sidebar>
 <div id="calendar-container">
     <div id="cal-buttons">
         <div id="cal-date-nav-buttons">
             <button id="previous" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l ml-10 mt-10 mb-10"
             >Précédent</button>
+                
             <button id="today" mwlCalendarToday [(viewDate)]="viewDate"
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-10 mb-10"
             >Aujourd'hui</button>
