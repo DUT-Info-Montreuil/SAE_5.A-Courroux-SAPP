@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { EventColor } from 'calendar-utils';
 import { EdtService } from '../services/edt.service';
 
 export function momentAdapterFactory() {
@@ -18,7 +17,7 @@ export function momentAdapterFactory() {
   styleUrls: ['./edt.component.scss']
 })
 
-export class EdtComponent {
+export class EdtComponent{
 
   formAddEvent = new FormGroup({
     cours: new FormControl(""),
@@ -55,8 +54,15 @@ export class EdtComponent {
     return this.events.indexOf(event.event);
   }
 
-  constructor(private datePipe: DatePipe, private edtService: EdtService) {
-    this.loadEvents();
+  constructor(
+    private datePipe: DatePipe,
+    private edtService: EdtService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone) {
+      this.loadEvents();
+      this.profs = this.edtService.getProfs();
+      this.ressources = this.edtService.getRessources();
+      this.salles = this.edtService.getSalles();
   }
 
   openModalMod() {
@@ -70,10 +76,6 @@ export class EdtComponent {
   }
 
   openModalAdd() {
-
-    this.profs = this.edtService.getProfs();
-    this.ressources = this.edtService.getNoms();
-    this.salles = this.edtService.getSalles();
     this.showModalAdd = true;
   }
   
