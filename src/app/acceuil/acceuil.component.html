@@ -1,16 +1,17 @@
 <div class="login">
     <div class="content">
-        <img src="assets/images/logoiut.png" alt="logo iut" id="logo">
+        <img src="assets/images/logoiut.png" alt="logo iut" id="logoModeSombre">
+        <img src="assets/images/logoiutclair.png" alt="logo iut" id="logoModeClair">
         <p id="welcome" class="mt-5">Bienvenue sur l’ENT 👋</p>
         <p id="id" class="mt-5">identifiez vous !</p>
-        <form action="" method="get">
+        <form method="post" id="form" (ngSubmit)="onSubmit(credentials)">
             <div class='textinput'>
-                <input type='text' class='input' required>
+                <input type='text' [(ngModel)]="credentials.identifier" name="identifier"  class='input' required>
                 <label class='label'>Entrez votre identifiant</label>
                 <span class='line'></span>
             </div>
             <div class='textinput'>
-                <input type='password' class='input' required>
+                <input type='password' [(ngModel)]="credentials.password" name="password"  class='input' required>
                 <label class='label'>Entrez votre mot de passe</label>
                 <span class='line'></span>
             </div>

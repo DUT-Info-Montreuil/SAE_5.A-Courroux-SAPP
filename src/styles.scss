@@ -5,9 +5,19 @@
 @tailwind utilities;
 
 body{
-    background-color: #282A2F;
     font-family: 'Poppins', sans-serif;
-    color: #FFFFFF;
+}
+
+@media (prefers-color-scheme: dark){
+    body{
+        color: white;
+    }
+}
+
+@media (prefers-color-scheme: light){
+    body{
+        color: black;
+    }
 }
 
 html, body {

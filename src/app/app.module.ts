@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { HttpClientModule } from '@angular/common/http';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -36,7 +37,9 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
   ],
   providers: [
     DatePipe,
-    {provide: CalendarDateFormatter, useClass:CustomDateFormater}
+    {provide: CalendarDateFormatter, useClass:CustomDateFormater},
+    HttpClientModule,
+    FormsModule
   ],
   bootstrap: [AppComponent]
 })
