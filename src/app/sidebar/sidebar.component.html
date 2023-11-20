@@ -1,0 +1,54 @@
+<!-- <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar menu With Sub-menus | Using HTML, CSS & JQuery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+</head> -->
+
+<!-- <body> -->
+<div id="side-bar-div">
+    <div class="menu-btn" *ngIf="!isActive" (click)="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="side-bar" [ngClass]="{'active': isActive}">
+        <img id="logoMontreuil" src="../assets/images/LOGO_IUT_MONTREUIL.png" style="pointer-events: none;" width="75"
+            height="75">
+        <div class="close-btn" (click)="toggleSidebar()">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="menu">
+            <div class="item"><a href="#"><i class="fa fa-calendar"></i>EdT</a></div>
+            <div class="item"><a href="#"><i class="fa fa-suitcase"></i>Moodle</a></div>
+            <div class="item" (click)="toggleMessagerie()">
+                <a class="sub-btn"><i class="fas fa-envelope"></i>Messagerie<i class="fas fa-angle-right dropdown"
+                        [ngClass]="{'rotate': isActiveMessagerie}"></i></a>
+                <div class="sub-menu" [ngClass]="{'active': isActiveMessagerie}">
+                    <a href="#" class="sub-item" *ngIf="isActiveMessagerie">SOGo</a>
+                    <a href="#" class="sub-item" *ngIf="isActiveMessagerie">Roundcube</a>
+                </div>
+            </div>
+            <div class="item" (click)="toggleVisioConferences()">
+                <a class="sub-btn"><i class="fa fa-headphones"></i>VisioConférences<i
+                        class="fas fa-angle-right dropdown" [ngClass]="{'rotate': isActiveVisioConferences}"></i></a>
+                <div class="sub-menu" [ngClass]="{'active': isActiveVisioConferences}">
+                    <a href="https://bbb1.iut.univ-paris8.fr/b" class="sub-item">BBB 1</a>
+                    <a href="https://bbb2.iut.univ-paris8.fr/b" class="sub-item">BBB 2</a>
+                    <a href="https://jitsi.iut.univ-paris8.fr/" class="sub-item">JITSI</a>
+                    <a href="https://cas.univ-paris8.fr/cas/login?service=https://e-p8.univ-paris8.fr/uPortal/Login%3FrefUrl%3D%2FuPortal%2Ff%2Fu63l1s6%2Fp%2FVisioconferences.u63l1n1821%2Fmax%2Frender.uP%253FpCp"
+                        class="sub-item">Visio de UP8</a>
+                    <a href="https://rendez-vous.renater.fr/home/" class="sub-item">JITSI de RENATER</a>
+                </div>
+            </div>
+            <div class="item"><a href="#"><i class="fa fa-compass"></i>Kompass</a></div>
+            <div class="item"><a href="#"><i class="fas fa-cloud"></i>Cloud</a></div>
+            <div class="item"><a href="#"><i class="fa fa-upload"></i>FileZ</a></div>
+            <div class="item">
+                <a class="sub-btn"><i class="fa fa-map-signs"></i>Tutos</a>
+            </div>
+            <div class="item"><a href="#"><i class="fa fa-user"></i>Profil</a></div>
+        </div>
+    </div>
+</div>
+
+<!-- </body> -->
