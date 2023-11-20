@@ -99,12 +99,12 @@ export class EdtComponent{
       const finDate = new Date(finString);
 
       const newEvent = {
-        title: this.formAddEvent.value.cours,
-        salle: this.formAddEvent.value.salle,
-        professeur: this.formAddEvent.value.professeur,
+        title: this.formAddEvent.value.cours!,
+        salle: this.formAddEvent.value.salle!,
+        professeur: this.formAddEvent.value.professeur!,
         color: {
-          primary: this.formAddEvent.value.couleur?.couleurP,
-          secondary: this.formAddEvent.value.couleur?.couleurS,
+          primary: this.formAddEvent.value.couleur?.couleurP!,
+          secondary: this.formAddEvent.value.couleur?.couleurS!,
         },
         start: debutDate,
         end: finDate,
