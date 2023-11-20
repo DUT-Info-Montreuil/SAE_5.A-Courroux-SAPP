@@ -1,0 +1,97 @@
+<div class="w-full" id="all">
+    <div id="centre" class="w-3/4 mt-10" >
+        <label for="choix"  class="text-xl text-center block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisissez une option</label>
+        <select id="choix" [(ngModel)]="formSelectionne" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="formSalle">Salle</option>
+            <option value="formProfesseur">Professeur</option>
+            <option value="formEleve">Eleve</option>
+            <option value="formRessource">Ressource</option>
+            <option value="formGroupe">Groupe</option>
+        </select>
+
+        <!-- CSS Moon par Tech Tream Titans sur codePen -->
+        <div *ngIf="formSelectionne === null" class="container">
+            <div class="moon">
+              <div class="crater crater1"></div>
+              <div class="crater crater2"></div>
+              <div class="crater crater3"></div>
+              <div class="crater crater4"></div>
+              <div class="crater crater5"></div>
+              <div class="shadow"></div>
+              <div class="eye eye-l"></div>
+              <div class="eye eye-r"></div>
+              <div class="mouth"></div>
+              <div class="blush blush1"></div>
+              <div class="blush blush2"></div>
+            </div>
+            <div class="orbit">
+              <div class="rocket">
+                <div class="window"></div>
+              </div>
+            </div>
+        </div>
+        <!-- CSS Moon par Tech Tream Titans sur codePen -->
+
+        <div class="mt-10">
+            <form [formGroup]="formAddSalle" (ngSubmit)="onSubmitAddSalle()" 
+            *ngIf="formSelectionne === 'formSalle'">
+                <label for="nom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                <input  type="text" id="nom" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="nbOrdi" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">nombre d'ordinateurs</label>
+                <input  type="number" id="nbOrdi" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="nbVideoProj" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">nombre de videos projecteurs</label>
+                <input type="number" id="nbVideoProj" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="nbTabNum" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">nombre de tableaux numériques</label>
+                <input type="number" id="nbTabNum" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
+            </form>
+
+            <form *ngIf="formSelectionne === 'formProfesseur'">
+                <label for="nom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                <input required type="text" id="nom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="prenom" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
+                <input required type="text" id="prenom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="nbHeurePrevisionnel" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre d'heure prévisionnelles</label>
+                <input required type="number" id="nbHeurePrevisionnel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
+            </form>
+
+            <form *ngIf="formSelectionne === 'formEleve'">
+                <label for="nom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                <input required type="text" id="nom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="prenom" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
+                <input required type="text" id="prenom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <label for="numINE" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numéro INE</label>
+                <input required type="text" id="numINE" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
+            </form>
+
+            <form [formGroup]="formAddRessource" (ngSubmit)="onSubmitAddRessource()"
+            *ngIf="formSelectionne === 'formRessource'">
+                <label for="nom" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                <input required formControlName="nom" type="text" id="nom" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <div>
+                    <!-- Styled Color Input de Lee Martin sur CodePen -->
+                    <div id="swatch" class="mt-5">
+                        <p>Style de la ressource</p>
+                        <input formControlName="couleur" type="color" id="color" name="couleur" value="#FF0000">
+                    </div>
+                    <!-- Styled Color Input de Lee Martin sur CodePen -->
+                </div>
+                <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
+            </form>
+
+            <form *ngIf="formSelectionne === 'formGroupe'">
+                <label for="promo"  class="text-xl text-center block mb-2 text-sm font-medium text-gray-900 dark:text-white">Promotion</label>
+                <select id="promo"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="INFO">INFO</option>
+                    <option value="GACO">GACO</option>
+                    <option value="QLIO">QLIO</option>
+                    <option value="INFOCOM">INFOCOM</option>
+                </select>
+                <button type="button" value="TP" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Créer un groupe de TP</button>
+                <button type="button" value="TD" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Créer un groupe de TD</button>
+            </form>
+        </div>
+    </div>
+</div>

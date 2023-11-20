@@ -10,6 +10,7 @@ import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsComponent } from './forms/forms.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -27,6 +28,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     AcceuilComponent,
     EdtComponent,
     SidebarComponent,
+    FormsComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,28 +1,66 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, OnInit } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EdtService {
+export class EdtService{
 
-  constructor() { }
+  ressources : any[] = [];
+  profs = ["abossard", "ggroff", "aricordaux", "msimonot"];
+  salles : any[] = [];
+  
+  constructor() {
+    let res1 = {
+      nom: "prog avancée",
+      couleur: "#8789ff"
+    }
+    let res2 = {
+      nom: "dev web",
+      couleur: "#cb78f5"
+    }
+    let res3 = {
+      nom: "SAE",
+      couleur: "#af9dbd"
+    }
+    let res4 = {
+      nom: "prog mulrimedia",
+      couleur: "#b02e2e"
+    }
+    this.ressources.push(res1, res2, res3, res4);
+  }
 
-  getNoms(){
+  addRessource(nom: string, couleur: string){
+    let res = {
+      nom: nom,
+      couleur: couleur
+    }
+    this.ressources.push(res);
+  }
+
+  getRessources(){
     // à remplacer avec l'appel à l'api
-    let noms = ["prog avancée", "dev web", "SAE", "prog mulrimedia"];
-    return noms;
+    return this.ressources;
+  }
+
+  addSalle(nom: string, nbOrdi: number, nbVideoProj: number, nbTabNum: number){
+    let salle = {
+      nom: nom,
+      nbOrdi: nbOrdi,
+      nbVideoProj: nbVideoProj,
+      nbTabNum: nbTabNum
+    }
+    this.salles.push(salle)
   }
 
   getProfs(){
     // à remplacer avec l'appel à l'api
-    let profs = ["abossard", "ggroff", "aricordaux", "msimonot"];
-    return profs;
+    return this.profs;
   }
 
   getSalles(){
     // à remplacer avec l'appel à l'api
-    let salles = ["A1-01", "B1-13", "D1-12", "A2-04"];
-    return salles;
+    return this.salles;
   }
 
   getCours(){
