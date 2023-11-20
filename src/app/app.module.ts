@@ -36,6 +36,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
     ReactiveFormsModule,
     FormsModule,
+    HttpClientModule
   ],
   providers: [
     DatePipe,
