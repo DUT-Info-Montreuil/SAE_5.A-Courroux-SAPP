@@ -7,8 +7,9 @@ import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 export class EdtService{
 
   ressources : any[] = [];
-  profs = ["abossard", "ggroff", "aricordaux", "msimonot"];
+  profs : any[] = [];
   salles : any[] = [];
+  eleves : any[] = []; 
   
   constructor() {
     let res1 = {
@@ -43,7 +44,7 @@ export class EdtService{
     return this.ressources;
   }
 
-  addSalle(nom: string, nbOrdi: number, nbVideoProj: number, nbTabNum: number){
+  addSalle(nom: string, nbOrdi: string, nbVideoProj: string, nbTabNum: string){
     let salle = {
       nom: nom,
       nbOrdi: nbOrdi,
@@ -53,14 +54,36 @@ export class EdtService{
     this.salles.push(salle)
   }
 
+  getSalles(){
+    // à remplacer avec l'appel à l'api
+    return this.salles;
+  }
+
+  addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
+    let prof = {
+      nom: nom,
+      prenom: prenom,
+      nbHeurePrevisionnel: nbHeurePrevisionnel
+    }
+    this.profs.push(prof);
+  }
+
   getProfs(){
     // à remplacer avec l'appel à l'api
     return this.profs;
   }
 
-  getSalles(){
-    // à remplacer avec l'appel à l'api
-    return this.salles;
+  addEleve(nom: string, prenom: string, numINE: string){
+    let eleve = {
+      nom: nom,
+      prenom: prenom,
+      numINE: numINE
+    }
+    this.eleves.push(eleve);
+  }
+
+  getEleves(){
+    return this.eleves;
   }
 
   getCours(){

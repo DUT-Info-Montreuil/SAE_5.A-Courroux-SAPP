@@ -9,6 +9,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData, DatePipe } from '@angular/common';
 import { FormsComponent } from './forms/forms.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -28,6 +30,11 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     FormsComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-bottom-center',
+      progressBar: true,
+    }),
     BrowserModule,
     AppRoutingModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
