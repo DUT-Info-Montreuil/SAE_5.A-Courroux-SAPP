@@ -10,7 +10,8 @@ export class SessionLoginService {
 
   constructor(private http: HttpClient) { }
 
-  login(credentials: any) {
+  login(identifier: string, password: string) {
+    let credentials = {identifier: identifier, password: password } 
     return this.http.post(this.LOGIN_URL, credentials);
   }
 }

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { SessionLoginService } from '../services/session-login.service';
+import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-acceuil',
@@ -8,22 +10,31 @@ import { SessionLoginService } from '../services/session-login.service';
 })
 export class AcceuilComponent {
 
-  credentials = { identifier: '', password: '' };
-
-  constructor(private sessionLoginService: SessionLoginService) { }
-
-  onSubmit(credential: any) {
-    console.log(this.credentials.identifier);
-    this.sessionLoginService.login(this.credentials).subscribe(
-      (response) => {
-        
-      },
-      (error) => {
-        // Gérez les erreurs de l'appel à l'API.
-      }
-    );
-  }
-
   nbRdm: number = Math.floor(Math.random() * 7);
   imageName = "assets/images/Frame" + this.nbRdm + ".png"; 
+
+  
+
+  formLogin = new FormGroup({
+    identifier: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required)
+  })
+
+  constructor(private sessionLoginService: SessionLoginService,
+    private toastr: ToastrService) { }
+
+  onSubmit() {
+    if (this.formLogin.valid){
+      let identifier = this.formLogin.value.identifier!;
+      let password = this.formLogin.value.password!;
+      this.sessionLoginService.login(identifier, password).subscribe(
+        (response) => {},
+        (error) => {}
+      );
+    } else {
+      this.toastr.error('Identifiant ou mot de passe incorrect', '', {
+        
+      });
+    }
+  }
 }
