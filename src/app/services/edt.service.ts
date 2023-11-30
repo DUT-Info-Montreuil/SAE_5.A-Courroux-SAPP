@@ -42,8 +42,8 @@ export class EdtService{
   }
 
   getSalles(){
-    return this.http.get(this.GET_PROFS)
     
+
   }
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
@@ -51,8 +51,7 @@ export class EdtService{
   }
 
   getProfs(){
-    
-    return this.profs;
+    return this.http.get(this.GET_PROFS)
   }
 
   addEleve(nom: string, prenom: string, numINE: string){
