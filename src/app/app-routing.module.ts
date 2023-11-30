@@ -6,7 +6,7 @@ import { FormsComponent } from './forms/forms.component';
 
 const routes: Routes = [
   { path: 'edt', component: EdtComponent},
-  { path: 'accueil', component: AcceuilComponent},
+  { path: 'acceuil', component: AcceuilComponent},
   { path: 'ajout', component: FormsComponent},
   { path: '', redirectTo: '/acceuil', pathMatch: 'full' },
 ];

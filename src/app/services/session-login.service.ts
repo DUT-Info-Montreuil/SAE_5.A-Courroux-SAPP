@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SessionLoginService {
 
-  LOGIN_URL = 'https://api.courroux.org/login';
+  LOGIN_URL = 'http://localhost:5000/login';
 
   constructor(private http: HttpClient) { }
 

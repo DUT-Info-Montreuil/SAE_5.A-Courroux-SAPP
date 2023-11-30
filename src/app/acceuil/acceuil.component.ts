@@ -29,12 +29,12 @@ export class AcceuilComponent {
       let password = this.formLogin.value.password!;
       this.sessionLoginService.login(identifier, password).subscribe(
         (response) => {},
-        (error) => {}
+        (error) => {
+          this.toastr.error('identifiant et/ou un mot de passe incorect(s)');
+        }
       );
     } else {
-      this.toastr.error('Identifiant ou mot de passe incorrect', '', {
-        
-      });
+      this.toastr.warning('veuillez rensegner un identifiant et/ou un mot de passe');
     }
   }
 }

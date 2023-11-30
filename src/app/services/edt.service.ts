@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 
@@ -6,29 +7,15 @@ import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 })
 export class EdtService{
 
+  ADD_PROF = 'http://localhost:5000/teacher';
+  GET_PROFS = 'http://localhost:5000/teacher/getAll';
+
   ressources : any[] = [];
   profs : any[] = [];
   salles : any[] = [];
   eleves : any[] = []; 
   
-  constructor() {
-    let res1 = {
-      nom: "prog avancée",
-      couleur: "#8789ff"
-    }
-    let res2 = {
-      nom: "dev web",
-      couleur: "#cb78f5"
-    }
-    let res3 = {
-      nom: "SAE",
-      couleur: "#af9dbd"
-    }
-    let res4 = {
-      nom: "prog mulrimedia",
-      couleur: "#b02e2e"
-    }
-    this.ressources.push(res1, res2, res3, res4);
+  constructor(private http: HttpClient) {
   }
 
   addRessource(nom: string, couleur: string){
@@ -55,21 +42,15 @@ export class EdtService{
   }
 
   getSalles(){
-    // à remplacer avec l'appel à l'api
-    return this.salles;
+    return this.http.get(this.GET_PROFS)
   }
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
-    let prof = {
-      nom: nom,
-      prenom: prenom,
-      nbHeurePrevisionnel: nbHeurePrevisionnel
-    }
-    this.profs.push(prof);
+    let credentials = {}
   }
 
   getProfs(){
-    // à remplacer avec l'appel à l'api
+    
     return this.profs;
   }
 
