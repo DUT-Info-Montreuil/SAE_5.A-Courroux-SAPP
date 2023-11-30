@@ -43,6 +43,7 @@ export class EdtService{
 
   getSalles(){
     return this.http.get(this.GET_PROFS)
+    
   }
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
