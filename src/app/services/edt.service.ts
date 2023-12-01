@@ -23,10 +23,10 @@ export class EdtService{
   }
 
   addRessource(nom: string, couleur: string){
-    let res = {
-      nom: nom,
-      couleur: couleur
-    }
+      let res = {
+        nom: nom,
+        couleur: couleur
+      }
     this.ressources.push(res);
   }
 
