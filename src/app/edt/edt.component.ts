@@ -32,9 +32,9 @@ export class EdtComponent{
     fin: new FormControl("")
   })
   
-  profs!: string[];
-  salles!: string[];
-  ressources!: string[];
+  profs!: any[];
+  salles!: any[];
+  ressources!: any[];
 
   // minEndTime!: string;
   // maxStartTime!: string;

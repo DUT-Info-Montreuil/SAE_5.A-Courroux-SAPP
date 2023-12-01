@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject} from 'rxjs';
+import { map } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,9 @@ import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 export class EdtService{
 
   ADD_PROF = 'http://localhost:5000/teacher';
-  GET_PROFS = 'http://localhost:5000/teacher/getAll';
+  GET_PROFS = 'http://localhost:8000/teachers';
+  GET_SALLES = 'http://localhost:8000/salles'
+  GET_RESSOURCES = 'http://localhost:8000/ressources';
 
   ressources : any[] = [];
   profs : any[] = [];
@@ -19,16 +23,29 @@ export class EdtService{
   }
 
   addRessource(nom: string, couleur: string){
-    let res = {
-      nom: nom,
-      couleur: couleur
-    }
+      let res = {
+        nom: nom,
+        couleur: couleur
+      }
     this.ressources.push(res);
   }
 
-  getRessources(){
-    // à remplacer avec l'appel à l'api
-    return this.ressources;
+  getRessources(): string[]{
+    let itemToReturn : string[] = [];
+
+    this.http.get<any[]>(this.GET_RESSOURCES).subscribe(
+      (data: any[]) => {
+        for (const item of data) {
+          itemToReturn.push(item);
+        }
+      },
+      (error) => {
+        console.error(error);
+        // Gérez l'erreur si nécessaire
+      }
+    );
+
+    return itemToReturn;
   }
 
   addSalle(nom: string, nbOrdi: string, nbVideoProj: string, nbTabNum: string){
@@ -41,18 +58,45 @@ export class EdtService{
     this.salles.push(salle)
   }
 
-  getSalles(){
-    return this.http.get(this.GET_PROFS)
-  }
+  getSalles(): string[]{
+
+    let itemToReturn : string[] = [];
+    
+    this.http.get<any[]>(this.GET_SALLES).subscribe(
+      (data: any[]) => {
+        for (const item of data) {
+          itemToReturn.push(item);
+        }
+      },
+      (error) => {
+        console.error(error);
+        // Gérez l'erreur si nécessaire
+      }
+    );
+
+    return itemToReturn;
+  } 
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
     let credentials = {}
   }
 
-  getProfs(){
-    
-    return this.profs;
-  }
+  getProfs(): string[]{
+    let itemToReturn : string[] = [];
+
+    this.http.get<any[]>(this.GET_PROFS).subscribe(
+      (data: any[]) => {
+        for (const item of data) {
+          itemToReturn.push(item);
+        }
+      },
+      (error) => {
+        console.error(error);
+        // Gérez l'erreur si nécessaire
+      }
+    );
+
+    return itemToReturn;  }
 
   addEleve(nom: string, prenom: string, numINE: string){
     let eleve = {
