@@ -10,6 +10,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class FormsComponent {
 
+  isSection1Open = false;
+  isSection2Open = false;
+  isSection3Open = false;
+
   formAddRessource = new FormGroup({
     nom: new FormControl("", Validators.required),
     couleur: new FormControl("", Validators.required)
@@ -40,10 +44,15 @@ export class FormsComponent {
   })
 
   public formSelectionne: any = null;
+  public selection: any = null;
   public typeGroupeSelectionne: any = null;
 
   constructor(private edtService: EdtService,
     private toastr: ToastrService){}
+
+  changerSelection(){
+    this.selection = this.formSelectionne.substring(4);
+  }
   
   onBoutonClique(valeurBouton: string) {
     this.typeGroupeSelectionne = valeurBouton;

@@ -91,41 +91,41 @@ export class EdtComponent{
   }
 
   loadEvents(){
-    let cours = this.edtService.getCours();
-    for (var val of cours) {
-      this.events.push(val);
-    }
+    // let cours = this.edtService.getCours();
+    // for (var val of cours) {
+    //   this.events.push(val);
+    // }
   }
 
   addEvent() {
-    const debutString = this.formAddEvent.value.debut;
-    const finString = this.formAddEvent.value.fin;
+    // const debutString = this.formAddEvent.value.debut;
+    // const finString = this.formAddEvent.value.fin;
 
-    if (typeof debutString === 'string' && typeof finString === 'string') {
-      const debutDate = new Date(debutString);
-      const finDate = new Date(finString);
+    // if (typeof debutString === 'string' && typeof finString === 'string') {
+    //   const debutDate = new Date(debutString);
+    //   const finDate = new Date(finString);
 
-      const newEvent = {
-        title: this.formAddEvent.value.cours!,
-        salle: this.formAddEvent.value.salle!,
-        professeur: this.formAddEvent.value.professeur!,
-        color: {
-          primary: this.formAddEvent.value.couleur?.couleurP!,
-          secondary: this.formAddEvent.value.couleur?.couleurS!,
-        },
-        start: debutDate,
-        end: finDate,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        }
-      };
-      this.events.push(newEvent);
-      this.refresh.next();
-    } else {
-      console.error("valeur de debut ou de fin n'est pas une chaine valide")
-    }
+    //   const newEvent = {
+    //     title: this.formAddEvent.value.cours!,
+    //     salle: this.formAddEvent.value.salle!,
+    //     professeur: this.formAddEvent.value.professeur!,
+    //     color: {
+    //       primary: this.formAddEvent.value.couleur?.couleurP!,
+    //       secondary: this.formAddEvent.value.couleur?.couleurS!,
+    //     },
+    //     start: debutDate,
+    //     end: finDate,
+    //     draggable: true,
+    //     resizable: {
+    //       beforeStart: true,
+    //       afterEnd: true,
+    //     }
+    //   };
+    //   this.events.push(newEvent);
+    //   this.refresh.next();
+    // } else {
+    //   console.error("valeur de debut ou de fin n'est pas une chaine valide")
+    // }
   }
 
   print(){
