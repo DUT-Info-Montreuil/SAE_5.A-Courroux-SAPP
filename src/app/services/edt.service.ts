@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 export class EdtService{
 
   ADD_PROF = 'http://localhost:5000/teacher';
-  GET_PROFS = 'http://localhost:5000/teacher/getAll';
+  GET_PROFS = 'http://localhost:8000/teachers';
   GET_SALLES = 'http://localhost:8000/salles'
   GET_RESSOURCES = 'http://localhost:8000/ressources';
 
@@ -75,16 +75,28 @@ export class EdtService{
     );
 
     return itemToReturn;
-  }
+  } 
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
     let credentials = {}
   }
 
-  getProfs(){
-    
-    return this.profs;
-  }
+  getProfs(): string[]{
+    let itemToReturn : string[] = [];
+
+    this.http.get<any[]>(this.GET_PROFS).subscribe(
+      (data: any[]) => {
+        for (const item of data) {
+          itemToReturn.push(item);
+        }
+      },
+      (error) => {
+        console.error(error);
+        // Gérez l'erreur si nécessaire
+      }
+    );
+
+    return itemToReturn;  }
 
   addEleve(nom: string, prenom: string, numINE: string){
     let eleve = {

@@ -62,6 +62,7 @@ export class EdtComponent{
     private zone: NgZone) {
       this.loadEvents();
       this.profs = this.edtService.getProfs();
+      console.log(this.profs);
       this.salles = this.edtService.getSalles();
       console.log(this.salles);
       this.ressources = this.edtService.getRessources();
