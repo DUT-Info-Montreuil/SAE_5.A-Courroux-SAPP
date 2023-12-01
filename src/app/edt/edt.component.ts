@@ -62,8 +62,11 @@ export class EdtComponent{
     private zone: NgZone) {
       this.loadEvents();
       this.profs = this.edtService.getProfs();
-      this.ressources = this.edtService.getRessources();
       this.salles = this.edtService.getSalles();
+      console.log(this.salles);
+      this.ressources = this.edtService.getRessources();
+      console.log(this.ressources);
+
   }
 
   openModalMod() {
