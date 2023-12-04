@@ -13,11 +13,6 @@ export class EdtService{
   GET_PROFS = 'http://localhost:8000/teachers';
   GET_SALLES = 'http://localhost:8000/salles'
   GET_RESSOURCES = 'http://localhost:8000/ressources';
-
-  ressources : any[] = [];
-  profs : any[] = [];
-  salles : any[] = [];
-  eleves : any[] = []; 
   
   constructor(private http: HttpClient) {
   }
@@ -27,7 +22,7 @@ export class EdtService{
         nom: nom,
         couleur: couleur
       }
-    this.ressources.push(res);
+    //this.ressources.push(res);
   }
 
   getRessources(): string[]{
@@ -55,7 +50,7 @@ export class EdtService{
       nbVideoProj: nbVideoProj,
       nbTabNum: nbTabNum
     }
-    this.salles.push(salle)
+    //this.salles.push(salle)
   }
 
   getSalles(): string[]{
@@ -104,11 +99,11 @@ export class EdtService{
       prenom: prenom,
       numINE: numINE
     }
-    this.eleves.push(eleve);
+    //this.eleves.push(eleve);
   }
 
   getEleves(){
-    return this.eleves;
+    //return this.eleves;
   }
 
   getCours(){

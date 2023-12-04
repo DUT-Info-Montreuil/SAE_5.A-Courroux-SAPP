@@ -3,12 +3,20 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { EdtService } from '../services/edt.service';
 import { ToastrService } from 'ngx-toastr';
 
+
 @Component({
   selector: 'app-forms',
   templateUrl: './forms.component.html',
   styleUrls: ['./forms.component.scss']
 })
 export class FormsComponent {
+
+  searchText: any;
+
+  ressources : any[] = [];
+  profs : any[] = [];
+  salles : any[] = [];
+  eleves : any[] = []; 
 
   isSection1Open = false;
   isSection2Open = false;
@@ -48,11 +56,17 @@ export class FormsComponent {
   public typeGroupeSelectionne: any = null;
 
   constructor(private edtService: EdtService,
-    private toastr: ToastrService){}
+    private toastr: ToastrService){
+      this.salles = this.edtService.getSalles();
+  }
 
   changerSelection(){
     this.selection = this.formSelectionne.substring(4);
   }
+
+  // getSalles(){
+  //   return this.salles;
+  // }
   
   onBoutonClique(valeurBouton: string) {
     this.typeGroupeSelectionne = valeurBouton;
