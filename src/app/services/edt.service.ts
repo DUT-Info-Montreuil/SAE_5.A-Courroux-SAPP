@@ -9,7 +9,13 @@ import { map } from 'rxjs/operators';
 })
 export class EdtService{
 
-  ADD_PROF = 'http://localhost:5000/teacher';
+  //Décommentez si vous utilisez python pour lancer le back-end
+  // ADD_PROF = 'http://localhost:5000/teacher';
+  // GET_PROFS = 'http://localhost:5000/teachers';
+  // GET_SALLES = 'http://localhost:5000/salles'
+  // GET_RESSOURCES = 'http://localhost:5000/ressources';
+
+  ADD_PROF = 'http://localhost:8000/teacher';
   GET_PROFS = 'http://localhost:8000/teachers';
   GET_SALLES = 'http://localhost:8000/salles'
   GET_RESSOURCES = 'http://localhost:8000/ressources';
@@ -25,13 +31,14 @@ export class EdtService{
     //this.ressources.push(res);
   }
 
-  getRessources(): string[]{
-    let itemToReturn : string[] = [];
+  getRessources(){
+    let ressources : any[] = [];
 
+    
     this.http.get<any[]>(this.GET_RESSOURCES).subscribe(
       (data: any[]) => {
         for (const item of data) {
-          itemToReturn.push(item);
+          ressources.push(item);
         }
       },
       (error) => {
@@ -40,8 +47,8 @@ export class EdtService{
       }
     );
 
-    return itemToReturn;
-  }
+    return ressources;
+  } 
 
   addSalle(nom: string, nbOrdi: string, nbVideoProj: string, nbTabNum: string){
     let salle = {
@@ -53,14 +60,14 @@ export class EdtService{
     //this.salles.push(salle)
   }
 
-  getSalles(): string[]{
+  getSalles(){
 
-    let itemToReturn : string[] = [];
+    let salles : any[] = [];
     
     this.http.get<any[]>(this.GET_SALLES).subscribe(
       (data: any[]) => {
         for (const item of data) {
-          itemToReturn.push(item);
+          salles.push(item);
         }
       },
       (error) => {
@@ -69,20 +76,20 @@ export class EdtService{
       }
     );
 
-    return itemToReturn;
+    return salles;
   } 
 
   addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
     let credentials = {}
   }
 
-  getProfs(): string[]{
-    let itemToReturn : string[] = [];
+  getProfs(){
+    let profs : any[] = [];
 
     this.http.get<any[]>(this.GET_PROFS).subscribe(
       (data: any[]) => {
         for (const item of data) {
-          itemToReturn.push(item);
+          profs.push(item);
         }
       },
       (error) => {
@@ -91,7 +98,8 @@ export class EdtService{
       }
     );
 
-    return itemToReturn;  }
+    return profs;
+  }
 
   addEleve(nom: string, prenom: string, numINE: string){
     let eleve = {
