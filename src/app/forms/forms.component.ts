@@ -11,7 +11,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class FormsComponent {
 
+  showModal = false;
+
   searchText: any;
+
+  elementASupp: any;
 
   ressources : any[] = [];
   profs : any[] = [];
@@ -20,7 +24,6 @@ export class FormsComponent {
 
   isSection1Open = false;
   isSection2Open = false;
-  isSection3Open = false;
 
   formAddRessource = new FormGroup({
     nom: new FormControl("", Validators.required),
@@ -37,7 +40,8 @@ export class FormsComponent {
   formAddProfesseur = new FormGroup({
     nom: new FormControl("", Validators.required),
     prenom: new FormControl("", Validators.required),
-    nbHeurePrevisionnel: new FormControl("", Validators.required)
+    identifiant: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required),
   })
 
   formAddEleve = new FormGroup({
@@ -58,6 +62,15 @@ export class FormsComponent {
   constructor(private edtService: EdtService,
     private toastr: ToastrService){
       this.salles = this.edtService.getSalles();
+      this.profs = edtService.getProfs();
+  }
+
+  afficherModal(): void {
+    this.showModal = true;
+  }
+
+  cacherModal(): void {
+    this.showModal = false;
   }
 
   changerSelection(){
@@ -74,12 +87,12 @@ export class FormsComponent {
 
   onSubmitAddProfesseur(){
     if (this.formAddProfesseur.valid){
-      let nom = this.formAddProfesseur.value.nom!;
-      let prenom = this.formAddProfesseur.value.prenom!;
-      let nbHeurePrevisionnel = this.formAddProfesseur.value.nbHeurePrevisionnel!;
-      this.edtService.addProf(nom, prenom, nbHeurePrevisionnel);
+      let lastname = this.formAddProfesseur.value.nom!;
+      let name = this.formAddProfesseur.value.prenom!;
+      let identifier = this.formAddProfesseur.value.identifiant!;
+      let password = this.formAddProfesseur.value.password!;
+      this.edtService.addProf(lastname, name, identifier, password);
       console.log(this.edtService.getProfs());
-      this.toastr.success('Professeur ajoutée !')
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     } 
@@ -98,16 +111,24 @@ export class FormsComponent {
 
   onSubmitAddSalle(){
     if (this.formAddSalle.valid){
-      let nom = this.formAddSalle.value.nom!;
-      let nbOrdi = this.formAddSalle.value.nbOrdi!;
-      let nbVideoProj = this.formAddSalle.value.nbVideoProj!;
-      let nbTabNum = this.formAddSalle.value.nbTabNum!;
-      this.edtService.addSalle(nom, nbOrdi, nbVideoProj, nbTabNum);
-      console.log(this.edtService.getSalles());
-      this.toastr.success('Salle ajoutée !');
+      let name = this.formAddSalle.value.nom!;
+      let ordi = parseInt(this.formAddSalle.value.nbOrdi!);
+      let videoProjecteur = parseInt(this.formAddSalle.value.nbVideoProj!);
+      let tableauNumerique = parseInt(this.formAddSalle.value.nbTabNum!);
+      this.edtService.addSalle(name, ordi, tableauNumerique, videoProjecteur);
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
+  }
+
+  choixSalleSupp(nom: string){
+    this.elementASupp = nom;
+  }
+
+  supprimerSalle(){
+    this.edtService.supprimerSalle(this.elementASupp);
+    this.salles = this.edtService.getSalles();
+    this.elementASupp = null;
   }
 
   onSubmitAddEleve(){

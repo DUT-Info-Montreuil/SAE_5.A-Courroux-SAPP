@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subject} from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable({
@@ -15,12 +14,17 @@ export class EdtService{
   // GET_SALLES = 'http://localhost:5000/salles'
   // GET_RESSOURCES = 'http://localhost:5000/ressources';
 
+  // profs
   ADD_PROF = 'http://localhost:8000/teacher';
   GET_PROFS = 'http://localhost:8000/teachers';
-  GET_SALLES = 'http://localhost:8000/salles'
+  // salles
+  GET_SALLES = 'http://localhost:8000/salles';
+  ADD_SALLE = 'http://localhost:8000/salle';
+  DELETE_SALLE = 'http://localhost:8000/salle/'; // + nom de la salle
+  //ressources
   GET_RESSOURCES = 'http://localhost:8000/ressources';
   
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toastr: ToastrService) {
   }
 
   addRessource(nom: string, couleur: string){
@@ -33,8 +37,6 @@ export class EdtService{
 
   getRessources(){
     let ressources : any[] = [];
-
-    
     this.http.get<any[]>(this.GET_RESSOURCES).subscribe(
       (data: any[]) => {
         for (const item of data) {
@@ -50,14 +52,32 @@ export class EdtService{
     return ressources;
   } 
 
-  addSalle(nom: string, nbOrdi: string, nbVideoProj: string, nbTabNum: string){
+  addSalle(nom: string, nbOrdi: number, nbVideoProj: number, nbTabNum: number){
     let salle = {
-      nom: nom,
-      nbOrdi: nbOrdi,
-      nbVideoProj: nbVideoProj,
-      nbTabNum: nbTabNum
+      name: nom,
+      ordi: nbOrdi,
+      videoProjecteur: nbVideoProj,
+      tableauNumerique: nbTabNum
     }
-    //this.salles.push(salle)
+    this.http.post(this.ADD_SALLE, salle).subscribe(
+      (response) => {
+        return this.toastr.success("la salle " + nom + " à bien été ajouté");
+      },
+      (error) => {
+        return this.toastr.error("erreur");
+      }
+    );
+  }
+
+  supprimerSalle(nom: string){
+    this.http.delete(this.DELETE_SALLE + nom).subscribe(
+      (response) => {
+        this.toastr.success("la salle " + nom + " à bien été supprimée");
+      },
+      (error) => {
+        this.toastr.error("erreur");
+      }
+    );
   }
 
   getSalles(){
@@ -72,15 +92,27 @@ export class EdtService{
       },
       (error) => {
         console.error(error);
-        // Gérez l'erreur si nécessaire
       }
     );
 
     return salles;
   } 
 
-  addProf(nom: string, prenom: string, nbHeurePrevisionnel: string){
-    let credentials = {}
+  addProf(lastname: string, name: string, identifier: string, password: string){
+    let prof = {
+      lastname: lastname,
+      name: name,
+      identifier: identifier,
+      password: password
+    }
+    this.http.post(this.ADD_PROF, prof).subscribe(
+      (response) => {
+        this.toastr.success("le professeur " + name + " à bien été ajouté");
+      },
+      (error) => {
+        this.toastr.error("erreur");
+      }
+    );
   }
 
   getProfs(){
