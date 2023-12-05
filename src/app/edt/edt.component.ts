@@ -7,10 +7,15 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HttpHeaders } from '@angular/common/http';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
 };
+
+const headers = new HttpHeaders({
+  'Content-Type': 'application/json'
+});
 
 @Component({
   selector: 'app-edt',
@@ -24,6 +29,20 @@ export class EdtComponent{
     cours: new FormControl(""),
     salle: new FormControl(""),
     professeur: new FormControl(""),
+    groupe: new FormControl(""),
+    couleur: new FormGroup({
+      couleurP: new FormControl(""),
+      couleurS: new FormControl(""),
+    }),
+    debut: new FormControl(""),
+    fin: new FormControl("")
+  })
+
+  formModifEvent = new FormGroup({
+    cours: new FormControl(""),
+    salle: new FormControl(""),
+    professeur: new FormControl(""),
+    groupe: new FormControl(""),
     couleur: new FormGroup({
       couleurP: new FormControl(""),
       couleurS: new FormControl(""),
@@ -35,6 +54,7 @@ export class EdtComponent{
   profs!: any[];
   salles!: any[];
   ressources!: any[];
+  groupes!: any[];
 
   // minEndTime!: string;
   // maxStartTime!: string;
@@ -64,6 +84,7 @@ export class EdtComponent{
       this.profs = this.edtService.getProfs();
       this.ressources = this.edtService.getRessources();
       this.salles = this.edtService.getSalles();
+      this.groupes = this.edtService.getPromotions();
   }
 
   openModalMod() {
@@ -86,41 +107,49 @@ export class EdtComponent{
   }
 
   loadEvents(){
-    // let cours = this.edtService.getCours();
-    // for (var val of cours) {
-    //   this.events.push(val);
-    // }
+    let cours = this.edtService.getCours();
+
+    for (var val of cours) {
+      this.events.push(val);
+    }
   }
 
   addEvent() {
-    // const debutString = this.formAddEvent.value.debut;
-    // const finString = this.formAddEvent.value.fin;
+    const debutString = this.formAddEvent.value.debut;
+    const finString = this.formAddEvent.value.fin;
 
-    // if (typeof debutString === 'string' && typeof finString === 'string') {
-    //   const debutDate = new Date(debutString);
-    //   const finDate = new Date(finString);
+    if (typeof debutString === 'string' && typeof finString === 'string') {
+      const debutDate = new Date(debutString);
+      const finDate = new Date(finString);
 
-    //   const newEvent = {
-    //     title: this.formAddEvent.value.cours!,
-    //     salle: this.formAddEvent.value.salle!,
-    //     professeur: this.formAddEvent.value.professeur!,
-    //     color: {
-    //       primary: this.formAddEvent.value.couleur?.couleurP!,
-    //       secondary: this.formAddEvent.value.couleur?.couleurS!,
-    //     },
-    //     start: debutDate,
-    //     end: finDate,
-    //     draggable: true,
-    //     resizable: {
-    //       beforeStart: true,
-    //       afterEnd: true,
-    //     }
-    //   };
-    //   this.events.push(newEvent);
-    //   this.refresh.next();
-    // } else {
-    //   console.error("valeur de debut ou de fin n'est pas une chaine valide")
-    // }
+      const newEvent = {
+        title: this.formAddEvent.value.cours!,
+        salle: this.formAddEvent.value.salle!,
+        professeur: this.formAddEvent.value.professeur!,
+        groupe: this.formAddEvent.value.groupe!,
+        color: {
+          primary: this.formAddEvent.value.couleur?.couleurP!,
+          secondary: this.formAddEvent.value.couleur?.couleurS!,
+        },
+        start: debutDate,
+        end: finDate,
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        }
+      };
+      this.events.push(newEvent);
+      this.refresh.next();
+    } else {
+      console.error("valeur de debut ou de fin n'est pas une chaine valide")
+    }
+  }
+
+  addCoursToDb() {
+    for (let cour of this.events) {
+      this.edtService.addCours(cour.title, cour.salle, cour.professeur, cour.groupe, cour.color!.primary, cour.color!.secondary, cour.start, cour.end!, headers);
+    }
   }
 
   print(){
