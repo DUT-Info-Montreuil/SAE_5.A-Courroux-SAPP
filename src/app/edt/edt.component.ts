@@ -148,7 +148,13 @@ export class EdtComponent{
 
   addCoursToDb() {
     for (let cour of this.events) {
-      this.edtService.addCours(cour.title, cour.salle, cour.professeur, cour.groupe, cour.color!.primary, cour.color!.secondary, cour.start, cour.end!, headers);
+      for(let grp of this.groupes) {
+        console.log(grp.group.id);
+        if(cour.groupe == grp.name) {
+          cour.groupe = grp.group.id;
+        }
+      }
+      this.edtService.addCours(cour.title, cour.salle, cour.professeur, Number(cour.groupe), cour.start, cour.end!, headers);
     }
   }
 

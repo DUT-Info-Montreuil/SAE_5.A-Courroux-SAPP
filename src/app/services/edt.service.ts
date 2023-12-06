@@ -18,7 +18,7 @@ export class EdtService{
   // GET_GROUPES = 'http://localhost:5000/groupes';
   // GET_PROMOTIONS = 'http://localhost:5000/promotions';
 
-  ADD_COURS = 'http://localhost:8000/cours/create';
+  ADD_COURS = 'http://localhost:8000/course';
   ADD_PROF = 'http://localhost:8000/teacher';
   GET_PROFS = 'http://localhost:8000/teachers';
   GET_SALLES = 'http://localhost:8000/salles'
@@ -156,17 +156,14 @@ export class EdtService{
     //return this.eleves;
   }
 
-  addCours(title:string, salle: string, professeur: string, groupe:string, colorP:string, colorS:string, debut: Date, fin: Date, headers: HttpHeaders){
+  addCours(title:string, salle: string, professeur: string, groupe:number, debut: Date, fin: Date, headers: HttpHeaders){
     let coursToAdd = {
-      title: title,
-      salle: salle,
-      professeur: professeur,
-      groupe: groupe,
-      colorP: colorP,
-      colorS: colorS,
-      date: debut.getDate(),
-      heureDebut: debut.getTime()/1000,
-      heureFin: fin.getTime()/1000
+      initial_ressource: title,
+      name_salle: salle,
+      initial_enseignant: professeur,
+      id_group: groupe,
+      start_time: debut.toISOString(),
+      end_time: fin.toISOString()
     }
 
     this.http.post(this.ADD_COURS, coursToAdd, { headers })
