@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -59,43 +60,15 @@ export class EdtService{
       videoProjecteur: nbVideoProj,
       tableauNumerique: nbTabNum
     }
-    this.http.post(this.ADD_SALLE, salle).subscribe(
-      (response) => {
-        return this.toastr.success("la salle " + nom + " à bien été ajouté");
-      },
-      (error) => {
-        return this.toastr.error("erreur");
-      }
-    );
+    return this.http.post(this.ADD_SALLE, salle);
   }
 
   supprimerSalle(nom: string){
-    this.http.delete(this.DELETE_SALLE + nom).subscribe(
-      (response) => {
-        this.toastr.success("la salle " + nom + " à bien été supprimée");
-      },
-      (error) => {
-        this.toastr.error("erreur");
-      }
-    );
+    return this.http.delete(this.DELETE_SALLE + nom);
   }
 
-  getSalles(){
-
-    let salles : any[] = [];
-    
-    this.http.get<any[]>(this.GET_SALLES).subscribe(
-      (data: any[]) => {
-        for (const item of data) {
-          salles.push(item);
-        }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-
-    return salles;
+  getSalles(): Observable<any[]>{
+    return this.http.get<any[]>(this.GET_SALLES);
   } 
 
   addProf(lastname: string, name: string, identifier: string, password: string){

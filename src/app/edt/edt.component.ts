@@ -63,7 +63,7 @@ export class EdtComponent{
       this.loadEvents();
       this.profs = this.edtService.getProfs();
       this.ressources = this.edtService.getRessources();
-      this.salles = this.edtService.getSalles();
+      //this.salles = this.edtService.getSalles();
   }
 
   openModalMod() {

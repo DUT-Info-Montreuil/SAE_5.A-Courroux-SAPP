@@ -140,8 +140,17 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input type="search" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nom" required>
+                            <input type="search" name="search" [(ngModel)]="searchText" autocomplete="off" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nom" required>
                         </div>
+                        <div *ngIf="elementASupp != null" id="alert-additional-content-2" class="mt-5 p-4 mb-4 text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+                            <div class="flex items-center">
+                              <h3 class="text-lg font-medium">Voulez vous vraiment supprimer {{elementASupp}} ?</h3>
+                            </div>
+                            <div class="mt-2 flex">
+                              <button type="button" (click)="supprimerSalle()" class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 me-2 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Supprimer</button>
+                              <button type="button" (click)="setElemToNull()" class="text-red-800 bg-transparent border border-red-800 hover:bg-red-900 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-xs px-3 py-1.5 text-center dark:hover:bg-red-600 dark:border-red-600 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800">Annuler</button>
+                            </div>
+                          </div>
                         <div class="mt-5 relative overflow-x-auto shadow-md sm:rounded-lg">
                             <table *ngIf="formSelectionne === 'formSalle'" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -182,18 +191,12 @@
                                             {{salle.videoProjecteur}}
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a>
+                                            <a (click)="isSection1Open = !isSection1Open" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a>
+                                            
                                         </td>
                                         <td class="px-6 py-4 text-right">
-                                            <a (click)="choixSalleSupp(salle.nom)"
+                                            <a (click)="choixElementSupp(salle.nom)"
                                             class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a>
-                                        </td>
-                                    </tr>
-                                    <tr *ngIf="elementASupp" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                        <td class="px-6 py-4 text-right"></td><td class="px-6 py-4 text-right"></td><td class="px-6 py-4 text-right"></td><td class="px-6 py-4 text-right"></td><td class="px-6 py-4 text-right"></td>
-                                        <td class="px-6 py-4 text-right">
-                                            <a (click)="supprimerSalle()"
-                                            class="font-medium text-red-600 dark:text-red-500 hover:underline">Confirmer</a>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdtService } from '../services/edt.service';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './forms.component.html',
   styleUrls: ['./forms.component.scss']
 })
-export class FormsComponent {
+export class FormsComponent implements OnInit{
 
   showModal = false;
 
@@ -60,9 +60,29 @@ export class FormsComponent {
   public typeGroupeSelectionne: any = null;
 
   constructor(private edtService: EdtService,
-    private toastr: ToastrService){
-      this.salles = this.edtService.getSalles();
+    private toastr: ToastrService,){
       this.profs = edtService.getProfs();
+      this.elementASupp = null;
+  }
+
+  ngOnInit(): void{
+    this.refreshSalle();
+  }
+
+  refreshSalle(): void {
+    this.edtService.getSalles().subscribe(
+      (liste: any[]) => {
+        this.salles = liste;
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
+  }
+
+  setElemToNull(){
+    this.elementASupp = null;
   }
 
   afficherModal(): void {
@@ -115,19 +135,33 @@ export class FormsComponent {
       let ordi = parseInt(this.formAddSalle.value.nbOrdi!);
       let videoProjecteur = parseInt(this.formAddSalle.value.nbVideoProj!);
       let tableauNumerique = parseInt(this.formAddSalle.value.nbTabNum!);
-      this.edtService.addSalle(name, ordi, tableauNumerique, videoProjecteur);
+      this.edtService.addSalle(name, ordi, tableauNumerique, videoProjecteur).subscribe(
+        (response) => {
+          this.toastr.success("la salle à bien été ajouté");
+          this.refreshSalle();
+        },
+        (error) => {this.toastr.error("erreur");}
+      );
+      this.formAddSalle.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
   }
 
-  choixSalleSupp(nom: string){
+  choixElementSupp(nom: string){
     this.elementASupp = nom;
   }
 
   supprimerSalle(){
-    this.edtService.supprimerSalle(this.elementASupp);
-    this.salles = this.edtService.getSalles();
+    this.edtService.supprimerSalle(this.elementASupp).subscribe(
+      (response) => {
+        this.toastr.success("la salle à bien été supprimée");
+        this.refreshSalle();
+      },
+      (error) => {
+        this.toastr.error("erreur");
+      }
+    );
     this.elementASupp = null;
   }
 

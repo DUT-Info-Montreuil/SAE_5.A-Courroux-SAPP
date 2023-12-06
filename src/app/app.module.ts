@@ -14,6 +14,7 @@ import { FormsComponent } from './forms/forms.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FilterPipe } from './pipes/filter.pipe';
+import { MatDialogModule } from '@angular/material/dialog';
 
 registerLocaleData(localeFr, 'fr');
 
