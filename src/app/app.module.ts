@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsComponent } from './forms/forms.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EdtUserComponent } from './edt/edtUser/edt-user/edt-user.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -31,6 +32,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     EdtComponent,
     SidebarComponent,
     FormsComponent,
+    EdtUserComponent,
   ],
   imports: [
     BrowserAnimationsModule,
