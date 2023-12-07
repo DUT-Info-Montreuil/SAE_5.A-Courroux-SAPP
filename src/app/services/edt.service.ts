@@ -81,13 +81,13 @@ export class EdtService{
     let credentials = {}
   }
 
-  getProfs(): string[]{
-    let itemToReturn : string[] = [];
+  getProfs(){
+    let profs : any[] = [];
 
     this.http.get<any[]>(this.GET_PROFS).subscribe(
       (data: any[]) => {
         for (const item of data) {
-          itemToReturn.push(item);
+          profs.push(item);
         }
       },
       (error) => {
@@ -95,8 +95,9 @@ export class EdtService{
         // Gérez l'erreur si nécessaire
       }
     );
-
-    return itemToReturn;  }
+    return profs;
+  }
+  
 
   addEleve(nom: string, prenom: string, numINE: string){
     let eleve = {
