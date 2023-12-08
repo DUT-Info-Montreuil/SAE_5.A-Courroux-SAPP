@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { SessionLoginService } from '../../../services/session-login.service';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -28,8 +27,7 @@ export class LoginComponent {
   })
   
 
-  constructor(private sessionLoginService: SessionLoginService,
-    private toastr: ToastrService,
+  constructor(private toastr: ToastrService,
     private router: Router,
     private formBuilder: FormBuilder,
     private authService: AuthService,

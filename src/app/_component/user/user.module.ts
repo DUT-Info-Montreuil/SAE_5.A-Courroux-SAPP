@@ -22,6 +22,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
   exports: [
     LoginComponent
   ],
-//   schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UsersModule { }
