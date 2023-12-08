@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, find } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
@@ -29,7 +29,7 @@ export class EdtComponent{
     cours: new FormControl(""),
     salle: new FormControl(""),
     professeur: new FormControl(""),
-    groupe: new FormControl(""),
+    groupe: new FormControl(),
     couleur: new FormGroup({
       couleurP: new FormControl(""),
       couleurS: new FormControl(""),
@@ -83,7 +83,9 @@ export class EdtComponent{
     private zone: NgZone) {
       this.loadEvents();
       this.profs = this.edtService.getProfs();
+      console.log(this.profs);
       this.ressources = this.edtService.getRessources();
+      console.log(this.ressources);
       this.salles = this.edtService.getSalles();
       this.groupes = this.edtService.getGroupes();
       console.log(this.groupes);
@@ -118,9 +120,15 @@ export class EdtComponent{
   }
 
   addEvent() {
-    const debutString = this.formAddEvent.value.debut;
-    const finString = this.formAddEvent.value.fin;
+    let debutString = this.formAddEvent.value.debut;
+    let finString = this.formAddEvent.value.fin;
 
+    debutString = (debutString?.replace('T', ' ')) + ":00";
+    finString = (finString?.replace('T', ' ')) + ":00";
+    
+
+    console.log(debutString);
+    console.log(finString);
     if (typeof debutString === 'string' && typeof finString === 'string') {
       const debutDate = new Date(debutString);
       const finDate = new Date(finString);
@@ -144,10 +152,10 @@ export class EdtComponent{
           afterEnd: true,
         }
       };
-
-      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), newEvent.start, newEvent.end, headers);
-      this.events.push(newEvent);
-      this.eventsToPushToBd.push(newEvent);
+      console.log(newEvent.title);
+      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), debutString, finString, headers);
+      this.events = [];
+      this.events = this.edtService.getCours();
       this.refresh.next();
     } else {
       console.error("valeur de debut ou de fin n'est pas une chaine valide")

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable, OnInit } from '@angular/core';
+import { CalendarEvent } from 'angular-calendar';
 import { BehaviorSubject, Observable, Subject} from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -158,14 +159,14 @@ export class EdtService{
     //return this.eleves;
   }
 
-  addCours(title:string, salle: string, professeur: string, groupe:number, debut: Date, fin: Date, headers: HttpHeaders){
+  addCours(title:string, salle: string, professeur: string, groupe:number, debut: string, fin: string, headers: HttpHeaders){
     let coursToAdd = {
       initial_ressource: title,
       name_salle: salle,
       initial_enseignant: professeur,
       id_group: groupe,
-      start_time: debut.toISOString(),
-      end_time: fin.toISOString()
+      start_time: debut,
+      end_time: fin
     }
 
     this.http.post(this.ADD_COURS, coursToAdd, { headers })
@@ -198,11 +199,30 @@ export class EdtService{
     //     afterEnd: true,
     //   }
     // }
-    let cours : any[] = [];
+    let cours : CalendarEvent[] = [];
 
     this.http.get<any[]>(this.GET_COURS).subscribe(
       (data: any[]) => {
         for (const item of data) {
+          const newEvent: CalendarEvent = {
+            id: item.id,
+            start: new Date(item.start_time),
+            end: new Date(item.end_time),
+            title: item.initial_ressource,
+            salle: item.name_salle,
+            professeur: String(item.id_enseignant),
+            groupe: item.id_group,
+            is_published: item.is_published,
+            color: {
+              primary: '#FFFFFF',
+              secondary: '#000000',
+            },
+            draggable: true,
+            resizable: {
+              beforeStart: true,
+              afterEnd: true,
+            }
+          }
           cours.push(item);
         }
       },
