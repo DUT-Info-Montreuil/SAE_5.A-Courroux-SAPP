@@ -15,6 +15,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FilterPipe } from './pipes/filter.pipe';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ModifModalFormComponent } from './modals/modif-modal-form/modif-modal-form.component';
+import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -23,7 +25,6 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
   public override dayViewHour({ date, locale }: DateFormatterParams): string {
       return new Intl.DateTimeFormat(locale, {hour: 'numeric', minute:'numeric'}).format(date);
   }
-
 }
 
 @NgModule({
@@ -34,9 +35,12 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     SidebarComponent,
     FormsComponent,
     FilterPipe,
+    ModifModalFormComponent,
+    DeleteModalComponent,
   ],
   imports: [
     BrowserAnimationsModule,
+    MatDialogModule,
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-center',
       progressBar: true,
@@ -49,6 +53,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     HttpClientModule,
   ],
   providers: [
+    FormsComponent,
     DatePipe,
     {provide: CalendarDateFormatter, useClass:CustomDateFormater},
     HttpClientModule,

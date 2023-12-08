@@ -61,7 +61,7 @@ export class EdtComponent{
     private cdr: ChangeDetectorRef,
     private zone: NgZone) {
       this.loadEvents();
-      this.profs = this.edtService.getProfs();
+      //this.profs = this.edtService.getProfs();
       this.ressources = this.edtService.getRessources();
       //this.salles = this.edtService.getSalles();
   }

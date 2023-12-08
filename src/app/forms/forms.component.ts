@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdtService } from '../services/edt.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
+import { Subscription, share } from 'rxjs';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 
 
 @Component({
@@ -9,13 +13,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './forms.component.html',
   styleUrls: ['./forms.component.scss']
 })
-export class FormsComponent implements OnInit{
+export class FormsComponent implements OnInit, OnDestroy{
 
   showModal = false;
 
   searchText: any;
-
-  elementASupp: any;
 
   ressources : any[] = [];
   profs : any[] = [];
@@ -41,13 +43,15 @@ export class FormsComponent implements OnInit{
     nom: new FormControl("", Validators.required),
     prenom: new FormControl("", Validators.required),
     identifiant: new FormControl("", Validators.required),
-    password: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required)
   })
 
   formAddEleve = new FormGroup({
     nom: new FormControl("", Validators.required),
     prenom: new FormControl("", Validators.required),
-    numINE: new FormControl("", Validators.required)
+    numINE: new FormControl("", Validators.required),
+    identifiant: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required)
   })
 
   formAddGroupe = new FormGroup({
@@ -59,14 +63,47 @@ export class FormsComponent implements OnInit{
   public selection: any = null;
   public typeGroupeSelectionne: any = null;
 
+  private salleRefreshSubscription!: Subscription;
+  private profRefreshSubscription!: Subscription;
+
   constructor(private edtService: EdtService,
-    private toastr: ToastrService,){
-      this.profs = edtService.getProfs();
-      this.elementASupp = null;
+    private toastr: ToastrService,
+    private dialogModif: MatDialog,
+    private dialogDelete: MatDialog,
+    private cdr: ChangeDetectorRef){
+  }
+
+  ouvrirModalModif(element: any){
+    this.dialogModif.open(ModifModalFormComponent, {
+      data: {
+        formSelectionne : this.formSelectionne,
+        element : element
+      }
+    });
+  }
+
+  ouvrirModalDelete(element: any){
+    this.dialogDelete.open(DeleteModalComponent, {
+      data: {
+        formSelectionne : this.formSelectionne,
+        element: element
+      }
+    });
   }
 
   ngOnInit(): void{
     this.refreshSalle();
+    this.refreshProfs();
+    this.salleRefreshSubscription = this.edtService.salleRefresh$.subscribe(() => {
+      this.refreshSalle();
+    });
+    this.profRefreshSubscription = this.edtService.profRefresh$.subscribe(() => {
+      this.refreshProfs();
+    });
+  }
+
+  ngOnDestroy() {
+    this.salleRefreshSubscription.unsubscribe();
   }
 
   refreshSalle(): void {
@@ -81,8 +118,16 @@ export class FormsComponent implements OnInit{
     );
   }
 
-  setElemToNull(){
-    this.elementASupp = null;
+  refreshProfs(): void {
+    this.edtService.getProfs().subscribe(
+      (liste: any[]) => {
+        this.profs = liste;
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
   }
 
   afficherModal(): void {
@@ -96,10 +141,6 @@ export class FormsComponent implements OnInit{
   changerSelection(){
     this.selection = this.formSelectionne.substring(4);
   }
-
-  // getSalles(){
-  //   return this.salles;
-  // }
   
   onBoutonClique(valeurBouton: string) {
     this.typeGroupeSelectionne = valeurBouton;
@@ -148,30 +189,14 @@ export class FormsComponent implements OnInit{
     }
   }
 
-  choixElementSupp(nom: string){
-    this.elementASupp = nom;
-  }
-
-  supprimerSalle(){
-    this.edtService.supprimerSalle(this.elementASupp).subscribe(
-      (response) => {
-        this.toastr.success("la salle à bien été supprimée");
-        this.refreshSalle();
-      },
-      (error) => {
-        this.toastr.error("erreur");
-      }
-    );
-    this.elementASupp = null;
-  }
-
   onSubmitAddEleve(){
     if (this.formAddEleve.valid){
-      let nom = this.formAddEleve.value.nom!;
-      let prenom = this.formAddEleve.value.prenom!;
-      let numINE = this.formAddEleve.value.numINE!;
-      this.edtService.addEleve(nom, prenom, numINE);
-      console.log(this.edtService.getEleves());
+      let lastname = this.formAddEleve.value.nom!;
+      let name = this.formAddEleve.value.prenom!;
+      let INE = this.formAddEleve.value.numINE!;
+      let identifier = this.formAddEleve.value.identifiant!;
+      let password = this.formAddEleve.value.password!;
+      this.edtService.addEleve(lastname, name, INE, identifier, password);
       this.toastr.success('Eleve ajoutée !')
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
