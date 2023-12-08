@@ -7,10 +7,15 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HttpHeaders } from '@angular/common/http';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
 };
+
+const headers = new HttpHeaders({
+  'Content-Type': 'application/json'
+});
 
 @Component({
   selector: 'app-edt',
@@ -24,6 +29,20 @@ export class EdtComponent{
     cours: new FormControl(""),
     salle: new FormControl(""),
     professeur: new FormControl(""),
+    groupe: new FormControl(""),
+    couleur: new FormGroup({
+      couleurP: new FormControl(""),
+      couleurS: new FormControl(""),
+    }),
+    debut: new FormControl(""),
+    fin: new FormControl("")
+  })
+
+  formModifEvent = new FormGroup({
+    cours: new FormControl(""),
+    salle: new FormControl(""),
+    professeur: new FormControl(""),
+    groupe: new FormControl(""),
     couleur: new FormGroup({
       couleurP: new FormControl(""),
       couleurS: new FormControl(""),
@@ -35,6 +54,7 @@ export class EdtComponent{
   profs!: any[];
   salles!: any[];
   ressources!: any[];
+  groupes!: any[];
 
   // minEndTime!: string;
   // maxStartTime!: string;
@@ -48,6 +68,7 @@ export class EdtComponent{
   view: CalendarView = CalendarView.Week;
 
   events: CalendarEvent[] = [];
+  eventsToPushToBd: CalendarEvent[] = [];
 
   refresh = new Subject<void>();
 
@@ -63,7 +84,13 @@ export class EdtComponent{
       this.loadEvents();
       this.profs = this.edtService.getProfs();
       this.ressources = this.edtService.getRessources();
+<<<<<<< HEAD
       //this.salles = this.edtService.getSalles();
+=======
+      this.salles = this.edtService.getSalles();
+      this.groupes = this.edtService.getGroupes();
+      console.log(this.groupes);
+>>>>>>> feature/cours-api
   }
 
   openModalMod() {
@@ -80,47 +107,57 @@ export class EdtComponent{
     this.showModalAdd = true;
   }
   
+
   closeModalAdd() {
     this.showModalAdd = false;
   }
 
   loadEvents(){
-    // let cours = this.edtService.getCours();
-    // for (var val of cours) {
-    //   this.events.push(val);
-    // }
+    let cours = this.edtService.getCours();
+    console.log(cours);
+
+    for (var val of cours) {
+      this.events.push(val);
+    }
   }
 
   addEvent() {
-    // const debutString = this.formAddEvent.value.debut;
-    // const finString = this.formAddEvent.value.fin;
+    const debutString = this.formAddEvent.value.debut;
+    const finString = this.formAddEvent.value.fin;
 
-    // if (typeof debutString === 'string' && typeof finString === 'string') {
-    //   const debutDate = new Date(debutString);
-    //   const finDate = new Date(finString);
+    if (typeof debutString === 'string' && typeof finString === 'string') {
+      const debutDate = new Date(debutString);
+      const finDate = new Date(finString);
 
-    //   const newEvent = {
-    //     title: this.formAddEvent.value.cours!,
-    //     salle: this.formAddEvent.value.salle!,
-    //     professeur: this.formAddEvent.value.professeur!,
-    //     color: {
-    //       primary: this.formAddEvent.value.couleur?.couleurP!,
-    //       secondary: this.formAddEvent.value.couleur?.couleurS!,
-    //     },
-    //     start: debutDate,
-    //     end: finDate,
-    //     draggable: true,
-    //     resizable: {
-    //       beforeStart: true,
-    //       afterEnd: true,
-    //     }
-    //   };
-    //   this.events.push(newEvent);
-    //   this.refresh.next();
-    // } else {
-    //   console.error("valeur de debut ou de fin n'est pas une chaine valide")
-    // }
+      const newEvent = {
+        id: this.events.length+1,
+        title: this.formAddEvent.value.cours!,
+        salle: this.formAddEvent.value.salle!,
+        professeur: this.formAddEvent.value.professeur!,
+        groupe: this.formAddEvent.value.groupe!,
+        is_published: false,
+        color: {
+          primary: this.formAddEvent.value.couleur?.couleurP!,
+          secondary: this.formAddEvent.value.couleur?.couleurS!,
+        },
+        start: debutDate,
+        end: finDate,
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        }
+      };
+
+      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), newEvent.start, newEvent.end, headers);
+      this.events.push(newEvent);
+      this.eventsToPushToBd.push(newEvent);
+      this.refresh.next();
+    } else {
+      console.error("valeur de debut ou de fin n'est pas une chaine valide")
+    }
   }
+
 
   print(){
     console.log(this.events);
@@ -201,4 +238,6 @@ export class EdtComponent{
     this.closeModalMod();
     console.log(this.events);
   }
+
+
 }

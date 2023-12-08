@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsComponent } from './forms/forms.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FilterPipe } from './pipes/filter.pipe';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -31,6 +32,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     EdtComponent,
     SidebarComponent,
     FormsComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -43,7 +45,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory }),
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     DatePipe,
