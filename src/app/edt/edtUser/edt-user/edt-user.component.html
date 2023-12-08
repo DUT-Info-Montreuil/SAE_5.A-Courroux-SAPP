@@ -10,7 +10,11 @@
             <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10">Prochain</button>
             <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Profs</button>
+
+
+
         </div>
+
     </div>
     <mwl-calendar-week-view [viewDate]="viewDate" class="week-view" [events]="events" [excludeDays]="[0, 6]" locale="fr"
         [dayStartHour]="8" [dayEndHour]="18" (eventClicked)="eventClicked($event)"
