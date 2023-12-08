@@ -82,12 +82,21 @@ export class EdtComponent{
     private cdr: ChangeDetectorRef,
     private zone: NgZone) {
       this.loadEvents();
+
       this.profs = this.edtService.getProfs();
+      console.log("Profs : ");
       console.log(this.profs);
+
       this.ressources = this.edtService.getRessources();
+      console.log("Ressources : ");
       console.log(this.ressources);
+
       this.salles = this.edtService.getSalles();
+      console.log("Salles : ");
+      console.log(this.salles);
+
       this.groupes = this.edtService.getGroupes();
+      console.log("Groupes : ");
       console.log(this.groupes);
   }
 
@@ -111,12 +120,12 @@ export class EdtComponent{
   }
 
   loadEvents(){
-    let cours = this.edtService.getCours();
-    console.log(cours);
+    this.events = [];
 
-    for (var val of cours) {
-      this.events.push(val);
-    }
+    this.events = this.edtService.getCours();
+    
+    console.log(this.events);
+    this.refresh.next();
   }
 
   addEvent() {
@@ -133,7 +142,7 @@ export class EdtComponent{
       const debutDate = new Date(debutString);
       const finDate = new Date(finString);
 
-      const newEvent = {
+      const newEvent: CalendarEvent = {
         id: this.events.length+1,
         title: this.formAddEvent.value.cours!,
         salle: this.formAddEvent.value.salle!,
@@ -153,10 +162,8 @@ export class EdtComponent{
         }
       };
       console.log(newEvent.title);
-      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), debutString, finString, headers);
-      this.events = [];
-      this.events = this.edtService.getCours();
-      this.refresh.next();
+      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), debutString, finString, headers);     
+      this.loadEvents();
     } else {
       console.error("valeur de debut ou de fin n'est pas une chaine valide")
     }

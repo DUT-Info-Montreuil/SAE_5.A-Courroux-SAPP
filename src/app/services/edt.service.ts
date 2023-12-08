@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable, OnInit } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { BehaviorSubject, Observable, Subject} from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -180,29 +180,11 @@ export class EdtService{
     );
   }
 
-  getCours(){
-    // à remplacer avec l'appel à l'api
-    // const event1 = {
-    //   title: "Prog avancée",
-    //   salle: "A1-01",
-    //   professeur: "abossard",
-    //   groupe: "BUT INFO",
-    //   color: {
-    //     primary: '#ad2121',
-    //     secondary: '#FAE3E3',
-    //   },
-    //   start: new Date("2023-11-07T10:30"),
-    //   end: new Date("2023-11-07T12:30"),
-    //   draggable: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   }
-    // }
-    let cours : CalendarEvent[] = [];
+  getCours() {
+    let cours: CalendarEvent[] = [];
 
-    this.http.get<any[]>(this.GET_COURS).subscribe(
-      (data: any[]) => {
+    this.http.get<any[]>(this.GET_COURS).pipe(
+      map((data: any[]) => {
         for (const item of data) {
           const newEvent: CalendarEvent = {
             id: item.id,
@@ -223,15 +205,17 @@ export class EdtService{
               afterEnd: true,
             }
           }
-          cours.push(item);
+          console.log(newEvent);
+          cours.push(newEvent);
         }
-      },
-      (error) => {
+      }),
+      catchError((error) => {
         console.error(error);
         // Gérez l'erreur si nécessaire
-      }
+        return throwError(error);
+      })
     );
-
     return cours;
   }
+  
 }
