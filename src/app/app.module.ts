@@ -14,6 +14,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FilterPipe } from './pipes/filter.pipe';
 import { UsersModule } from './_component/user/user.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './_security/auth.interceptor';
+
 
 registerLocaleData(localeFr, 'fr');
 
@@ -51,7 +54,9 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     DatePipe,
     {provide: CalendarDateFormatter, useClass:CustomDateFormater},
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+
   ],
   bootstrap: [AppComponent]
 })
