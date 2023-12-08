@@ -16,10 +16,12 @@
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
             (click)="openModalAdd()"
             >Ajouter</button>
-            <button 
+
+            <!-- <button 
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
             (click)="addCoursToDb()"
-            >Confirmer</button>
+            >Confirmer</button> -->
+            
         </div>
     </div>
     <mwl-calendar-week-view
@@ -129,28 +131,28 @@
                     <div>
                         <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ressource</label>
                         <select name="cours" formControlName="cours" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let cours of ressources" [value]="cours">{{ cours.name }}</option>
+                            <option *ngFor="let cours of ressources" [value]="cours.name">{{ cours.name }}</option>
                         </select>
                         <!-- <input type="text" name="cours" id="cours" formControlName="cours" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="salle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salle</label>
                         <select name="salle" formControlName="salle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let salle of salles" [value]="salle" >{{ salle.nom }}</option>
+                            <option *ngFor="let salle of salles" [value]="salle.nom" >{{ salle.nom }}</option>
                         </select>
                         <!-- <input type="text" name="salle" id="salle" formControlName="salle" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="professeur" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
                         <select name="professeur" formControlName="professeur" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let professeur of profs" [value]="professeur" >{{ professeur.staff.user.identifier }}</option>
+                            <option *ngFor="let professeur of profs" [value]="professeur.staff.user.identifier" >{{ professeur.staff.user.identifier }}</option>
                         </select>
                         <!-- <input type="text" name="professeur" id="professeur" formControlName="professeur" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="groupes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Groupe</label>
                         <select name="groupe" formControlName="groupe" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let groupe of groupes" [value]="groupe" >{{ groupe.group.name }}</option>
+                            <option *ngFor="let groupe of groupes" [value]="groupe.id" >{{ groupe.name }}</option>
                         </select>
                     </div>
                     <div>

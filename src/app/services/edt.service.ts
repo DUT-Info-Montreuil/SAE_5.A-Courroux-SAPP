@@ -17,9 +17,11 @@ export class EdtService{
   // GET_RESSOURCES = 'http://localhost:5000/ressources';
   // GET_GROUPES = 'http://localhost:5000/groupes';
   // GET_PROMOTIONS = 'http://localhost:5000/promotions';
+  ///home/drgenc/Cours/S5/Courroux/SAE_5.A-Courroux-SAPP/node_modules/calendar-utils/calendar-utils.d.ts
 
   ADD_COURS = 'http://localhost:8000/course';
   ADD_PROF = 'http://localhost:8000/teacher';
+  GET_COURS = 'http://localhost:8000/courses';
   GET_PROFS = 'http://localhost:8000/teachers';
   GET_SALLES = 'http://localhost:8000/salles'
   GET_RESSOURCES = 'http://localhost:8000/ressources';
@@ -179,24 +181,37 @@ export class EdtService{
 
   getCours(){
     // à remplacer avec l'appel à l'api
-    const event1 = {
-      title: "Prog avancée",
-      salle: "A1-01",
-      professeur: "abossard",
-      groupe: "BUT INFO",
-      color: {
-        primary: '#ad2121',
-        secondary: '#FAE3E3',
+    // const event1 = {
+    //   title: "Prog avancée",
+    //   salle: "A1-01",
+    //   professeur: "abossard",
+    //   groupe: "BUT INFO",
+    //   color: {
+    //     primary: '#ad2121',
+    //     secondary: '#FAE3E3',
+    //   },
+    //   start: new Date("2023-11-07T10:30"),
+    //   end: new Date("2023-11-07T12:30"),
+    //   draggable: true,
+    //   resizable: {
+    //     beforeStart: true,
+    //     afterEnd: true,
+    //   }
+    // }
+    let cours : any[] = [];
+
+    this.http.get<any[]>(this.GET_COURS).subscribe(
+      (data: any[]) => {
+        for (const item of data) {
+          cours.push(item);
+        }
       },
-      start: new Date("2023-11-07T10:30"),
-      end: new Date("2023-11-07T12:30"),
-      draggable: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true,
+      (error) => {
+        console.error(error);
+        // Gérez l'erreur si nécessaire
       }
-    }
-    let cours = [event1];
+    );
+
     return cours;
   }
 }

@@ -68,6 +68,7 @@ export class EdtComponent{
   view: CalendarView = CalendarView.Week;
 
   events: CalendarEvent[] = [];
+  eventsToPushToBd: CalendarEvent[] = [];
 
   refresh = new Subject<void>();
 
@@ -84,7 +85,8 @@ export class EdtComponent{
       this.profs = this.edtService.getProfs();
       this.ressources = this.edtService.getRessources();
       this.salles = this.edtService.getSalles();
-      this.groupes = this.edtService.getPromotions();
+      this.groupes = this.edtService.getGroupes();
+      console.log(this.groupes);
   }
 
   openModalMod() {
@@ -108,6 +110,7 @@ export class EdtComponent{
 
   loadEvents(){
     let cours = this.edtService.getCours();
+    console.log(cours);
 
     for (var val of cours) {
       this.events.push(val);
@@ -123,10 +126,12 @@ export class EdtComponent{
       const finDate = new Date(finString);
 
       const newEvent = {
+        id: this.events.length+1,
         title: this.formAddEvent.value.cours!,
         salle: this.formAddEvent.value.salle!,
         professeur: this.formAddEvent.value.professeur!,
         groupe: this.formAddEvent.value.groupe!,
+        is_published: false,
         color: {
           primary: this.formAddEvent.value.couleur?.couleurP!,
           secondary: this.formAddEvent.value.couleur?.couleurS!,
@@ -139,24 +144,16 @@ export class EdtComponent{
           afterEnd: true,
         }
       };
+
+      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), newEvent.start, newEvent.end, headers);
       this.events.push(newEvent);
+      this.eventsToPushToBd.push(newEvent);
       this.refresh.next();
     } else {
       console.error("valeur de debut ou de fin n'est pas une chaine valide")
     }
   }
 
-  addCoursToDb() {
-    for (let cour of this.events) {
-      for(let grp of this.groupes) {
-        console.log(grp.group.id);
-        if(cour.groupe == grp.name) {
-          cour.groupe = grp.group.id;
-        }
-      }
-      this.edtService.addCours(cour.title, cour.salle, cour.professeur, Number(cour.groupe), cour.start, cour.end!, headers);
-    }
-  }
 
   print(){
     console.log(this.events);
@@ -237,4 +234,6 @@ export class EdtComponent{
     this.closeModalMod();
     console.log(this.events);
   }
+
+
 }
