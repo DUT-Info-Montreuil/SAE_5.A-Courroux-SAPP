@@ -8,7 +8,6 @@ import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, Dat
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData, DatePipe } from '@angular/common';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsComponent } from './forms/forms.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -30,7 +29,6 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
   declarations: [
     AppComponent,
     EdtComponent,
-    SidebarComponent,
     FormsComponent,
     FilterPipe,
   ],
@@ -47,6 +45,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     FormsModule,
     HttpClientModule,
     UsersModule
+    
   ],
   providers: [
     DatePipe,
