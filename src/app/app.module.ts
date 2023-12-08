@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AcceuilComponent } from './acceuil/acceuil.component';
+import { LoginComponent } from './_component/user/login/login.component';
 import { EdtComponent, momentAdapterFactory } from './edt/edt.component';
 import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, DateAdapter, DateFormatterParams } from 'angular-calendar';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { FormsComponent } from './forms/forms.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FilterPipe } from './pipes/filter.pipe';
+import { UsersModule } from './_component/user/user.module';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -28,7 +29,6 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
 @NgModule({
   declarations: [
     AppComponent,
-    AcceuilComponent,
     EdtComponent,
     SidebarComponent,
     FormsComponent,
@@ -46,6 +46,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    UsersModule
   ],
   providers: [
     DatePipe,
