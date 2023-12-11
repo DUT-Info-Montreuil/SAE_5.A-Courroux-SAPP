@@ -1,14 +1,15 @@
 import { Deserializable } from "../fonctional/deserializable.model"
-import { Staff } from "./staff.model";
+import { User } from "./user.model";
 
-export class Teacher implements Deserializable {
+export class Staff implements Deserializable {
     id: number;
-    staff: Staff;
+    initial: string;
+    user : User;
     
     deserialize(input: any): this {
         if (input) {
             Object.assign(this, input)
-            this.staff = new Staff().deserialize(input.staff)
+            this.user = new User().deserialize(input.user)
 
         }
         return this
