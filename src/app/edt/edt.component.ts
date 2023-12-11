@@ -6,7 +6,6 @@ import { Observable, Subject, find } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpHeaders } from '@angular/common/http';
 
 export function momentAdapterFactory() {
