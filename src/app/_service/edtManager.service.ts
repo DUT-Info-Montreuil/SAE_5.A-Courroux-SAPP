@@ -39,4 +39,13 @@ export class EdtManagerService {
             retry(1)
         );
     }
+
+    parseEdtManager(edtManager: EdtManager): any {
+        return {
+            "name": edtManager.staff.user.name,
+            "lastName": edtManager.staff.user.lastname,
+            "password": edtManager.staff.user.password!,
+            "username": edtManager.staff.user.username,
+        }
+    }
 }

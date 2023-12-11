@@ -3,6 +3,7 @@ import { User } from "./user.model";
 
 export class Student implements Deserializable {
     id: number;
+    INE : number;
     user : User;
     
     deserialize(input: any): this {

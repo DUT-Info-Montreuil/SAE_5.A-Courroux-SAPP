@@ -19,15 +19,17 @@ export class StudentService {
         );
       }
     addStudent(student: Student): Observable<Student> {
+        const studentData = this.parseStudent(student);
         let url = `${this.utilsService.getEndPoint().apiUrl}/student`;
-        return this.http.post<Student>(url, student, this.utilsService.getJsonHeader())
+        return this.http.post<Student>(url, studentData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
       }
     updateStudent(student: Student): Observable<Student> {
+        const studentData = this.parseStudent(student);
         let url = `${this.utilsService.getEndPoint().apiUrl}/student/${student.id}`;
-        return this.http.put<Student>(url, student, this.utilsService.getJsonHeader())
+        return this.http.put<Student>(url, studentData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
@@ -38,5 +40,15 @@ export class StudentService {
         .pipe(
             retry(1)
         );
+    }
+
+    parseStudent(student: Student): any {
+        return {
+            "INE": student.INE,
+            "name": student.user.name,
+            "lastName": student.user.lastname,
+            "password": student.user.password!,
+            "username": student.user.username,
+        }
     }
 }

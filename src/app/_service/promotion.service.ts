@@ -19,15 +19,18 @@ export class PromotionService {
         );
       }
     addPromotion(promotion: Promotion): Observable<Promotion> {
+        const promotionData = this.parsePromotion(promotion);
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotion`;
-        return this.http.post<Promotion>(url, promotion, this.utilsService.getJsonHeader())
+        return this.http.post<Promotion>(url, promotionData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
       }
     updatePromotion(promotion: Promotion): Observable<Promotion> {
+        const promotionData = this.parsePromotion(promotion);
+
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotion/${promotion.id}`;
-        return this.http.put<Promotion>(url, promotion, this.utilsService.getJsonHeader())
+        return this.http.put<Promotion>(url, promotionData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
@@ -38,5 +41,13 @@ export class PromotionService {
         .pipe(
             retry(1)
         );
+    }
+
+    parsePromotion(promotion: Promotion): any {
+        return {
+            "niveau": promotion.niveau,
+            "name": promotion.group.name,
+            "id_resp": promotion.id_resp
+         };
     }
 }
