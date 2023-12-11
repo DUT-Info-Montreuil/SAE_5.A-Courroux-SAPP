@@ -43,7 +43,7 @@ export class EdtManagerService {
     parseEdtManager(edtManager: EdtManager): any {
         return {
             "name": edtManager.staff.user.name,
-            "lastName": edtManager.staff.user.lastname,
+            "lastname": edtManager.staff.user.lastname,
             "password": edtManager.staff.user.password!,
             "username": edtManager.staff.user.username,
         }

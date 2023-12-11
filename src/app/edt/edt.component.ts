@@ -83,15 +83,26 @@ export class EdtComponent{
     private zone: NgZone,
     private teacherService: TeacherService,) {
       this.loadEvents();
-      this.teacherService.getTeachers().subscribe({
-        next: (data: any) => {
-          this.profs = data;
-          console.log(this.profs);
-        },
-        error: (error) => {
-          console.log(error);
-        }
-      })
+      // this.teacherService.getTeachers().subscribe({
+      //   next: (data: any) => {
+      //     this.profs = data;
+      //     console.log(this.profs);
+
+      //     let teacher = this.profs[0];
+      //     teacher.staff.user.name = "test";
+      //     this.teacherService.updateTeacher(teacher).subscribe({
+      //       next: (data: any) => {
+      //         console.log(data);
+      //       },
+      //       error: (error) => {
+      //         console.log(error);
+      //       }
+      //     })
+      //   },
+      //   error: (error) => {
+      //     console.log(error);
+      //   }
+      // })
       this.ressources = this.edtService.getRessources();
       //this.salles = this.edtService.getSalles();
       this.groupes = this.edtService.getGroupes();

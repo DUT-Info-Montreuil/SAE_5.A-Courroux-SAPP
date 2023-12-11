@@ -49,7 +49,7 @@ export class TeacherService {
     parseTeacher(teacher: Teacher): any {
         return {
             "name": teacher.staff.user.name,
-            "lastName": teacher.staff.user.lastname,
+            "lastname": teacher.staff.user.lastname,
             "password": teacher.staff.user.password!,
             "username": teacher.staff.user.username,
         }

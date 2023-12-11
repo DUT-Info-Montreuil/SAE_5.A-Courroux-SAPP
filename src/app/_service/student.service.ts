@@ -46,7 +46,7 @@ export class StudentService {
         return {
             "INE": student.INE,
             "name": student.user.name,
-            "lastName": student.user.lastname,
+            "lastname": student.user.lastname,
             "password": student.user.password!,
             "username": student.user.username,
         }
