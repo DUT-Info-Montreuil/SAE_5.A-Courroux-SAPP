@@ -5,8 +5,10 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SessionLoginService {
-
-  LOGIN_URL = 'http://localhost:5000/login';
+  //Python
+  // LOGIN_URL = 'http://localhost:5000/login';
+  //Docker
+  LOGIN_URL = 'http://localhost:8000/auth/login';
 
   constructor(private http: HttpClient) { }
 

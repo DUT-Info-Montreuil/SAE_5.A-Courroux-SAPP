@@ -180,42 +180,43 @@ export class EdtService{
     );
   }
 
-  getCours() {
-    let cours: CalendarEvent[] = [];
+getCours(): Observable<CalendarEvent[]> {
 
-    this.http.get<any[]>(this.GET_COURS).pipe(
-      map((data: any[]) => {
-        for (const item of data) {
-          const newEvent: CalendarEvent = {
-            id: item.id,
-            start: new Date(item.start_time),
-            end: new Date(item.end_time),
-            title: item.initial_ressource,
-            salle: item.name_salle,
-            professeur: String(item.id_enseignant),
-            groupe: item.id_group,
-            is_published: item.is_published,
-            color: {
-              primary: '#FFFFFF',
-              secondary: '#000000',
-            },
-            draggable: true,
-            resizable: {
-              beforeStart: true,
-              afterEnd: true,
-            }
+  return this.http.get<any[]>(this.GET_COURS).pipe(
+    map((data: any[]) => {
+      const cours: CalendarEvent[] = [];
+      for (const item of data) {
+
+        const newEvent: CalendarEvent = {
+          id: item.id,
+          start: new Date(item.start_time),
+          end: new Date(item.end_time),
+          title: item.initial_ressource,
+          salle: item.name_salle,
+          professeur: String(item.id_enseignant),
+          groupe: item.id_group,
+          is_published: item.is_published,
+          color: {
+            primary: '#FFFFFF',
+            secondary: '#000000',
+          },
+          draggable: true,
+          resizable: {
+            beforeStart: true,
+            afterEnd: true,
           }
-          console.log(newEvent);
-          cours.push(newEvent);
-        }
-      }),
-      catchError((error) => {
-        console.error(error);
-        // Gérez l'erreur si nécessaire
-        return throwError(error);
-      })
-    );
-    return cours;
-  }
+        };
+        cours.push(newEvent);
+      }
+      return cours;
+    }),
+    catchError((error) => {
+      console.error(error);
+      // Gérez l'erreur si nécessaire
+      return throwError(error);
+    })
+  );
+}
+
   
 }

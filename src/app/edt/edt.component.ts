@@ -120,10 +120,18 @@ export class EdtComponent{
   }
 
   loadEvents(){
-    this.events = [];
+    //this.events = [];
 
-    this.events = this.edtService.getCours();
+    this.edtService.getCours().subscribe(
+      (data: CalendarEvent[]) => {
+        this.events = data;
+      },
+      (error) => {
+        console.error(error);
+      }
+    )
     
+    console.log("Cours : ");
     console.log(this.events);
     this.refresh.next();
   }
