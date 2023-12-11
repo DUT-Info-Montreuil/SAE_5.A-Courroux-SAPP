@@ -84,20 +84,14 @@ export class EdtComponent{
       this.loadEvents();
 
       this.profs = this.edtService.getProfs();
-      console.log("Profs : ");
-      console.log(this.profs);
-
+      console.log(this.profs); 
+      this.salles = this.edtService.getSalles();
+      console.log(this.salles);
       this.ressources = this.edtService.getRessources();
-      console.log("Ressources : ");
       console.log(this.ressources);
 
-      this.salles = this.edtService.getSalles();
-      console.log("Salles : ");
-      console.log(this.salles);
+      
 
-      this.groupes = this.edtService.getGroupes();
-      console.log("Groupes : ");
-      console.log(this.groupes);
   }
 
   openModalMod() {
