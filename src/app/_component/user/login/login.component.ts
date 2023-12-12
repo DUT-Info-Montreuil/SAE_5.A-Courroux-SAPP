@@ -87,9 +87,6 @@ export class LoginComponent {
       error: err => {
         console.log('error login :: ', err)
         this.toastr.error('identifiant et/ou un mot de passe incorect(s)');
-
-        // this.error = "Erreur d'identification, vérifiez les informations saisies et recommencez."
-        // this.loading = false
       }
     })
   }

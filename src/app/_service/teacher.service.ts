@@ -19,15 +19,21 @@ export class TeacherService {
         );
     }
     addTeacher(teacher: Teacher): Observable<Teacher> {
+
+        const teacherData = this.parseTeacher(teacher);
+
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher`;
-        return this.http.post<Teacher>(url, teacher, this.utilsService.getJsonHeader())
+        return this.http.post<Teacher>(url, teacherData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
     }
     updateTeacher(teacher: Teacher): Observable<Teacher> {
+
+        const teacherData = this.parseTeacher(teacher);
+        
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher/${teacher.id}`;
-        return this.http.put<Teacher>(url, teacher, this.utilsService.getJsonHeader())
+        return this.http.put<Teacher>(url, teacherData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
@@ -38,5 +44,14 @@ export class TeacherService {
         .pipe(
             retry(1)
         );
+    }
+
+    parseTeacher(teacher: Teacher): any {
+        return {
+            "name": teacher.staff.user.name,
+            "lastname": teacher.staff.user.lastname,
+            "password": teacher.staff.user.password!,
+            "username": teacher.staff.user.username,
+        }
     }
 }

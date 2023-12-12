@@ -7,6 +7,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
 import { HttpHeaders } from '@angular/common/http';
+import { TeacherService } from '../_service/teacher.service';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -79,9 +80,29 @@ export class EdtComponent{
     private datePipe: DatePipe,
     private edtService: EdtService,
     private cdr: ChangeDetectorRef,
-    private zone: NgZone) {
+    private zone: NgZone,
+    private teacherService: TeacherService,) {
       this.loadEvents();
-      //this.profs = this.edtService.getProfs();
+      // this.teacherService.getTeachers().subscribe({
+      //   next: (data: any) => {
+      //     this.profs = data;
+      //     console.log(this.profs);
+
+      //     let teacher = this.profs[0];
+      //     teacher.staff.user.name = "test";
+      //     this.teacherService.updateTeacher(teacher).subscribe({
+      //       next: (data: any) => {
+      //         console.log(data);
+      //       },
+      //       error: (error) => {
+      //         console.log(error);
+      //       }
+      //     })
+      //   },
+      //   error: (error) => {
+      //     console.log(error);
+      //   }
+      // })
       this.ressources = this.edtService.getRessources();
       //this.salles = this.edtService.getSalles();
       this.groupes = this.edtService.getGroupes();
