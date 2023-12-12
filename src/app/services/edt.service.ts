@@ -33,15 +33,17 @@ export class EdtService{
   }
 
   private salleRefreshSource = new Subject<void>();
-  
   salleRefresh$ = this.salleRefreshSource.asObservable();
 
   private profRefreshSource = new Subject<void>();
-  
   profRefresh$ = this.profRefreshSource.asObservable();
 
   notifySalleRefresh() {
     this.salleRefreshSource.next();
+  }
+
+  notifyProfRefresh(){
+    this.profRefreshSource.next();
   }
 
   addRessource(nom: string, couleur: string){

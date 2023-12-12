@@ -17,21 +17,21 @@ export class TeacherService {
         .pipe(
             retry(1)
         );
-      }
+    }
     addTeacher(teacher: Teacher): Observable<Teacher> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher`;
         return this.http.post<Teacher>(url, teacher, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
-      }
+    }
     updateTeacher(teacher: Teacher): Observable<Teacher> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher/${teacher.id}`;
         return this.http.put<Teacher>(url, teacher, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
-      }
+    }
     getTeacher(id: number): Observable<Teacher> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher/${id}`;
         return this.http.get<Teacher>(url, this.utilsService.getJsonHeader())

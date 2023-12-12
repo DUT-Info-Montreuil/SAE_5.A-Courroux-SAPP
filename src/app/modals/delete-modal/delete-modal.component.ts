@@ -24,8 +24,12 @@ export class DeleteModalComponent implements OnInit{
     this.setElementASupp();
   }
 
-  somethingChanged() {
+  sallesChanged() {
     this.edtService.notifySalleRefresh();
+  }
+
+  profsChanged(){
+    this.edtService.notifyProfRefresh();
   }
 
   setElementASupp(){
@@ -43,7 +47,7 @@ export class DeleteModalComponent implements OnInit{
     this.edtService.supprimerSalle(this.elementASupp).subscribe(
       (response) => {
         this.toastr.success("la salle à bien été supprimée");
-        this.somethingChanged();
+        this.sallesChanged();
       },
       (error) => {
         this.toastr.error("erreur");
@@ -56,7 +60,7 @@ export class DeleteModalComponent implements OnInit{
     this.edtService.supprimerProf(this.data.element.id).subscribe(
       (response) => {
         this.toastr.success("le professeur à bien été supprimé(e)");
-        this.somethingChanged();
+        this.profsChanged();
       },
       (error) => {
         this.toastr.error("erreur");

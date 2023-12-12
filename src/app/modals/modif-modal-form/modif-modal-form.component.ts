@@ -4,6 +4,9 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { EdtService } from 'src/app/services/edt.service';
+import { TeacherService } from 'src/app/_service/teacher.service';
+import { Teacher } from 'src/app/_model/entity/teacher.model';
+import { __values } from 'tslib';
 
 @Component({
   selector: 'app-modif-modal-form',
@@ -11,6 +14,8 @@ import { EdtService } from 'src/app/services/edt.service';
   styleUrls: ['./modif-modal-form.component.scss']
 })
 export class ModifModalFormComponent implements OnInit{
+
+  teacher:Teacher = new Teacher();
 
   elementName: any = null;
 
@@ -23,12 +28,14 @@ export class ModifModalFormComponent implements OnInit{
   })
 
   formModifProfesseur = new FormGroup({
-    nom: new FormControl("", Validators.required),
-    prenom: new FormControl("", Validators.required)
+    id: new FormControl<number|null>(null),
+    name: new FormControl("", Validators.required),
+    lastname: new FormControl("", Validators.required)
   })
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
     private edtService: EdtService,
+    private teacherService: TeacherService,
     private toastr: ToastrService,
     ){
   }
@@ -42,12 +49,18 @@ export class ModifModalFormComponent implements OnInit{
     this.setSalleValues();
     this.setProfValues();
     this.elementName = this.data.element.nom;
+    console.log(this.data);
+  }
+
+  getElementId(): number{
+    return this.data.element.id;
   }
 
   setProfValues(){
     this.formModifProfesseur.patchValue({
-      prenom: this.data.element.staff.user.name,
-      nom: this.data.element.staff.user.lastname,
+      id: this.getElementId(),
+      name: this.data.element.staff.user.name,
+      lastname: this.data.element.staff.user.lastname,
     });
   }
 
@@ -79,15 +92,14 @@ export class ModifModalFormComponent implements OnInit{
 
   onSubmitModifProfesseur(){
     if (this.formModifProfesseur.valid){
-      let name = this.data.element.nom;
-      let lastname = this.data.element.lastname;
-      this.edtService.modifProf(name, lastname, this.data.element.id).subscribe(
-        (response) => {
+      this.teacher = Object.assign(this.teacher, this.formModifProfesseur.value);
+      this.teacherService.updateTeacher(this.teacher).subscribe({
+        next: response => {
           this.toastr.success("la salle à bien été modifié");
           this.somethingChanged();
         },
-        (error) => {this.toastr.error("erreur");}
-      );
+        error: error=> {this.toastr.error("erreur");}
+      });
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }

@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
 import { Subscription, share } from 'rxjs';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
+import { TeacherService } from '../_service/teacher.service';
+import { Teacher } from '../_model/entity/teacher.model';
 
 
 @Component({
@@ -14,6 +16,8 @@ import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.compon
   styleUrls: ['./forms.component.scss']
 })
 export class FormsComponent implements OnInit, OnDestroy{
+
+  teacher:Teacher = new Teacher();
 
   showModal = false;
 
@@ -40,9 +44,9 @@ export class FormsComponent implements OnInit, OnDestroy{
   })
 
   formAddProfesseur = new FormGroup({
-    nom: new FormControl("", Validators.required),
-    prenom: new FormControl("", Validators.required),
-    identifiant: new FormControl("", Validators.required),
+    lastname: new FormControl("", Validators.required),
+    name: new FormControl("", Validators.required),
+    username: new FormControl("", Validators.required),
     password: new FormControl("", Validators.required)
   })
 
@@ -66,10 +70,12 @@ export class FormsComponent implements OnInit, OnDestroy{
   private salleRefreshSubscription!: Subscription;
   private profRefreshSubscription!: Subscription;
 
-  constructor(private edtService: EdtService,
+  constructor(
+    private edtService: EdtService,
     private toastr: ToastrService,
     private dialogModif: MatDialog,
     private dialogDelete: MatDialog,
+    private teacherService: TeacherService,
     private cdr: ChangeDetectorRef){
   }
 
@@ -119,7 +125,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   }
 
   refreshProfs(): void {
-    this.edtService.getProfs().subscribe(
+    this.teacherService.getTeachers().subscribe(
       (liste: any[]) => {
         this.profs = liste;
       },
@@ -148,12 +154,15 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddProfesseur(){
     if (this.formAddProfesseur.valid){
-      let lastname = this.formAddProfesseur.value.nom!;
-      let name = this.formAddProfesseur.value.prenom!;
-      let identifier = this.formAddProfesseur.value.identifiant!;
-      let password = this.formAddProfesseur.value.password!;
-      this.edtService.addProf(lastname, name, identifier, password);
-      console.log(this.edtService.getProfs());
+      this.teacher = Object.assign(this.teacher, this.formAddProfesseur.value);
+      this.teacherService.addTeacher(this.teacher).subscribe({
+        next: response => {
+          this.toastr.success("le prof a bien été ajouté !");
+          this.refreshProfs();
+        },
+        error: error=> {this.toastr.error("erreur");}
+      });
+      this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     } 
