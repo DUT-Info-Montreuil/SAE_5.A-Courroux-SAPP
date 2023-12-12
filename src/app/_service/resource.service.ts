@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
-import { Observable, retry } from 'rxjs';
+import { Observable, Subject, retry, map } from 'rxjs';
 import { Resource } from '../_model/entity/resource.model';
 
 @Injectable({
@@ -11,6 +11,13 @@ export class ResourceService {
 
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
 
+    private ressourceRefreshSource = new Subject<void>();
+    ressourceRefresh$ = this.ressourceRefreshSource.asObservable();
+
+    notifyRessourceRefresh() {
+        this.ressourceRefreshSource.next();
+    }
+
     getResources(): Observable<Resource[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/ressources`;
         return this.http.get<Resource[]>(url, this.utilsService.getJsonHeader())
@@ -18,20 +25,29 @@ export class ResourceService {
             retry(1)
         );
       }
-    addResource(teacher: Resource): Observable<Resource> {
+    addResource(resource: Resource): Observable<Resource> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/ressource`;
-        return this.http.post<Resource>(url, teacher, this.utilsService.getJsonHeader())
+        return this.http.post<Resource>(url, resource, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
       }
     updateResource(resource: Resource): Observable<Resource> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/ressource/${resource.name}`;
+        let url = `${this.utilsService.getEndPoint().apiUrl}/ressource/${resource.initial}`;
         return this.http.put<Resource>(url, resource, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
       }
+
+    deleteResource(resource: Resource): Observable<Resource> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/ressource/${resource.initial}`;
+        return this.http.delete<Resource>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+    
     getResource(id: number): Observable<Resource> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/ressource/${id}`;
         return this.http.get<Resource>(url, this.utilsService.getJsonHeader())

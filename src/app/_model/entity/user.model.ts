@@ -7,6 +7,10 @@ export class User implements Deserializable {
     role: string;
     name: string;
     lastname: string;
+
+    assignFromObject(obj: any): User {
+        return Object.assign(this, obj);
+    }
     
     deserialize(input: any): this {
         if (input) {

@@ -8,6 +8,15 @@ import { Subscription, share } from 'rxjs';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 import { TeacherService } from '../_service/teacher.service';
 import { Teacher } from '../_model/entity/teacher.model';
+import { RoomService } from '../_service/room.service';
+import { Room } from '../_model/entity/room.model';
+import { ResourceService } from '../_service/resource.service';
+import { Resource } from '../_model/entity/resource.model';
+import { GroupService } from '../_service/group.service';
+import { Student } from '../_model/entity/student.model';
+import { Group } from '../_model/entity/group.model';
+import { group } from '@angular/animations';
+import { StudentService } from '../_service/student.service';
 
 
 @Component({
@@ -18,29 +27,34 @@ import { Teacher } from '../_model/entity/teacher.model';
 export class FormsComponent implements OnInit, OnDestroy{
 
   teacher:Teacher = new Teacher();
+  room:Room = new Room();
+  ressource:Resource = new Resource();
+  eleve:Student = new Student();
 
   showModal = false;
 
   searchText: any;
 
-  ressources : any[] = [];
-  profs : any[] = [];
-  salles : any[] = [];
-  eleves : any[] = []; 
+  ressources : Resource[] = [];
+  profs : Teacher[] = [];
+  salles : Room[] = [];
+  eleves : Student[] = [];
+  promos : Group[] = [];
 
   isSection1Open = false;
   isSection2Open = false;
 
   formAddRessource = new FormGroup({
-    nom: new FormControl("", Validators.required),
-    couleur: new FormControl("", Validators.required)
+    name: new FormControl("", Validators.required),
+    initial: new FormControl("", Validators.required),
+    id_promo: new FormControl("", Validators.required)
   })
 
   formAddSalle = new FormGroup({
-    nom: new FormControl("", Validators.required),
-    nbOrdi: new FormControl("", Validators.required),
-    nbVideoProj: new FormControl("", Validators.required),
-    nbTabNum: new FormControl("", Validators.required)
+    name: new FormControl("", Validators.required),
+    ordi: new FormControl("", Validators.required),
+    videoProjecteur: new FormControl("", Validators.required),
+    tableauNumerique: new FormControl("", Validators.required)
   })
 
   formAddProfesseur = new FormGroup({
@@ -51,10 +65,10 @@ export class FormsComponent implements OnInit, OnDestroy{
   })
 
   formAddEleve = new FormGroup({
-    nom: new FormControl("", Validators.required),
-    prenom: new FormControl("", Validators.required),
-    numINE: new FormControl("", Validators.required),
-    identifiant: new FormControl("", Validators.required),
+    lastname: new FormControl("", Validators.required),
+    name: new FormControl("", Validators.required),
+    INE: new FormControl("", Validators.required),
+    username: new FormControl("", Validators.required),
     password: new FormControl("", Validators.required)
   })
 
@@ -69,6 +83,8 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   private salleRefreshSubscription!: Subscription;
   private profRefreshSubscription!: Subscription;
+  private ressourceRefreshSubscription!: Subscription;
+  private eleveRefreshSubscription!: Subscription;
 
   constructor(
     private edtService: EdtService,
@@ -76,12 +92,37 @@ export class FormsComponent implements OnInit, OnDestroy{
     private dialogModif: MatDialog,
     private dialogDelete: MatDialog,
     private teacherService: TeacherService,
+    private roomService: RoomService,
+    private ressourceService: ResourceService,
+    private groupeService: GroupService,
+    private studentService: StudentService,
     private cdr: ChangeDetectorRef){
+  }
+
+  ngOnInit(): void{
+    this.refreshSalle();
+    this.refreshProfs();
+    this.refreshRessources();
+    this.refreshPromo();
+    this.refreshEleves();
+    this.eleveRefreshSubscription = this.studentService.studentRefresh$.subscribe(() => {
+      this.refreshEleves();
+    });
+    this.ressourceRefreshSubscription = this.ressourceService.ressourceRefresh$.subscribe(() => {
+      this.refreshRessources();
+    });
+    this.salleRefreshSubscription = this.roomService.salleRefresh$.subscribe(() => {
+      this.refreshSalle();
+    });
+    this.profRefreshSubscription = this.teacherService.profRefresh$.subscribe(() => {
+      this.refreshProfs();
+    });
   }
 
   ouvrirModalModif(element: any){
     this.dialogModif.open(ModifModalFormComponent, {
       data: {
+        promos : this.promos,
         formSelectionne : this.formSelectionne,
         element : element
       }
@@ -97,24 +138,44 @@ export class FormsComponent implements OnInit, OnDestroy{
     });
   }
 
-  ngOnInit(): void{
-    this.refreshSalle();
-    this.refreshProfs();
-    this.salleRefreshSubscription = this.edtService.salleRefresh$.subscribe(() => {
-      this.refreshSalle();
-    });
-    this.profRefreshSubscription = this.edtService.profRefresh$.subscribe(() => {
-      this.refreshProfs();
-    });
-  }
-
   ngOnDestroy() {
     this.salleRefreshSubscription.unsubscribe();
+    this.profRefreshSubscription.unsubscribe();
+    this.ressourceRefreshSubscription.unsubscribe();
+    this.eleveRefreshSubscription.unsubscribe();
+  }
+
+  refreshPromo(): void {
+    this.groupeService.getGroups().subscribe(
+      (liste: Group[]) => {
+        liste.forEach((group: Group) => {
+          if (group.id_group_parent === null) {
+            this.promos.push(group);
+          }
+        })
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
+  }
+
+  refreshEleves(): void {
+    this.studentService.getStudents().subscribe(
+      (liste: Student[]) => {
+        this.eleves = liste;
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
   }
 
   refreshSalle(): void {
-    this.edtService.getSalles().subscribe(
-      (liste: any[]) => {
+    this.roomService.getSalles().subscribe(
+      (liste: Room[]) => {
         this.salles = liste;
       },
       (erreur) => {
@@ -126,8 +187,20 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   refreshProfs(): void {
     this.teacherService.getTeachers().subscribe(
-      (liste: any[]) => {
+      (liste: Teacher[]) => {
         this.profs = liste;
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
+  }
+
+  refreshRessources(): void {
+    this.ressourceService.getResources().subscribe(
+      (liste: Resource[]) => {
+        this.ressources = liste;
       },
       (erreur) => {
         console.error(erreur);
@@ -154,7 +227,7 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddProfesseur(){
     if (this.formAddProfesseur.valid){
-      this.teacher = Object.assign(this.teacher, this.formAddProfesseur.value);
+      this.teacher.assignFromObject(this.formAddProfesseur.value);
       this.teacherService.addTeacher(this.teacher).subscribe({
         next: response => {
           this.toastr.success("le prof a bien été ajouté !");
@@ -170,10 +243,15 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddRessource(){
     if (this.formAddRessource.valid) {
-      let couleur = this.formAddRessource.value.couleur!;
-      let nom = this.formAddRessource.value.nom!;
-      this.edtService.addRessource(nom, couleur);
-      this.toastr.success('Ressource ajoutée !');
+      this.ressource = Object.assign(this.ressource, this.formAddRessource.value);
+      this.ressourceService.addResource(this.ressource).subscribe({
+        next: response => {
+          this.toastr.success("la ressource a bien été ajoutée !");
+          this.refreshRessources();
+        },
+        error: error=> {this.toastr.error("erreur");}
+      });
+      this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
@@ -181,17 +259,14 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddSalle(){
     if (this.formAddSalle.valid){
-      let name = this.formAddSalle.value.nom!;
-      let ordi = parseInt(this.formAddSalle.value.nbOrdi!);
-      let videoProjecteur = parseInt(this.formAddSalle.value.nbVideoProj!);
-      let tableauNumerique = parseInt(this.formAddSalle.value.nbTabNum!);
-      this.edtService.addSalle(name, ordi, tableauNumerique, videoProjecteur).subscribe(
-        (response) => {
-          this.toastr.success("la salle à bien été ajouté");
+      this.room = Object.assign(this.room, this.formAddSalle.value);
+      this.roomService.addSalle(this.room).subscribe({
+        next: response => {
+          this.toastr.success("la salle a bien été ajouté !");
           this.refreshSalle();
         },
-        (error) => {this.toastr.error("erreur");}
-      );
+        error: error=> {this.toastr.error("erreur");}
+      });
       this.formAddSalle.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
@@ -200,15 +275,17 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddEleve(){
     if (this.formAddEleve.valid){
-      let lastname = this.formAddEleve.value.nom!;
-      let name = this.formAddEleve.value.prenom!;
-      let INE = this.formAddEleve.value.numINE!;
-      let identifier = this.formAddEleve.value.identifiant!;
-      let password = this.formAddEleve.value.password!;
-      this.edtService.addEleve(lastname, name, INE, identifier, password);
-      this.toastr.success('Eleve ajoutée !')
+      this.eleve = Object.assign(this.eleve, this.formAddEleve.value);
+      this.studentService.addStudent(this.eleve).subscribe({
+        next: responde => {
+          this.toastr.success("l'élève a bien été ajouté !");
+          this.refreshEleves();
+        },
+        error: error=> {this.toastr.error("erreur");}
+      });
+      this.formAddEleve.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
-    } 
+    }
   }
 }

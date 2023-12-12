@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { ResourceService } from 'src/app/_service/resource.service';
+import { RoomService } from 'src/app/_service/room.service';
+import { StudentService } from 'src/app/_service/student.service';
+import { TeacherService } from 'src/app/_service/teacher.service';
 import { EdtService } from 'src/app/services/edt.service';
 
 @Component({
@@ -9,63 +13,99 @@ import { EdtService } from 'src/app/services/edt.service';
   styleUrls: ['./delete-modal.component.scss']
 })
 export class DeleteModalComponent implements OnInit{
-  elementASupp: any;
+  elementASupp: string;
 
   public formSelectionne: any = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private edtService: EdtService,
+    private teacherService: TeacherService,
+    private roomService: RoomService,
+    private ressourceService: ResourceService,
+    private studentService: StudentService,
     private toastr: ToastrService,
   ){}
 
   ngOnInit(): void {
     this.formSelectionne = this.data.formSelectionne;
     this.setElementASupp();
-  }
-
-  sallesChanged() {
-    this.edtService.notifySalleRefresh();
-  }
-
-  profsChanged(){
-    this.edtService.notifyProfRefresh();
+    console.log(this.data);
   }
 
   setElementASupp(){
-    switch (this.data.formSelectionne) {
-      case 'formSalle':
+    switch (this.formSelectionne) {
+      case "formSalle":
         this.elementASupp = this.data.element.nom;
         break;
-      case 'formProfesseur':
-        this.elementASupp = this.data.element.staff.user.name + ' ' + this.data.element.staff.user.lastname;
+      case "formProfesseur":
+        this.elementASupp = this.data.element.staff.user.name + " " + this.data.element.staff.user.lastname;
+        break;
+      case "formRessource":
+        this.elementASupp = this.data.element.initial;
+        break;
+      case "formEleve":
+        this.elementASupp = this.data.element.user.name + " " + this.data.element.user.lastname;
         break;
     }
   }
 
+  studentsChanged(){
+    this.studentService.notifyStudentRefresh();
+  }
+
+  sallesChanged() {
+    this.roomService.notifySalleRefresh();
+  }
+
+  profsChanged(){
+    this.teacherService.notifyProfRefresh();
+  }
+
+  ressourcesChanged(){
+    this.ressourceService.notifyRessourceRefresh();
+  }
+
   supprimerSalle(){
-    this.edtService.supprimerSalle(this.elementASupp).subscribe(
-      (response) => {
-        this.toastr.success("la salle à bien été supprimée");
+    this.roomService.deleteSalle(this.data.element.nom).subscribe({
+      next: response => {
+        this.toastr.success("la salle a bien été supprimée!");
         this.sallesChanged();
       },
-      (error) => {
-        this.toastr.error("erreur");
-      }
-    );
-    this.elementASupp = null;
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
   }
 
   supprimerProf(){
-    this.edtService.supprimerProf(this.data.element.id).subscribe(
-      (response) => {
-        this.toastr.success("le professeur à bien été supprimé(e)");
+    this.teacherService.deleteTeacher(this.data.element.id).subscribe({
+      next: response => {
+        this.toastr.success("le professeur a bien été supprimé!");
         this.profsChanged();
       },
-      (error) => {
-        this.toastr.error("erreur");
-      }
-    );
-    this.elementASupp = null;
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
+  }
+
+  supprimerRessource(){
+    this.ressourceService.deleteResource(this.data.element).subscribe({
+      next: response => {
+        this.toastr.success("la ressource a bien été supprimée!");
+        this.ressourcesChanged();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
+  }
+
+  supprimerEleve(){
+    this.studentService.deleteStudent(this.data.element.id).subscribe({
+      next: response => {
+        this.toastr.success("l'élève a bien été supprimé(e)!");
+        this.studentsChanged();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
   }
 }
