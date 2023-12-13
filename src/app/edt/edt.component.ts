@@ -189,11 +189,10 @@ export class EdtComponent{
   loadEvents(){
 
     this.courseService.getCourses().subscribe(
-      (data: Course[]) => {
-        for (let course of data) {
-          console.log(course);
-          this.courses.push(course);
-        }
+      (courses: Course[]) => {
+        this.courses = courses;
+        this.coursesToEvents();
+
       },
       (error) => {
         console.log(error);
@@ -203,7 +202,6 @@ export class EdtComponent{
     console.log("Cours : ");
     console.log(this.courses);
 
-    this.coursesToEvents();
   }
 
   coursesToEvents() {
