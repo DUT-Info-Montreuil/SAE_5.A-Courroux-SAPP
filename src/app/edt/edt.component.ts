@@ -341,6 +341,7 @@ export class EdtComponent{
   eventTimesChanged(event: any) {
     event.event.start = event.newStart;
     event.event.end = event.newEnd;
+    this.loadEvents();
     this.refresh.next();
   }
 
