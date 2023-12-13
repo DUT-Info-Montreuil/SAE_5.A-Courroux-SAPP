@@ -22,10 +22,10 @@ import { Student } from 'src/app/_model/entity/student.model';
 })
 export class ModifModalFormComponent implements OnInit{
 
-  teacher:Teacher = new Teacher();
+  teacher:Teacher;
   salle:Room = new Room();
   ressource:Resource = new Resource();
-  eleve:Student = new Student();
+  eleve:Student;
 
   promos = this.formsComponent.promos;
   elementName: any = null;
@@ -160,7 +160,12 @@ export class ModifModalFormComponent implements OnInit{
 
   onSubmitModifProfesseur(){
     if (this.formModifProfesseur.valid){
-      this.teacher = Object.assign(this.teacher, this.formModifProfesseur.value);
+      let id = this.data.element.id;
+      let name = this.formModifProfesseur.value.name!;
+      let lastname = this.formModifProfesseur.value.lastname!;
+      let username = this.data.element.staff.user.username;
+      let password = this.data.element.staff.user.password;
+      this.teacher = new Teacher(id, name, lastname, username, password);
       console.log(this.teacher);
       this.teacherService.updateTeacher(this.teacher).subscribe({
         next: response => {
@@ -191,7 +196,13 @@ export class ModifModalFormComponent implements OnInit{
 
   onSubmitModifEleve(){
     if (this.formModifStudent.valid){
-      this.eleve = Object.assign(this.eleve, this.formModifStudent.value);
+      let id = this.getElementId();
+      let INE = this.data.element.INE;
+      let name = this.formModifStudent.value.name!;
+      let lastname = this.formModifStudent.value.lastname!;
+      let username = this.data.element.username;
+      let password = this.data.element.password;
+      this.eleve = new Student(id, INE, name, lastname, username, password);
       console.log(this.eleve);
       this.studentService.updateStudent(this.eleve).subscribe({
         next: response => {

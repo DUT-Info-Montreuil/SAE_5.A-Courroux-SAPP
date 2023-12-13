@@ -60,8 +60,8 @@ export class StudentService {
             "INE": student.INE,
             "name": student.user.name,
             "lastname": student.user.lastname,
-            // "password": student.user.password!,
-            // "username": student.user.username,
+            "password": student.user.password!,
+            "username": student.user.username,
         }
     }
 }

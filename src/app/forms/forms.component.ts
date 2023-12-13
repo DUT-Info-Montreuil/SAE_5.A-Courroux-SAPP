@@ -26,10 +26,10 @@ import { StudentService } from '../_service/student.service';
 })
 export class FormsComponent implements OnInit, OnDestroy{
 
-  teacher:Teacher = new Teacher();
+  teacher:Teacher;
   room:Room = new Room();
   ressource:Resource = new Resource();
-  eleve:Student = new Student();
+  eleve:Student;
 
   showModal = false;
 
@@ -227,7 +227,12 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddProfesseur(){
     if (this.formAddProfesseur.valid){
-      this.teacher.assignFromObject(this.formAddProfesseur.value);
+      let id = this.profs[this.profs.length - 1].id - 1;
+      let name = this.formAddProfesseur.value.name!;
+      let lastname = this.formAddProfesseur.value.lastname!;
+      let username = this.formAddProfesseur.value.username!;
+      let password = this.formAddProfesseur.value.password!;
+      this.teacher = new Teacher(id, name, lastname, username, password);
       this.teacherService.addTeacher(this.teacher).subscribe({
         next: response => {
           this.toastr.success("le prof a bien été ajouté !");
@@ -275,7 +280,13 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   onSubmitAddEleve(){
     if (this.formAddEleve.valid){
-      this.eleve = Object.assign(this.eleve, this.formAddEleve.value);
+      let id = this.eleves[this.eleves.length - 1].id - 1;;
+      let INE = parseInt(this.formAddEleve.value.INE!, 10);
+      let name = this.formAddEleve.value.name!;
+      let lastname = this.formAddEleve.value.lastname!;
+      let username = this.formAddEleve.value.username!;
+      let password = this.formAddEleve.value.password!;
+      this.eleve = new Student(id, INE, name, lastname, username, password);
       this.studentService.addStudent(this.eleve).subscribe({
         next: responde => {
           this.toastr.success("l'élève a bien été ajouté !");

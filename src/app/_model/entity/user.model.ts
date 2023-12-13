@@ -1,6 +1,6 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 
-export class User implements Deserializable {
+export class User {
     id: number;
     username: string;
     password?: string
@@ -8,14 +8,17 @@ export class User implements Deserializable {
     name: string;
     lastname: string;
 
-    assignFromObject(obj: any): User {
-        return Object.assign(this, obj);
+    constructor(name: string, lastname: string, username: string, password: string){
+        this.name = name;
+        this.lastname = lastname;
+        this.username = username;
+        this.password = password;
     }
     
-    deserialize(input: any): this {
-        if (input) {
-            Object.assign(this, input)
-        }
-        return this
-    }
+    // deserialize(input: any): this {
+    //     if (input) {
+    //         Object.assign(this, input)
+    //     }
+    //     return this
+    // }
 }
