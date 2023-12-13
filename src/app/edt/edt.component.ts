@@ -15,6 +15,8 @@ import { ResourceService } from '../_service/resource.service';
 import { Resource } from '../_model/entity/resource.model';
 import { Group } from '../_model/entity/group.model';
 import { GroupService } from '../_service/group.service';
+import { parse, format } from 'date-fns';
+
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -91,7 +93,7 @@ export class EdtComponent{
     private groupService: GroupService) {
       this.loadEvents();
 
-      console.log("Profs : ")
+      // console.log("Profs : ")
       this.teacherService.getTeachers().subscribe(
         (data: Teacher[]) => {
           for(let teacher of data) {
@@ -102,9 +104,9 @@ export class EdtComponent{
           console.log(error);
         }
       );
-      console.log(this.profs); 
+      // console.log(this.profs); 
 
-      console.log("Salles : ")
+      // console.log("Salles : ")
       this.edtService.getSalles().subscribe(
         (data: any[]) => {
           for (let salle of data) {
@@ -115,9 +117,9 @@ export class EdtComponent{
           console.log(error);
         }
       );
-      console.log(this.salles);
+      // console.log(this.salles);
 
-      console.log("Ressources : ");
+      // console.log("Ressources : ");
       this.resourceService.getResources().subscribe(
         (data: Resource[]) => {
           for(let resource of data) {
@@ -128,7 +130,7 @@ export class EdtComponent{
           console.log(error);
         }
       )
-      console.log(this.ressources);
+      // console.log(this.ressources);
 
       console.log("Groupes : ");
       this.groupService.getGroups().subscribe(
@@ -141,7 +143,7 @@ export class EdtComponent{
           console.log(error);
         }
       )
-      console.log(this.groupes);
+      // console.log(this.groupes);
 
   }
 
@@ -186,17 +188,36 @@ export class EdtComponent{
     this.showModalAdd = false;
   }
 
-  loadEvents(){
 
-    this.courseService.getCourses().subscribe(
-      (courses: Course[]) => {
+
+  loadEvents(){
+    this.events = [];
+
+    // //Récupérer le lundi et vendredi de la semaine courante
+    // let date = new Date();
+    // let day = date.getDay();
+    // let diff = date.getDate() - day + (day == 0 ? -6:1);
+    // let monday = new Date(date.setDate(diff));
+    // let friday = new Date(date.setDate(diff + 4));
+    // console.log("Monday",monday);
+    // console.log("Friday", friday);
+    let day = this.viewDate.getDay();
+    let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+    let monday = new Date(this.viewDate.setDate(diff));
+    let friday = new Date(this.viewDate.setDate(diff + 4));
+
+    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
+
+    this.courseService.getCourses(args).subscribe({
+      next : courses => {
         this.courses = courses;
         this.coursesToEvents();
 
       },
-      (error) => {
+      error: error => {
         console.log(error);
       }
+    }
     )
     
     console.log("Cours : ");
@@ -222,8 +243,8 @@ export class EdtComponent{
         }
       }
 
-      console.log(newEvent.start);
-      console.log(newEvent.end);
+      // console.log(newEvent.start);
+      // console.log(newEvent.end);
       this.events.push(newEvent);
       this.refresh.next();
     }
@@ -237,8 +258,8 @@ export class EdtComponent{
     finString = (finString?.replace('T', ' ')) + ":00";
     
 
-    console.log(debutString);
-    console.log(finString);
+    // console.log(debutString);
+    // console.log(finString);
     if (typeof debutString === 'string' && typeof finString === 'string') {
       const debutDate = new Date(debutString);
       const finDate = new Date(finString);
@@ -272,7 +293,7 @@ export class EdtComponent{
 
 
   print(){
-    console.log(this.events);
+    // console.log(this.events);
   }
 
   eventClicked(event: any) {
@@ -348,7 +369,7 @@ export class EdtComponent{
     this.events.splice(this.getIndex(event), 1);
     this.refresh.next();
     this.closeModalMod();
-    console.log(this.events);
+    // console.log(this.events);
   }
 
   findCoursebyEventId(id: number) {
