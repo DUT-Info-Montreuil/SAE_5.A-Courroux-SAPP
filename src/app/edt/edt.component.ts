@@ -8,6 +8,13 @@ import { DatePipe } from '@angular/common';
 import { EdtService } from '../services/edt.service';
 import { HttpHeaders } from '@angular/common/http';
 import { TeacherService } from '../_service/teacher.service';
+import { Teacher } from '../_model/entity/teacher.model';
+import { CourseService } from '../_service/course.service';
+import { Course } from '../_model/entity/course.model';
+import { ResourceService } from '../_service/resource.service';
+import { Resource } from '../_model/entity/resource.model';
+import { Group } from '../_model/entity/group.model';
+import { GroupService } from '../_service/group.service';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -43,18 +50,15 @@ export class EdtComponent{
     salle: new FormControl(""),
     professeur: new FormControl(""),
     groupe: new FormControl(""),
-    couleur: new FormGroup({
-      couleurP: new FormControl(""),
-      couleurS: new FormControl(""),
-    }),
     debut: new FormControl(""),
     fin: new FormControl("")
   })
   
-  profs!: any[];
-  salles!: any[];
-  ressources!: any[];
-  groupes!: any[];
+  courses: Course[] = [];
+  profs: Teacher[] = [];
+  salles: any[] = [];
+  ressources: Resource[] = [];
+  groupes: Group[] = [];
 
   // minEndTime!: string;
   // maxStartTime!: string;
@@ -81,20 +85,90 @@ export class EdtComponent{
     private edtService: EdtService,
     private cdr: ChangeDetectorRef,
     private zone: NgZone,
-    private teacherService: TeacherService,) {
+    private teacherService: TeacherService,
+    private courseService: CourseService,
+    private resourceService: ResourceService,
+    private groupService: GroupService) {
       this.loadEvents();
 
-      this.profs = this.edtService.getProfs();
+      console.log("Profs : ")
+      this.teacherService.getTeachers().subscribe(
+        (data: Teacher[]) => {
+          for(let teacher of data) {
+            this.profs.push(teacher);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       console.log(this.profs); 
-      this.salles = this.edtService.getSalles();
+
+      console.log("Salles : ")
+      this.edtService.getSalles().subscribe(
+        (data: any[]) => {
+          for (let salle of data) {
+            this.salles.push(salle);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       console.log(this.salles);
-      this.ressources = this.edtService.getRessources();
+
+      console.log("Ressources : ");
+      this.resourceService.getResources().subscribe(
+        (data: Resource[]) => {
+          for(let resource of data) {
+            this.ressources.push(resource);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
       console.log(this.ressources);
+
+      console.log("Groupes : ");
+      this.groupService.getGroups().subscribe(
+        (data: Group[]) => {
+          for(let group of data) {
+            this.groupes.push(group);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      console.log(this.groupes);
 
   }
 
-  openModalMod() {
+  openModalMod(eventId: number) {
+    let c = this.findCoursebyEventId(eventId);
+
+    this.formModifEvent.get('cours')?.setValue(c.initial_resource);
+    this.formModifEvent.get('salle')?.setValue(c.name_salle!);
+
+    let p= "";
+    for (let prof of this.profs) {
+      if(prof.id == c.id_enseignant) {
+        let p = prof.staff.user.username;
+      }
+    }
+    this.formModifEvent.get('professeur')?.setValue(p);
+
+    let g = "";
+    for (let groupe of this.groupes) {
+      if(groupe.id == c.id_group) {
+        let g = groupe.name;
+      }
+    }
+    this.formModifEvent.get('groupe')?.setValue(g);
+
     this.showModalMod = true;
+
   }
   
   closeModalMod() {
@@ -113,20 +187,48 @@ export class EdtComponent{
   }
 
   loadEvents(){
-    //this.events = [];
 
-    this.edtService.getCours().subscribe(
-      (data: CalendarEvent[]) => {
-        this.events = data;
+    this.courseService.getCourses().subscribe(
+      (data: Course[]) => {
+        for (let course of data) {
+          console.log(course);
+          this.courses.push(course);
+        }
       },
       (error) => {
-        console.error(error);
+        console.log(error);
       }
     )
     
     console.log("Cours : ");
-    console.log(this.events);
-    this.refresh.next();
+    console.log(this.courses);
+
+    this.coursesToEvents();
+  }
+
+  coursesToEvents() {
+    for (let course of this.courses) {
+      const newEvent: CalendarEvent = {
+        id: course.id,
+        title: course.initial_resource,
+        start: new Date(course.start_time),
+        end: new Date(course.end_time),
+        color: {
+          primary: this.formAddEvent.value.couleur?.couleurP!,
+          secondary: this.formAddEvent.value.couleur?.couleurS!,
+        },        
+        draggable: true,
+        resizable: {
+          beforeStart: true,
+          afterEnd: true,
+        }
+      }
+
+      console.log(newEvent.start);
+      console.log(newEvent.end);
+      this.events.push(newEvent);
+      this.refresh.next();
+    }
   }
 
   addEvent() {
@@ -143,27 +245,27 @@ export class EdtComponent{
       const debutDate = new Date(debutString);
       const finDate = new Date(finString);
 
-      const newEvent: CalendarEvent = {
-        id: this.events.length+1,
-        title: this.formAddEvent.value.cours!,
-        salle: this.formAddEvent.value.salle!,
-        professeur: this.formAddEvent.value.professeur!,
-        groupe: this.formAddEvent.value.groupe!,
-        is_published: false,
-        color: {
-          primary: this.formAddEvent.value.couleur?.couleurP!,
-          secondary: this.formAddEvent.value.couleur?.couleurS!,
-        },
-        start: debutDate,
-        end: finDate,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        }
-      };
-      console.log(newEvent.title);
-      this.edtService.addCours(newEvent.title, newEvent.salle, newEvent.professeur, Number(newEvent.groupe), debutString, finString, headers);     
+      // const newEvent: Course = {
+      //   id: this.events.length+1,
+      //   title: this.formAddEvent.value.cours!,
+      //   salle: this.formAddEvent.value.salle!,
+      //   professeur: this.formAddEvent.value.professeur!,
+      //   groupe: this.formAddEvent.value.groupe!,
+      //   is_published: false,
+      //   color: {
+      //     primary: this.formAddEvent.value.couleur?.couleurP!,
+      //     secondary: this.formAddEvent.value.couleur?.couleurS!,
+      //   },
+      //   start: debutDate,
+      //   end: finDate,
+      //   draggable: true,
+      //   resizable: {
+      //     beforeStart: true,
+      //     afterEnd: true,
+      //   }
+      // };
+      
+      this.edtService.addCours(this.formAddEvent.value.cours!, this.formAddEvent.value.salle!, this.formAddEvent.value.professeur!, Number(this.formAddEvent.value.groupe!), debutString, finString, headers);     
       this.loadEvents();
     } else {
       console.error("valeur de debut ou de fin n'est pas une chaine valide")
@@ -186,7 +288,7 @@ export class EdtComponent{
       .then(([loadedEventStart, loadedEventEnd]) => {
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
-        this.openModalMod();
+        this.openModalMod(this.eventSelectionne.event.id);
       });
   }
   
@@ -251,5 +353,15 @@ export class EdtComponent{
     console.log(this.events);
   }
 
+  findCoursebyEventId(id: number) {
+    let c: Course = this.courses[0];
+    for(let course of this.courses) {
+      if(course.id == id) {
+        c = course;
+      }
+    }
+
+    return c;
+  }
 
 }

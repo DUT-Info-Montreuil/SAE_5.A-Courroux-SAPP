@@ -1,7 +1,7 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 
 export class Course implements Deserializable {
-    id: string;
+    id: number;
     start_time: Date;
     end_time: Date;
     id_enseignant?: number;
