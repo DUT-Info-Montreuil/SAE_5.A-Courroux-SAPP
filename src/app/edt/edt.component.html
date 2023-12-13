@@ -52,7 +52,7 @@
                     <div>
                         <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du cours</label>
                         <select name="cours" formControlName="cours" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let cours of ressources" [value]="cours.name" >{{ cours.name }}</option>
+                            <option *ngFor="let cours of ressources" [value]="cours.name" [selected]="cours.name">{{ cours.name }}</option>
                         </select>
                         
                     </div>
@@ -64,22 +64,21 @@
                     </div>
                     <div>
                         <label for="professeur" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
-                        <select name="salle" formControlName="salle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let professeur of profs" [value]="professeur.id" [selected]="eventSelectionne.event.professeur === professeur.staff.user.username">{{ professeur.staff.user.username }}</option>
+                        <select name="professeur" formControlName="professeur" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option *ngFor="let professeur of profs" [value]="professeur.id" [selected]="professeur.staff.user.username">{{ professeur.staff.user.username }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="groupes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Groupe</label>
                         <select name="groupe" formControlName="groupe" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let groupe of groupes" [value]="groupe.id" [selected]="eventSelectionne.event.groupe === groupe.name">{{ groupe.name }}</option>
+                            <option *ngFor="let groupe of groupes" [value]="groupe.id" [selected]="groupe.name">{{ groupe.name }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="debut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Commence à</label>
                         <input 
                         type="datetime-local" 
-                        [(ngModel)]="eventSelectionne.event.start" 
-                        (ngModelChange)="startTimeChanged(eventSelectionne, $event)"
+                        formControlName="debut"
                         name="debut" id="debut" required 
                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                     </div>
@@ -87,8 +86,7 @@
                         <label for="fin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fini à</label>
                         <input 
                         type="datetime-local"
-                        [(ngModel)]="eventSelectionne.event.end" 
-                        (ngModelChange)="endTimeChanged(eventSelectionne, $event)"
+                        formControlName="fin"
                         name="fin" id="fin" required  
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
                     </div>

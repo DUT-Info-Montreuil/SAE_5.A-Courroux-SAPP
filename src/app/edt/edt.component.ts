@@ -146,30 +146,28 @@ export class EdtComponent{
   }
 
   openModalMod(eventId: number) {
-    let c = this.findCoursebyEventId(eventId);
-
-    this.formModifEvent.get('cours')?.setValue(c.initial_resource);
-    this.formModifEvent.get('salle')?.setValue(c.name_salle!);
-
-    let p= "";
-    for (let prof of this.profs) {
-      if(prof.id == c.id_enseignant) {
-        let p = prof.staff.user.username;
-      }
-    }
-    this.formModifEvent.get('professeur')?.setValue(p);
-
-    let g = "";
-    for (let groupe of this.groupes) {
-      if(groupe.id == c.id_group) {
-        let g = groupe.name;
-      }
-    }
-    this.formModifEvent.get('groupe')?.setValue(g);
-
+    console.log(this.eventSelectionne.event);
+    this.onCourseSelect(eventId);
     this.showModalMod = true;
-
   }
+
+  onCourseSelect(selectedCourseId: number) {
+    const selectedCourse = this.courses.find(course => course.id === selectedCourseId);
+    
+    if (selectedCourse) {
+        // Update form controls based on selected course
+        this.formModifEvent.patchValue({
+            debut: this.datePipe.transform(selectedCourse.start_time, 'yyyy-MM-ddTHH:mm'),
+            fin: this.datePipe.transform(selectedCourse.end_time, 'yyyy-MM-ddTHH:mm')
+        });
+    }
+
+                // Example for updating 'salle' based on selected course data
+      const selectedSalle = this.salles.find(salle => salle.name === selectedCourse!.name_salle);
+      if (selectedSalle) {
+          this.formModifEvent.get('salle')?.patchValue(selectedSalle.nom);
+      }
+}
   
   closeModalMod() {
     this.showModalMod = false;
@@ -193,15 +191,14 @@ export class EdtComponent{
         this.courses = courses;
         this.coursesToEvents();
 
+        console.log("Cours : ");
+        console.log(this.courses);
       },
       (error) => {
         console.log(error);
       }
     )
     
-    console.log("Cours : ");
-    console.log(this.courses);
-
   }
 
   coursesToEvents() {
@@ -222,8 +219,6 @@ export class EdtComponent{
         }
       }
 
-      console.log(newEvent.start);
-      console.log(newEvent.end);
       this.events.push(newEvent);
       this.refresh.next();
     }
@@ -349,17 +344,6 @@ export class EdtComponent{
     this.refresh.next();
     this.closeModalMod();
     console.log(this.events);
-  }
-
-  findCoursebyEventId(id: number) {
-    let c: Course = this.courses[0];
-    for(let course of this.courses) {
-      if(course.id == id) {
-        c = course;
-      }
-    }
-
-    return c;
   }
 
 }
