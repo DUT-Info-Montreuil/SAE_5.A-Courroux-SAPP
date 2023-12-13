@@ -87,6 +87,7 @@ export class DeleteModalComponent implements OnInit{
     this.elementASupp = "";
   }
 
+  // code 200 mais ne supprime pas la ressource dans la liste
   supprimerRessource(){
     this.ressourceService.deleteResource(this.data.element).subscribe({
       next: response => {
