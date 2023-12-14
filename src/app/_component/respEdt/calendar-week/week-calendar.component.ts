@@ -16,18 +16,28 @@ import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
 import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
+import { RoomService } from 'src/app/_service/room.service';
+
+
+export function momentAdapterFactory() {
+  return adapterFactory(moment);
+};
 
 
 
 @Component({
-  selector: 'copy-course',
-  templateUrl: './copy-course.component.html',
-  styleUrls: ['./copy-course.component.scss']
+  selector: 'app-calendar-week',
+  templateUrl: './week-calendar.component.html',
+  styleUrls: ['./week-calendar.component.scss']
 })
 
-export class CopyCourseComponent{
+export class WeekCalendarComponent{
   
-
+  courses: Course[] = [];
+  teachers: Teacher[] = [];
+  salles: any[] = [];
+  ressources: Resource[] = [];
+  groupes: Group[] = [];
 
   courseForEdit: Course;
 
@@ -52,8 +62,17 @@ export class CopyCourseComponent{
   }
 
   constructor(
+    private datePipe: DatePipe,
+    // private edtService: EdtService,
+    // private cdr: ChangeDetectorRef,
+    // private zone: NgZone,
+    private teacherService: TeacherService,
+    private courseService: CourseService,
+    private resourceService: ResourceService,
+    private groupService: GroupService,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private roomService: RoomService) {
 
   }
 
@@ -71,7 +90,7 @@ export class CopyCourseComponent{
         }
       }
       );
-      this.edtService.getSalles().subscribe({
+      this.roomService.getSalles().subscribe({
         next: data => {
           for (let salle of data) {
             this.salles.push(salle);
@@ -107,7 +126,7 @@ export class CopyCourseComponent{
   }
 
   openModalMod(eventId: number) {
-    this.courseForEdit = this.findCoursebyEventId(eventId);
+    this.courseForEdit = this.getCourseByEventId(eventId)!;
 
     this.showModalMod = true;
 
@@ -131,12 +150,15 @@ export class CopyCourseComponent{
 
 
   loadEvents(){
+    console.log("loadEvents");
     this.events = [];
 
     let day = this.viewDate.getDay();
     let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
-    let monday = new Date(this.viewDate.setDate(diff));
-    let friday = new Date(this.viewDate.setDate(diff + 4));
+    console.log(diff);
+    let date_temp = new Date(this.viewDate);
+    let monday = new Date(date_temp.setDate(diff));
+    let friday = new Date(date_temp.setDate(diff + 4));
 
     const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
 
@@ -148,6 +170,9 @@ export class CopyCourseComponent{
         for (let course of courses) {
           this.addEvent(course);
         }
+        this.refresh.next();
+
+        console.log(this.events);
 
       },
       error: error => {
@@ -155,9 +180,15 @@ export class CopyCourseComponent{
       }
     }
     )
-
   }
 
+
+  addCourse(course: Course) {
+    this.courses.push(course);
+    this.addEvent(course);
+    // this.refresh.next();
+  }
+    
 
   addEvent(course: Course): void {
 
@@ -176,19 +207,16 @@ export class CopyCourseComponent{
         afterEnd: true,
       }
     });
-    this.refresh.next();
-
   }
 
-  replaceEvent(course: Course): void {
 
-    this.courses = this.courses.filter((course) => course.id !== course.id);
-    this.courses.push(course);
-    
-    this.events = this.events.filter((event) => event.id !== course.id);
-    this.addEvent(course);
-
+  removeCourse(course_remove: Course): void {
+    this.courses = this.courses.filter((course) => course.id !== course_remove.id);
+    this.events = this.events.filter((event) => event.id !== course_remove.id);
+    // this.refresh.next();
   }
+
+  
 
 
 
@@ -232,31 +260,37 @@ export class CopyCourseComponent{
 
   eventTimesChanged(event: any) {
     console.log("here")
-    let course = this.courses.find(course => course.id == event.event.id);
-    if (!course){
+    let course_find = this.courses.find(course => course.id == event.event.id);
+    if (!course_find){
       return;
     }
     
-    course.start_time = event.newStart;
-    course.end_time = event.newEnd;
-    this.courseService.updateCourse(course).subscribe({
+
+    course_find.start_time = event.newStart;
+    course_find.end_time = event.newEnd;
+
+    const event_backup = this.events.find(event => event.id == course_find!.id);
+
+    this.events = this.events.filter((event) => event.id !== course_find!.id);
+    this.addEvent(course_find);
+
+    this.courseService.updateCourse(course_find).subscribe({
       next: course => {
-        this.replaceEvent(course);
+        this.courses.filter((course) => course.id !== course_find!.id);
+        this.events = this.events.filter((event) => event.id !== course_find!.id);
+        this.addCourse(course);
+
       },
       error: response => {
         console.log(response);
-        this.toastr.error(response.error.error, 'Erreur');
+        this.events = this.events.filter((event) => event.id !== course_find!.id);
+        this.events.push(event_backup!);
+        this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
       }
     })
 
 
 
-
-    event.event.start = event.newStart;
-    event.event.end = event.newEnd;
-    console.log(event.event)
-    // this.loadEvents();
-    this.refresh.next();
   }
 
   endTimeChanged(newEvent: any, ancienneDate: string) {
@@ -286,15 +320,51 @@ export class CopyCourseComponent{
     // console.log(this.events);
   }
 
-  findCoursebyEventId(id: number) {
-    let c: Course 
-    for(let course of this.courses) {
-      if(course.id == id) {
-        c = course;
-      }
-    }
+  getCourseByEventId(eventId: number) {
 
-    return c!;
+    return this.courses.find(course => course.id == eventId);
+  }
+
+  getRessourcesByInitial(initial_resource: string) {
+    return this.ressources.find(resource => resource.initial == initial_resource)?.name;
+  }
+
+  getTimeString(date: Date) {
+    return this.datePipe.transform(date, 'HH:mm');
+  }
+
+
+
+
+  getInitialTeacher(id: number) {
+    let id_teacher =  this.courses.find(course => course.id == id)?.id_enseignant;
+    let teacher = this.teachers.find(teacher => teacher.id == id_teacher);
+    return teacher? teacher.staff.initial : "";
+  }
+
+  
+
+  publishCourse(){
+    this.courseService.publishCourses().subscribe({
+      next:() => {
+        this.toastr.success('Les cours ont été publiés', 'Succès',{timeOut: 1500,});
+        this.loadEvents()
+      },
+      error: error => {
+        this.toastr.error(error, 'Erreur',{timeOut: 2000});
+      }
+    })
+  }
+  cancelCourse(){
+    this.courseService.cancelCourses().subscribe({
+      next:() => {
+        this.toastr.success('Les cours ont été annulés', 'Succès',{timeOut: 1500});
+        this.loadEvents()
+      },
+      error: error => {
+        this.toastr.error(error, 'Erreur',{timeOut: 2000});
+      }
+    })
   }
 
 }

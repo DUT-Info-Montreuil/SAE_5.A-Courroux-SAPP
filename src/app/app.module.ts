@@ -18,8 +18,8 @@ import { AuthInterceptor } from './_security/auth.interceptor';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ModifModalFormComponent } from './modals/modif-modal-form/modif-modal-form.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
-import { WeekCalendarComponent, momentAdapterFactory } from './_component/calendar/calendar-week/week-calendar.component';
-import { WeekCalendarModule } from './_component/calendar/calendar.module';
+import { WeekCalendarComponent, momentAdapterFactory } from './_component/respEdt/calendar-week/week-calendar.component';
+import { EdtModule } from './_component/respEdt/edt.module';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -53,7 +53,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     FormsModule,
     HttpClientModule,
     UsersModule,
-    WeekCalendarModule
+    EdtModule
     
   ],
   providers: [

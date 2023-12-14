@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core'
 import { AuthResponse } from '../_model/fonctional/auth-response.model'
-// import { User } from '../_model/entity/user.model'
+import { User } from '../_model/entity/user.model'
+import { UserService } from '../_service/user.service'
 
 const TOKEN_KEY = 'auth-token'
 // const REFRESHTOKEN_KEY = 'auth-refreshtoken'
-// const USER_KEY = 'auth-user'
-// const ROLE_KEY = 'auth-role'
+const USER_KEY = 'auth-user'
+const ROLE_KEY = 'auth-role'
 // const CURRENT_USER_ID = 'user-id'  
 // const ESTABLISHMENT_CARACTS_KEY = 'auth-establishment-caracts'
 // const ESTABLISHMENTS_KEY = 'auth-establishments'
@@ -18,8 +19,10 @@ const TOKEN_KEY = 'auth-token'
   providedIn: 'root'
 })
 export class StorageService {
+
+  user: User
   
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   signOut(): void {
     window.localStorage.clear()
@@ -81,4 +84,5 @@ export class StorageService {
       return null
     }
   }
+
 }

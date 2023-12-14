@@ -4,7 +4,7 @@ import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, Dat
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData, DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { ModifModalFormComponent } from 'src/app/modals/modif-modal-form/modif-m
 import { DeleteModalComponent } from 'src/app/modals/delete-modal/delete-modal.component';
 import { CourseAddComponent } from './course-add/course-add.component';
 import { CourseEditComponent } from './course-edit/course-edit.component';
+import { AuthInterceptor } from 'src/app/_security/auth.interceptor';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -55,7 +56,10 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     DatePipe,
     {provide: CalendarDateFormatter, useClass:CustomDateFormater},
     HttpClientModule,
+    // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+
 
   ],
+  
 })
-export class WeekCalendarModule { }
+export class EdtModule { }

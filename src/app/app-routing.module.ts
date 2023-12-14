@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './_component/user/login/login.component';
-import { WeekCalendarComponent } from './_component/calendar/calendar-week/week-calendar.component';
+import { WeekCalendarComponent } from './_component/respEdt/calendar-week/week-calendar.component';
 import { FormsComponent } from './forms/forms.component';
+import { WeekViewCalendarComponent } from './_component/user/calendar-week/week-view-calendar.component';
 
 const routes: Routes = [
   { path: '', component: WeekCalendarComponent},
   { path: 'login', component: LoginComponent},
   { path: 'ajout', component: FormsComponent},
+  { path: 'user', component: WeekViewCalendarComponent },
   { path: '**', redirectTo: '/', data: { error404: true } }, 
 
 ];

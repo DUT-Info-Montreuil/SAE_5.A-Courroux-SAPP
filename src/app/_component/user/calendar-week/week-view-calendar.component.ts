@@ -5,7 +5,6 @@ import * as moment from 'moment';
 import { Observable, Subject, find } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { EdtService } from '../../../services/edt.service';
 import { TeacherService } from '../../../_service/teacher.service';
 import { Teacher } from '../../../_model/entity/teacher.model';
 import { CourseService } from '../../../_service/course.service';
@@ -17,6 +16,8 @@ import { GroupService } from '../../../_service/group.service';
 import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
+import { StorageService } from 'src/app/_security/storage.service';
+import { UserService } from 'src/app/_service/user.service';
 
 
 export function momentAdapterFactory() {
@@ -26,12 +27,12 @@ export function momentAdapterFactory() {
 
 
 @Component({
-  selector: 'app-calendar-week',
-  templateUrl: './week-calendar.component.html',
-  styleUrls: ['./week-calendar.component.scss']
+  selector: 'app-calendar-week-view',
+  templateUrl: './week-view-calendar.component.html',
+  styleUrls: ['./week-view-calendar.component.scss']
 })
 
-export class WeekCalendarComponent{
+export class WeekViewCalendarComponent{
   
   courses: Course[] = [];
   teachers: Teacher[] = [];
@@ -72,7 +73,8 @@ export class WeekCalendarComponent{
     private groupService: GroupService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private roomService: RoomService) {
+    private roomService: RoomService,
+    private userService: UserService) {
 
   }
 
@@ -117,6 +119,15 @@ export class WeekCalendarComponent{
           for(let group of data) {
             this.groupes.push(group);
           }
+        },
+        error: error => {
+          console.log(error);
+        }
+      }
+      )
+      this.userService.getIdentify().subscribe({
+        next: data => {
+          console.log(data)
         },
         error: error => {
           console.log(error);
@@ -201,32 +212,22 @@ export class WeekCalendarComponent{
         primary: "#1e90ff",
         secondary: "#D1E8FF",
       },        
-      draggable: true,
+      draggable: false,
       resizable: {
-        beforeStart: true,
-        afterEnd: true,
+        beforeStart: false,
+        afterEnd: false,
       }
     });
-    console.log(this.events);
   }
 
 
-  removeCourse(course: Course): void {
-    this.courses = this.courses.filter((course) => course.id !== course.id);
-    this.events = this.events.filter((event) => event.id !== course.id);
-    this.refresh.next();
+  removeCourse(course_remove: Course): void {
+    this.courses = this.courses.filter((course) => course.id !== course_remove.id);
+    this.events = this.events.filter((event) => event.id !== course_remove.id);
+    // this.refresh.next();
   }
-  replaceCourse(course_replace: Course): void {
 
-    this.courses = this.courses.filter((course) => course.id !== course_replace.id);
-    this.courses.push(course_replace);
-    
-    this.events = this.events.filter((event) => event.id !== course_replace.id);
-    this.addEvent(course_replace);
-    this.refresh.next();
-
-
-  }
+  
 
 
 

@@ -41,6 +41,11 @@ export class CourseEditComponent implements OnInit{
 
     ngOnInit() {
 
+        
+        this.initializeForm();
+    }
+
+    initializeForm() {
         let start_time = new Date(this.course.start_time);
         let end_time = new Date(this.course.end_time);
 
@@ -53,8 +58,8 @@ export class CourseEditComponent implements OnInit{
 
 
         this.courseForm = this.formBuilder.group({
-            id_enseignant: [this.course.id_enseignant, [
-                this.validateSelect
+            id_enseignant: [this.course.id_enseignant?this.course.id_enseignant:"", [
+                // this.validateSelect
             ]],
             initial_ressource: [this.course.initial_ressource, [
                 Validators.required,
@@ -64,14 +69,13 @@ export class CourseEditComponent implements OnInit{
                 Validators.required,
                 this.validateSelect
             ]],
-            name_salle: [this.course.name_salle, [
-                this.validateSelect
+            name_salle: [this.course.name_salle?this.course.name_salle:"", [
+                // this.validateSelect
             ]],
             date: [date, [Validators.required]],
             start: [start, [Validators.required]],
             end: [end, [Validators.required]],  
         });
-        console.log("name_salle", this.course.name_salle)
     }
 
     validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
@@ -113,6 +117,7 @@ export class CourseEditComponent implements OnInit{
                 this.closeModalEdit()
                 this.toastr.success('Le cours a été modifié', 'Cours modifié',{timeOut: 1500});
                 // this.courseService.addCourseList(course);
+                // this.initializeForm();
             },
             error: error => {
                 console.log(error)
