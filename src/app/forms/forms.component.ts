@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EdtService } from '../services/edt.service';
 import { ToastrService } from 'ngx-toastr';
@@ -15,8 +15,9 @@ import { Resource } from '../_model/entity/resource.model';
 import { GroupService } from '../_service/group.service';
 import { Student } from '../_model/entity/student.model';
 import { Group } from '../_model/entity/group.model';
-import { group } from '@angular/animations';
 import { StudentService } from '../_service/student.service';
+import { Promotion } from '../_model/entity/promotion.model';
+import { PromotionService } from '../_service/promotion.service';
 
 
 @Component({
@@ -30,6 +31,8 @@ export class FormsComponent implements OnInit, OnDestroy{
   room:Room = new Room();
   ressource:Resource = new Resource();
   eleve:Student;
+  promo:Group;
+  groupe: Group;
 
   showModal = false;
 
@@ -39,7 +42,8 @@ export class FormsComponent implements OnInit, OnDestroy{
   profs : Teacher[] = [];
   salles : Room[] = [];
   eleves : Student[] = [];
-  promos : Group[] = [];
+  promos : Promotion[] = [];
+  groups : Group[] = [];
 
   isSection1Open = false;
   isSection2Open = false;
@@ -73,10 +77,12 @@ export class FormsComponent implements OnInit, OnDestroy{
   })
 
   formAddGroupe = new FormGroup({
-    promo: new FormControl("", Validators.required),
-    
+    niveau: new FormControl("", Validators.required),
+    TD : new FormControl("", Validators.required),
+    TP : new FormControl("", Validators.required)
   })
 
+  promoSelectionnee: Promotion | null = null;
   public formSelectionne: any = null;
   public selection: any = null;
   public typeGroupeSelectionne: any = null;
@@ -85,9 +91,9 @@ export class FormsComponent implements OnInit, OnDestroy{
   private profRefreshSubscription!: Subscription;
   private ressourceRefreshSubscription!: Subscription;
   private eleveRefreshSubscription!: Subscription;
+  private groupeRefreshSubscription!: Subscription;
 
   constructor(
-    private edtService: EdtService,
     private toastr: ToastrService,
     private dialogModif: MatDialog,
     private dialogDelete: MatDialog,
@@ -96,7 +102,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     private ressourceService: ResourceService,
     private groupeService: GroupService,
     private studentService: StudentService,
-    private cdr: ChangeDetectorRef){
+    private promotionService: PromotionService,){
   }
 
   ngOnInit(): void{
@@ -105,6 +111,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshRessources();
     this.refreshPromo();
     this.refreshEleves();
+    this.refreshGroupes();
+    this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
+      this.refreshGroupes();
+    });
     this.eleveRefreshSubscription = this.studentService.studentRefresh$.subscribe(() => {
       this.refreshEleves();
     });
@@ -138,21 +148,53 @@ export class FormsComponent implements OnInit, OnDestroy{
     });
   }
 
+  changerPromo(event: any) {
+    const selectedValue: Promotion | null = event.target.value;
+  
+    console.log('Selected Value:', selectedValue);
+  
+    if (selectedValue) {
+      this.promoSelectionnee = selectedValue;
+      console.log('Promo sélectionnée ID:', this.promoSelectionnee.id);
+      this.refreshGroupes();  
+    } else {
+      this.toastr.error("Veuillez sélectionner une promo");
+    }
+  }
+  
   ngOnDestroy() {
     this.salleRefreshSubscription.unsubscribe();
     this.profRefreshSubscription.unsubscribe();
     this.ressourceRefreshSubscription.unsubscribe();
     this.eleveRefreshSubscription.unsubscribe();
+    this.groupeRefreshSubscription.unsubscribe();
+  }
+
+  refreshGroupes(): void {
+    if (this.promoSelectionnee !== null) {
+      console.log(this.promoSelectionnee.id_resp);
+      this.groupeService.getTreeGroup(parseInt(this.promoSelectionnee.id)).subscribe(
+        (element: any) => {
+          this.groups = element.children;
+          // liste.forEach(element => {
+          //   if (element.id_group_parent == this.idPromoSelectionnee 
+          //     && element.id_group_parent != null) {
+          //     this.tds.push(element);
+          //   }
+          // });
+        },
+        (erreur) => {
+          console.error(erreur);
+          this.toastr.error("erreur");
+        }
+      );
+    }
   }
 
   refreshPromo(): void {
-    this.groupeService.getGroups().subscribe(
-      (liste: Group[]) => {
-        liste.forEach((group: Group) => {
-          if (group.id_group_parent === null) {
-            this.promos.push(group);
-          }
-        })
+    this.promotionService.getPromotions().subscribe(
+      (liste: Promotion[]) => {
+        this.promos = liste;
       },
       (erreur) => {
         console.error(erreur);
@@ -295,6 +337,22 @@ export class FormsComponent implements OnInit, OnDestroy{
         error: error=> {this.toastr.error("erreur");}
       });
       this.formAddEleve.reset();
+    } else {
+      this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
+    }
+  }
+
+  onSubmitAddGroupe() {
+    if (this.formAddGroupe.valid){
+      this.groupe = Object.assign(this.groupe, this.formAddGroupe.value);
+      this.groupeService.addGroup(this.groupe).subscribe({
+        next: response => {
+          this.toastr.success("le groupe a bien été ajouté !");
+          this.refreshGroupes();
+        },
+        error: error=> {this.toastr.error("erreur");}
+      });
+      this.formAddGroupe.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }

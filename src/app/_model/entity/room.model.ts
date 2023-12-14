@@ -1,7 +1,7 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 
 export class Room implements Deserializable {
-    nom: string;
+    name: string;
     ordi: number;
     tableauNumerique: number
     videoProjecteur: number;

@@ -33,6 +33,7 @@ export class ModifModalFormComponent implements OnInit{
   public formSelectionne: any = null;
 
   formModifSalle = new FormGroup({
+    name : new FormControl("", Validators.required),
     ordi: new FormControl("", Validators.required),
     videoProjecteur: new FormControl("", Validators.required),
     tableauNumerique: new FormControl("", Validators.required)
@@ -129,6 +130,7 @@ export class ModifModalFormComponent implements OnInit{
 
   setSalleValues(){
     this.formModifSalle.patchValue({
+      name: this.data.element.nom,
       ordi: this.data.element.ordi,
       videoProjecteur: this.data.element.videoProjecteur,
       tableauNumerique: this.data.element.tableauNumerique
