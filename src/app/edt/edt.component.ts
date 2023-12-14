@@ -88,7 +88,8 @@ export class EdtComponent{
     private teacherService: TeacherService,
     private courseService: CourseService,
     private resourceService: ResourceService,
-    private groupService: GroupService) {
+    private groupService: GroupService,
+    private formBuilder: FormBuilder) {
       this.loadEvents();
 
       console.log("Profs : ")
@@ -146,9 +147,11 @@ export class EdtComponent{
   }
 
   openModalMod(eventId: number) {
-    console.log(this.eventSelectionne.event);
-    this.onCourseSelect(eventId);
+    // console.log(this.eventSelectionne.event);
+    // this.onCourseSelect(eventId);
+
     this.showModalMod = true;
+    this.initializeForm(eventId);
   }
 
   onCourseSelect(selectedCourseId: number) {
@@ -346,4 +349,82 @@ export class EdtComponent{
     console.log(this.events);
   }
 
+  getCourseByEventId(eventId: number) {
+    for (const course of this.courses) {
+      if (course.id === eventId) {
+        return course;
+      }
+    }
+
+    return null;
+  }
+
+  getNomProfesseurById(id_enseignant: number) {
+    for (const professeur of this.profs) {
+      if (professeur.id === id_enseignant) {
+        return professeur.staff.user.username;
+      }
+    }
+    
+    return null;
+  }
+
+  getNomGroupeById(id_group: number) {
+    for (const groupe of this.groupes) {
+      if (groupe.id === id_group) {
+        return groupe.name;
+      }
+    }
+    
+    return null;
+  }
+
+  initializeForm(eventId: number): void {
+    let courSelected = this.getCourseByEventId(eventId);
+  
+    if (courSelected !== null) {
+      this.formModifEvent.setControl('cours', new FormControl(courSelected.initial_resource, [
+        Validators.required,
+        Validators.maxLength(15)
+      ]));
+  
+      this.formModifEvent.setControl('salle', new FormControl(courSelected.name_salle || "", [
+        Validators.required,
+        Validators.maxLength(63)
+      ]));
+  
+      this.formModifEvent.setControl('professeur', new FormControl(this.getNomProfesseurById(courSelected.id_enseignant!) || "", [
+        Validators.maxLength(63)
+      ]));
+  
+      this.formModifEvent.setControl('groupe', new FormControl(this.getNomGroupeById(courSelected.id_group) || "", [
+        Validators.required,
+        Validators.maxLength(63)
+      ]));
+  
+      this.formModifEvent.setControl('debut', new FormControl(courSelected.start_time ? courSelected.start_time.toISOString() : "", [
+        Validators.required,
+        // Ajoutez ici le validateur de format de date si nécessaire
+      ]));
+      
+      this.formModifEvent.setControl('fin', new FormControl(courSelected.end_time ? courSelected.end_time.toISOString() : "", [
+        Validators.required,
+        // Ajoutez ici le validateur de format de date si nécessaire
+      ]));
+      
+    }
+  }
+  
+  getEventId(event: any): number {
+    if (typeof event.id === 'number') {
+      return event.id;
+    }
+    // Handle other cases like string or undefined
+    // For example:
+    // if (typeof event.id === 'string') {
+    //   return parseInt(event.id, 10);
+    // }
+    return 0;
+  }
+  
 }

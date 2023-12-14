@@ -19,18 +19,38 @@
             
         </div>
     </div>
-    <mwl-calendar-week-view
-        [viewDate]="viewDate"
-        class="week-view" 
-        [events]="events"
-        [excludeDays]="[0, 6]"
-        locale="fr"
-        [dayStartHour]="8"
-        [dayEndHour]="18"
-        (eventClicked)="eventClicked($event)"
-        (eventTimesChanged)="eventTimesChanged($event)"
-        [refresh] = "refresh"
-    ></mwl-calendar-week-view>
+<mwl-calendar-week-view
+  [viewDate]="viewDate"
+  class="week-view"
+  [events]="events"
+  [excludeDays]="[0, 6]"
+  locale="fr"
+  [dayStartHour]="8"
+  [dayEndHour]="18"
+  (eventClicked)="eventClicked($event)"
+  (eventTimesChanged)="eventTimesChanged($event)"
+  [refresh]="refresh"
+  [eventTemplate]="customEWeekViewTemplate">
+</mwl-calendar-week-view>
+
+<ng-template #customEWeekViewTemplate let-event="event">
+  <div *ngIf="event.id === getEventId(event)" class="titre h-full flex flex-col justify-between">
+    <div class="item-center text-center">
+      <div class="item-center text-center">
+        {{ getCourseByEventId(event.id)?.initial_resource ? getCourseByEventId(event.id)?.initial_resource : "BDD" }}
+      </div>
+      <div class="flex justify-between">
+        <div class="max-w-min inline-block">
+          {{ getCourseByEventId(event.id)?.name_salle ? getCourseByEventId(event.id)?.name_salle : "Là" }}
+        </div>
+        <div class="max-w-min inline-block">
+          {{ getCourseByEventId(event.id)?.id_enseignant ? getCourseByEventId(event.id)?.id_enseignant : "AC" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 </div>
 <div id="modify-event-modal" tabindex="-1" aria-hidden="true"
     class="modal fixed top-0 left-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center bg-gray-900 bg-opacity-50"
@@ -52,26 +72,26 @@
                     <div>
                         <label for="cours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du cours</label>
                         <select name="cours" formControlName="cours" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let cours of ressources" [value]="cours.name" [selected]="cours.name">{{ cours.name }}</option>
+                            <option *ngFor="let cours of ressources" [value]="cours.name" [selected]="eventSelectionne.event.cours == (eventSelectionne.event.id)?.initial_resource">{{ cours.name }}</option>
                         </select>
                         
                     </div>
                     <div>
                         <label for="salle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salle</label>
                         <select name="salle" formControlName="salle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let salle of salles" [value]="salle.nom" [selected]="eventSelectionne.event.salle === salle.name">{{ salle.nom }}</option>
+                            <option *ngFor="let salle of salles" [value]="salle.nom" [selected]="eventSelectionne.event.salle === getCourseByEventId(eventSelectionne.event.id)?.name_salle">{{ salle.nom }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="professeur" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
                         <select name="professeur" formControlName="professeur" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let professeur of profs" [value]="professeur.id" [selected]="professeur.staff.user.username">{{ professeur.staff.user.username }}</option>
+                            <option *ngFor="let professeur of profs" [value]="professeur.id" [selected]="eventSelectionne.event.professeur === getNomProfesseurById(getCourseByEventId(eventSelectionne.event.id)?.id_enseignant!)">{{ professeur.staff.user.username }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="groupes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Groupe</label>
                         <select name="groupe" formControlName="groupe" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option *ngFor="let groupe of groupes" [value]="groupe.id" [selected]="groupe.name">{{ groupe.name }}</option>
+                            <option *ngFor="let groupe of groupes" [value]="groupe.id" [selected]="eventSelectionne.event.groupe ===getNomGroupeById(getCourseByEventId(eventSelectionne.event.id)?.id_group!)">{{ groupe.name }}</option>
                         </select>
                     </div>
                     <div>
