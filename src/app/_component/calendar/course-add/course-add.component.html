@@ -33,7 +33,7 @@
                         <label for="name_salle" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Salle</label>
                         <select name="name_salle" formControlName="name_salle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option selected="" disabled="" value="">Choisir...</option>
-                            <option *ngFor="let salle of salles" [value]="salle.nom" >{{ salle.nom }}</option>
+                            <option *ngFor="let salle of salles" [value]="salle.name" >{{ salle.name }}</option>
                         </select>
                         <!-- <input type="text" name="salle" id="salle" formControlName="salle" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
