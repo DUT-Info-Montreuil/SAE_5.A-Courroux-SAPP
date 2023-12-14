@@ -5,10 +5,11 @@ import { WeekCalendarComponent } from './_component/calendar/calendar-week/week-
 import { FormsComponent } from './forms/forms.component';
 
 const routes: Routes = [
-  { path: 'edt', component: WeekCalendarComponent},
+  { path: '', component: WeekCalendarComponent},
   { path: 'login', component: LoginComponent},
   { path: 'ajout', component: FormsComponent},
-  { path: '', redirectTo: '/acceuil', pathMatch: 'full' },
+  { path: '**', redirectTo: '/', data: { error404: true } }, 
+
 ];
 
 @NgModule({
