@@ -175,6 +175,7 @@ export class WeekCalendarComponent{
 
 
   addEvent(course: Course): void {
+
     this.events.push({
       id: course.id,
       title: course.initial_ressource,
@@ -195,6 +196,10 @@ export class WeekCalendarComponent{
   }
 
   replaceEvent(course: Course): void {
+
+    this.courses = this.courses.filter((course) => course.id !== course.id);
+    this.courses.push(course);
+    
     this.events = this.events.filter((event) => event.id !== course.id);
     this.addEvent(course);
 
@@ -241,6 +246,26 @@ export class WeekCalendarComponent{
 
 
   eventTimesChanged(event: any) {
+    console.log("here")
+    let course = this.courses.find(course => course.id == event.event.id);
+    if (!course){
+      return;
+    }
+    
+    course.start_time = event.newStart;
+    course.end_time = event.newEnd;
+    this.courseService.updateCourse(course).subscribe({
+      next: course => {
+        this.replaceEvent(course);
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+
+
+
+
     event.event.start = event.newStart;
     event.event.end = event.newEnd;
     console.log(event.event)
@@ -276,14 +301,14 @@ export class WeekCalendarComponent{
   }
 
   findCoursebyEventId(id: number) {
-    let c: Course = this.courses[0];
+    let c: Course 
     for(let course of this.courses) {
       if(course.id == id) {
         c = course;
       }
     }
 
-    return c;
+    return c!;
   }
 
 }
