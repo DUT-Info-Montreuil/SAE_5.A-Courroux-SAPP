@@ -86,4 +86,19 @@ export class CourseService {
         }
         return courseParsed;
     }
+
+    publishCourses(){
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/publish`;
+        return this.http.put(url, {}, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+    cancelCourses(){
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/cancel`;
+        return this.http.delete(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
 }

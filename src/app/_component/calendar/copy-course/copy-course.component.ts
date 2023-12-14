@@ -18,25 +18,16 @@ import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 
 
-export function momentAdapterFactory() {
-  return adapterFactory(moment);
-};
-
-
 
 @Component({
-  selector: 'app-calendar-week',
-  templateUrl: './week-calendar.component.html',
-  styleUrls: ['./week-calendar.component.scss']
+  selector: 'copy-course',
+  templateUrl: './copy-course.component.html',
+  styleUrls: ['./copy-course.component.scss']
 })
 
-export class WeekCalendarComponent{
+export class CopyCourseComponent{
   
-  courses: Course[] = [];
-  teachers: Teacher[] = [];
-  salles: any[] = [];
-  ressources: Resource[] = [];
-  groupes: Group[] = [];
+
 
   courseForEdit: Course;
 
@@ -61,14 +52,6 @@ export class WeekCalendarComponent{
   }
 
   constructor(
-    private datePipe: DatePipe,
-    private edtService: EdtService,
-    private cdr: ChangeDetectorRef,
-    private zone: NgZone,
-    private teacherService: TeacherService,
-    private courseService: CourseService,
-    private resourceService: ResourceService,
-    private groupService: GroupService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService) {
 
@@ -148,15 +131,12 @@ export class WeekCalendarComponent{
 
 
   loadEvents(){
-    console.log("loadEvents");
     this.events = [];
 
     let day = this.viewDate.getDay();
     let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
-    console.log(diff);
-    let date_temp = new Date(this.viewDate);
-    let monday = new Date(date_temp.setDate(diff));
-    let friday = new Date(date_temp.setDate(diff + 4));
+    let monday = new Date(this.viewDate.setDate(diff));
+    let friday = new Date(this.viewDate.setDate(diff + 4));
 
     const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
 
@@ -168,8 +148,6 @@ export class WeekCalendarComponent{
         for (let course of courses) {
           this.addEvent(course);
         }
-        this.refresh.next();
-
 
       },
       error: error => {
@@ -180,13 +158,6 @@ export class WeekCalendarComponent{
 
   }
 
-
-  addCourse(course: Course) {
-    this.courses.push(course);
-    this.addEvent(course);
-    this.refresh.next();
-  }
-    
 
   addEvent(course: Course): void {
 
@@ -205,18 +176,17 @@ export class WeekCalendarComponent{
         afterEnd: true,
       }
     });
+    this.refresh.next();
 
   }
 
-  replaceCourse(course_replace: Course): void {
+  replaceEvent(course: Course): void {
 
-    this.courses = this.courses.filter((course) => course.id !== course_replace.id);
-    this.courses.push(course_replace);
+    this.courses = this.courses.filter((course) => course.id !== course.id);
+    this.courses.push(course);
     
-    this.events = this.events.filter((event) => event.id !== course_replace.id);
-    this.addEvent(course_replace);
-    this.refresh.next();
-
+    this.events = this.events.filter((event) => event.id !== course.id);
+    this.addEvent(course);
 
   }
 
@@ -262,36 +232,31 @@ export class WeekCalendarComponent{
 
   eventTimesChanged(event: any) {
     console.log("here")
-    let course_find = this.courses.find(course => course.id == event.event.id);
-    if (!course_find){
+    let course = this.courses.find(course => course.id == event.event.id);
+    if (!course){
       return;
     }
     
-
-    course_find.start_time = event.newStart;
-    course_find.end_time = event.newEnd;
-
-    const event_backup = this.events.find(event => event.id == course_find!.id);
-
-    this.events = this.events.filter((event) => event.id !== course_find!.id);
-    this.addEvent(course_find);
-
-    this.courseService.updateCourse(course_find).subscribe({
+    course.start_time = event.newStart;
+    course.end_time = event.newEnd;
+    this.courseService.updateCourse(course).subscribe({
       next: course => {
-        this.events = this.events.filter((event) => event.id !== course_find!.id);
-        this.addCourse(course);
-
+        this.replaceEvent(course);
       },
       error: response => {
         console.log(response);
-        this.events = this.events.filter((event) => event.id !== course_find!.id);
-        this.events.push(event_backup!);
         this.toastr.error(response.error.error, 'Erreur');
       }
     })
 
 
 
+
+    event.event.start = event.newStart;
+    event.event.end = event.newEnd;
+    console.log(event.event)
+    // this.loadEvents();
+    this.refresh.next();
   }
 
   endTimeChanged(newEvent: any, ancienneDate: string) {
@@ -330,29 +295,6 @@ export class WeekCalendarComponent{
     }
 
     return c!;
-  }
-
-  publishCourse(){
-    this.courseService.publishCourses().subscribe({
-      next:() => {
-        this.toastr.success('Les cours ont été publiés', 'Succès');
-        this.loadEvents()
-      },
-      error: error => {
-        this.toastr.error(error, 'Erreur');
-      }
-    })
-  }
-  cancelCourse(){
-    this.courseService.cancelCourses().subscribe({
-      next:() => {
-        this.toastr.success('Les cours ont été annulés', 'Succès');
-        this.loadEvents()
-      },
-      error: error => {
-        this.toastr.error(error, 'Erreur');
-      }
-    })
   }
 
 }
