@@ -1,7 +1,7 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 
 export class Group implements Deserializable {
-    id: string;
+    id: number;
     name: string;
     id_group_parent: number;
     parent: Group;

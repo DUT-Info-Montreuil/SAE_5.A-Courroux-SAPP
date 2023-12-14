@@ -1,0 +1,77 @@
+<div id="calendar-container">
+    <div id="cal-buttons">
+        <div id="cal-date-nav-buttons">
+            <button id="previous" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l ml-10 mt-10 mb-10"
+            >Précédent</button>
+                
+            <button id="today" mwlCalendarToday [(viewDate)]="viewDate" (click)="loadEvents()"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-10 mb-10"
+            >Aujourd'hui</button>
+            <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+            >Prochain</button>
+            <button 
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+            (click)="openModalAdd()"
+            >Ajouter</button>
+
+            
+        </div>
+    </div>
+    <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        class="week-view" 
+        [events]="events"
+        [excludeDays]="[0, 6]"
+        locale="fr"
+        [dayStartHour]="8"
+        [dayEndHour]="18"
+        (eventClicked)="eventClicked($event)"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        [refresh] = "refresh"
+        [eventTitleTemplate]="customEWeekViewTemplate">    
+    ></mwl-calendar-week-view>
+
+    <ng-template #customEWeekViewTemplate>
+        <div *ngFor="let event of events" class="titre h-full flex flex-col justify-between" >
+          <div class="item-center text-center">
+            <div class="flex justify-between">
+
+              <div class="max-w-min inline-block" >
+                {{ getCourseByEventId(getEventId(event))?.name_salle ? getCourseByEventId(getEventId(event))?.name_salle : "Là" }}
+              </div>
+
+              <div class="item-center text-center" >
+                {{ (getCourseByEventId(getEventId(event))?.initial_ressource!) ? getNomRessourceByInitial(getCourseByEventId(getEventId(event))?.initial_ressource!) : "BDD" }}
+              </div>
+
+              <div class="max-w-min inline-block">
+                {{ getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) ? getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) : "AC" }}
+              </div>
+
+            </div>
+
+            <div class="flex justify-between">
+
+                <div class="max-w-min inline-block" >
+                  {{ event ? getTimeOfEvent(event)[0] : "JSP" }}
+                </div>
+
+                <div class="max-w-min inline-block">
+                  {{ event ? getTimeOfEvent(event)[1] : "JSP2" }}
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+      </ng-template>
+</div>
+ <ng-container *ngIf="showModalAdd">
+    <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addEvent($event)" (closeModal)="closeModalAdd()"></course-add>
+</ng-container> 
+
+<ng-container *ngIf="showModalMod">
+    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="replaceEvent($event)" (closeModal)="closeModalMod()"></course-edit>
+</ng-container> 

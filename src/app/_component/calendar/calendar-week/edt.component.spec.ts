@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EdtComponent } from './edt.component';
+import { WeekCalendarComponent } from './week-calendar.component';
 
 describe('EdtComponent', () => {
-  let component: EdtComponent;
-  let fixture: ComponentFixture<EdtComponent>;
+  let component: WeekCalendarComponent;
+  let fixture: ComponentFixture<WeekCalendarComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [EdtComponent]
+      declarations: [WeekCalendarComponent]
     });
-    fixture = TestBed.createComponent(EdtComponent);
+    fixture = TestBed.createComponent(WeekCalendarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
