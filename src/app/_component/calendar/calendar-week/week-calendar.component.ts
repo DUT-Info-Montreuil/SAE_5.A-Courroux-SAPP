@@ -15,6 +15,7 @@ import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
 import { format } from 'date-fns';
+import { ToastrService } from 'ngx-toastr';
 
 
 export function momentAdapterFactory() {
@@ -68,7 +69,8 @@ export class WeekCalendarComponent{
     private courseService: CourseService,
     private resourceService: ResourceService,
     private groupService: GroupService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService) {
 
   }
 
@@ -258,8 +260,9 @@ export class WeekCalendarComponent{
       next: course => {
         this.replaceEvent(course);
       },
-      error: error => {
-        console.log(error);
+      error: response => {
+        console.log(response);
+        this.toastr.error(response.error.error, 'Erreur');
       }
     })
 
