@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
 import { Observable, retry } from 'rxjs';
 import { Course } from '../_model/entity/course.model';
+import { format } from 'date-fns';
+
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +14,6 @@ export class CourseService {
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
 
     getCourses(args: any[]= []): Observable<Course[]> {
-
 
         let params: String[] = []
 
@@ -46,15 +47,19 @@ export class CourseService {
         );
       }
     addCourse(course: Course): Observable<Course> {
+        const courseData = this.parseCourse(course);
+
         let url = `${this.utilsService.getEndPoint().apiUrl}/course`;
-        return this.http.post<Course>(url, course, this.utilsService.getJsonHeader())
+        return this.http.post<Course>(url, courseData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
       }
     updateCourse(course: Course): Observable<Course> {
+        const courseData = this.parseCourse(course);
+
         let url = `${this.utilsService.getEndPoint().apiUrl}/course/${course.id}`;
-        return this.http.put<Course>(url, course, this.utilsService.getJsonHeader())
+        return this.http.put<Course>(url, courseData, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
@@ -65,5 +70,20 @@ export class CourseService {
         .pipe(
             retry(1)
         );
+    }
+
+    parseCourse(course: Course): any {
+        let courseParsed = {
+            id: course.id,
+            start_time: format(course.start_time, 'yyyy-MM-dd HH:mm:ss'),
+            end_time: format(course.end_time, 'yyyy-MM-dd HH:mm:ss'),
+            id_enseignant: course.id_enseignant,
+            initial_ressource: course.initial_ressource,
+            id_group: course.id_group,
+            name_salle: course.name_salle,
+            appelEffectue: course.appelEffectue,
+            is_published: course.is_published
+        }
+        return courseParsed;
     }
 }
