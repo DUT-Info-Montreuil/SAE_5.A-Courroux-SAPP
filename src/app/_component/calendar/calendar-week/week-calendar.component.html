@@ -1,23 +1,34 @@
 <div id="calendar-container">
     <div id="cal-buttons">
-        <div id="cal-date-nav-buttons">
-            <button id="previous" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l ml-10 mt-10 mb-10"
-            >Précédent</button>
-                
-            <button id="today" mwlCalendarToday [(viewDate)]="viewDate" (click)="loadEvents()"
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-10 mb-10"
-            >Aujourd'hui</button>
-            <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]"
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
-            >Prochain</button>
-            <button 
-            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-            (click)="openModalAdd()"
-            >Ajouter</button>
+        <div id="cal-date-nav-buttons" class="flex justify-between">
+            <div>
+                <button id="previous" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]" (click)="loadEvents()"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l ml-10 mt-10 mb-10"
+                >Précédent</button>
+                    
+                <button id="today" mwlCalendarToday [(viewDate)]="viewDate" (click)="loadEvents()"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-10 mb-10"
+                >Aujourd'hui</button>
+                <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]" (click)="loadEvents()"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                >Prochain</button>
+                <button 
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
+                (click)="openModalAdd()"
+                >Ajouter</button>
+            </div>
 
+            <div>
+                <button (click)="cancelCourse()"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                >Annuler</button>
+                <button (click)="publishCourse()"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                >Publier</button>
+            </div>
             
         </div>
+        
     </div>
     <mwl-calendar-week-view
         [viewDate]="viewDate"
@@ -69,9 +80,9 @@
       </ng-template>
 </div>
  <ng-container *ngIf="showModalAdd">
-    <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addEvent($event)" (closeModal)="closeModalAdd()"></course-add>
+    <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
 <ng-container *ngIf="showModalMod">
-    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="replaceEvent($event)" (closeModal)="closeModalMod()"></course-edit>
+    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="replaceCourse($event)" (closeModal)="closeModalMod()"></course-edit>
 </ng-container> 
