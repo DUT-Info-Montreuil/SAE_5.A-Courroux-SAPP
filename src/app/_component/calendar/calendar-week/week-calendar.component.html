@@ -41,44 +41,31 @@
         (eventClicked)="eventClicked($event)"
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
+        [eventTitleTemplate]="customeWeekViewTemplate"> 
     ></mwl-calendar-week-view>
 
     <!-- [eventTitleTemplate]="customEWeekViewTemplate">     -->
 
-    <!-- <ng-template #customEWeekViewTemplate>
-        <div *ngFor="let event of events" class="titre h-full flex flex-col justify-between" >
+    <ng-template #customeWeekViewTemplate let-event="event">
+        <div class="titre h-full flex flex-col justify-between relative">
           <div class="item-center text-center">
-            <div class="flex justify-between">
-
-              <div class="max-w-min inline-block" >
-                {{ getCourseByEventId(getEventId(event))?.name_salle ? getCourseByEventId(getEventId(event))?.name_salle : "Là" }}
+            <!-- Votre contenu principal ici -->
+            <div class="flex-row justify-center text-center">
+              <div class="flex-1 max-w-min inline-block items-center justify-items-center">
+                {{ getRessourcesByInitial(getCourseByEventId(event.id)!.initial_ressource) }}
               </div>
-
-              <div class="item-center text-center" >
-                {{ (getCourseByEventId(getEventId(event))?.initial_ressource!) ? getNomRessourceByInitial(getCourseByEventId(getEventId(event))?.initial_ressource!) : "BDD" }}
-              </div>
-
-              <div class="max-w-min inline-block">
-                {{ getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) ? getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) : "AC" }}
-              </div>
-
             </div>
-
-            <div class="flex justify-between">
-
-                <div class="max-w-min inline-block" >
-                  {{ event ? getTimeOfEvent(event)[0] : "JSP" }}
-                </div>
-
-                <div class="max-w-min inline-block">
-                  {{ event ? getTimeOfEvent(event)[1] : "JSP2" }}
-                </div>
-
-            </div>
-
           </div>
+          
+          <!-- Footer dans la ng-template -->
+          <div class="flex flex-row items-center justify-center">
+            <img src="assets/images/clock.png" alt="Logo" class="w-[18px]" >
+            <h2>{{ getTimeString(getCourseByEventId(event.id)!.start_time) }} - {{ getTimeString(getCourseByEventId(event.id)!.end_time) }} </h2>
+          </div>
+          
         </div>
-      </ng-template> -->
+
+      </ng-template>
 </div>
  <ng-container *ngIf="showModalAdd">
     <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>

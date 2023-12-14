@@ -16,6 +16,7 @@ import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
 import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
+import { RoomService } from 'src/app/_service/room.service';
 
 
 export function momentAdapterFactory() {
@@ -62,15 +63,16 @@ export class WeekCalendarComponent{
 
   constructor(
     private datePipe: DatePipe,
-    private edtService: EdtService,
-    private cdr: ChangeDetectorRef,
-    private zone: NgZone,
+    // private edtService: EdtService,
+    // private cdr: ChangeDetectorRef,
+    // private zone: NgZone,
     private teacherService: TeacherService,
     private courseService: CourseService,
     private resourceService: ResourceService,
     private groupService: GroupService,
     private formBuilder: FormBuilder,
-    private toastr: ToastrService) {
+    private toastr: ToastrService,
+    private roomService: RoomService) {
 
   }
 
@@ -88,7 +90,7 @@ export class WeekCalendarComponent{
         }
       }
       );
-      this.edtService.getSalles().subscribe({
+      this.roomService.getSalles().subscribe({
         next: data => {
           for (let salle of data) {
             this.salles.push(salle);
@@ -124,7 +126,7 @@ export class WeekCalendarComponent{
   }
 
   openModalMod(eventId: number) {
-    this.courseForEdit = this.findCoursebyEventId(eventId);
+    this.courseForEdit = this.getCourseByEventId(eventId)!;
 
     this.showModalMod = true;
 
@@ -278,6 +280,7 @@ export class WeekCalendarComponent{
 
     this.courseService.updateCourse(course_find).subscribe({
       next: course => {
+        this.courses.filter((course) => course.id !== course_find!.id);
         this.events = this.events.filter((event) => event.id !== course_find!.id);
         this.addCourse(course);
 
@@ -322,16 +325,21 @@ export class WeekCalendarComponent{
   }
 
   getCourseByEventId(eventId: number) {
-    // for (const course of this.courses) {
-    //   if (course.id == eventId) {
-    //     console.log(course);
-    //     return course;
-    //   }
-    // }
 
     
     return this.courses.find(course => course.id == eventId);
   }
+
+  getRessourcesByInitial(initial_resource: string) {
+    return this.ressources.find(resource => resource.initial == initial_resource)?.name;
+  }
+
+  getTimeString(date: Date) {
+    return this.datePipe.transform(date, 'HH:mm');
+  }
+
+
+
 
   getNomProfesseurById(id_enseignant: number) {
     
@@ -358,16 +366,7 @@ export class WeekCalendarComponent{
     return null;
   }
 
-  findCoursebyEventId(id: number) {
-    let c: Course 
-    for(let course of this.courses) {
-      if(course.id == id) {
-        c = course;
-      }
-    }
-
-    return c!;
-  }
+  
 
   publishCourse(){
     this.courseService.publishCourses().subscribe({

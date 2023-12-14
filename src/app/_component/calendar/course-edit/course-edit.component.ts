@@ -71,6 +71,7 @@ export class CourseEditComponent implements OnInit{
             start: [start, [Validators.required]],
             end: [end, [Validators.required]],  
         });
+        console.log("name_salle", this.course.name_salle)
     }
 
     validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
