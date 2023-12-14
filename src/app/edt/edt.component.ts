@@ -352,6 +352,7 @@ export class EdtComponent{
   getCourseByEventId(eventId: number) {
     for (const course of this.courses) {
       if (course.id === eventId) {
+        console.log(course);
         return course;
       }
     }
@@ -416,15 +417,35 @@ export class EdtComponent{
   }
   
   getEventId(event: any): number {
+    console.log(event.id);
+
     if (typeof event.id === 'number') {
       return event.id;
     }
-    // Handle other cases like string or undefined
-    // For example:
-    // if (typeof event.id === 'string') {
-    //   return parseInt(event.id, 10);
-    // }
-    return 0;
+    
+    return event.id;
   }
   
+  getNomRessourceByInitial(initial: string) {
+    for (const ressource of this.ressources) {
+      if (ressource.initial === initial) {
+        return ressource.name;
+      }
+    }
+    
+    return null;
+  }
+
+getTimeOfEvent(event: any) {
+  let c = this.getCourseByEventId(event.id);
+
+  if (c !== null) {
+    return [c.start_time, c.end_time];
+  }
+
+  return "nope";
+}
+
+  
+
 }

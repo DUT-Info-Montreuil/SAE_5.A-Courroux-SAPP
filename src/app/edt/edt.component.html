@@ -19,38 +19,55 @@
             
         </div>
     </div>
-<mwl-calendar-week-view
-  [viewDate]="viewDate"
-  class="week-view"
-  [events]="events"
-  [excludeDays]="[0, 6]"
-  locale="fr"
-  [dayStartHour]="8"
-  [dayEndHour]="18"
-  (eventClicked)="eventClicked($event)"
-  (eventTimesChanged)="eventTimesChanged($event)"
-  [refresh]="refresh"
-  [eventTemplate]="customEWeekViewTemplate">
-</mwl-calendar-week-view>
+    <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        class="week-view" 
+        [events]="events"
+        [excludeDays]="[0, 6]"
+        locale="fr"
+        [dayStartHour]="8"
+        [dayEndHour]="18"
+        (eventClicked)="eventClicked($event)"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        [refresh] = "refresh"
+        [eventTitleTemplate]="customEWeekViewTemplate">    
+      </mwl-calendar-week-view>
 
-<ng-template #customEWeekViewTemplate let-event="event">
-  <div *ngIf="event.id === getEventId(event)" class="titre h-full flex flex-col justify-between">
-    <div class="item-center text-center">
-      <div class="item-center text-center">
-        {{ getCourseByEventId(event.id)?.initial_resource ? getCourseByEventId(event.id)?.initial_resource : "BDD" }}
-      </div>
-      <div class="flex justify-between">
-        <div class="max-w-min inline-block">
-          {{ getCourseByEventId(event.id)?.name_salle ? getCourseByEventId(event.id)?.name_salle : "Là" }}
-        </div>
-        <div class="max-w-min inline-block">
-          {{ getCourseByEventId(event.id)?.id_enseignant ? getCourseByEventId(event.id)?.id_enseignant : "AC" }}
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
+      <ng-template #customEWeekViewTemplate>
+        <div *ngFor="let event of events" class="titre h-full flex flex-col justify-between" >
+          <div class="item-center text-center">
 
+            <div class="flex justify-between">
+
+              <div class="max-w-min inline-block" >
+                {{ getCourseByEventId(getEventId(event))?.name_salle ? getCourseByEventId(getEventId(event))?.name_salle : "Là" }}
+              </div>
+
+              <div class="item-center text-center" >
+                {{ getNomRessourceByInitial(getCourseByEventId(getEventId(event))?.initial_resource!) ? getNomRessourceByInitial(getCourseByEventId(getEventId(event))?.initial_resource!) : "BDD" }}
+              </div>
+
+              <div class="max-w-min inline-block">
+                {{ getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) ? getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) : "AC" }}
+              </div>
+
+            </div>
+
+            <div class="flex justify-between">
+
+                <div class="max-w-min inline-block" >
+                  {{ event ? getTimeOfEvent(event)[0] : "JSP" }}
+                </div>
+
+                <div class="max-w-min inline-block">
+                  {{ event ? getTimeOfEvent(event)[1] : "JSP2" }}
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+      </ng-template>
 </div>
 <div id="modify-event-modal" tabindex="-1" aria-hidden="true"
     class="modal fixed top-0 left-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center bg-gray-900 bg-opacity-50"
