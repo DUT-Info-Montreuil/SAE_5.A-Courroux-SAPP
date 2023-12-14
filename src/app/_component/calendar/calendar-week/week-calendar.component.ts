@@ -165,6 +165,9 @@ export class WeekCalendarComponent{
         for (let course of courses) {
           this.addEvent(course);
         }
+        this.refresh.next();
+
+        console.log(this.events);
 
       },
       error: error => {
@@ -172,7 +175,6 @@ export class WeekCalendarComponent{
       }
     }
     )
-
   }
 
 
@@ -193,8 +195,7 @@ export class WeekCalendarComponent{
         afterEnd: true,
       }
     });
-    this.refresh.next();
-
+    console.log(this.events);
   }
 
   replaceEvent(course: Course): void {
@@ -204,6 +205,7 @@ export class WeekCalendarComponent{
     
     this.events = this.events.filter((event) => event.id !== course.id);
     this.addEvent(course);
+    this.refresh.next();
 
   }
 
@@ -303,6 +305,43 @@ export class WeekCalendarComponent{
     // console.log(this.events);
   }
 
+  getCourseByEventId(eventId: number) {
+    // for (const course of this.courses) {
+    //   if (course.id == eventId) {
+    //     console.log(course);
+    //     return course;
+    //   }
+    // }
+
+    
+    return this.courses.find(course => course.id == eventId);
+  }
+
+  getNomProfesseurById(id_enseignant: number) {
+    
+    console.log("Debut recherche professeur");
+    console.log(id_enseignant);
+    for (const professeur of this.teachers) {
+      if (professeur.id === id_enseignant) {
+        console.log("Fin recherche professeur");
+        console.log(professeur.id);
+        return professeur.staff.user.username;
+      }
+    }
+    
+    return null;
+  }
+
+  getNomGroupeById(id_group: number) {
+    for (const groupe of this.groupes) {
+      if (groupe.id === id_group) {
+        return groupe.name;
+      }
+    }
+    
+    return null;
+  }
+
   findCoursebyEventId(id: number) {
     let c: Course 
     for(let course of this.courses) {
@@ -312,6 +351,36 @@ export class WeekCalendarComponent{
     }
 
     return c!;
+  }
+
+  getEventId(event: any): number {
+    // console.log(event.id);
+
+    if (typeof event.id === 'number') {
+      return event.id;
+    }
+    
+    return event.id;
+  }
+  
+  getNomRessourceByInitial(initial: string) {
+    for (const ressource of this.ressources) {
+      if (ressource.initial === initial) {
+        return ressource.name;
+      }
+    }
+    
+    return null;
+  }
+
+  getTimeOfEvent(event: any) {
+    let c = this.getCourseByEventId(event.id);
+
+    if (c !== null) {
+      return [c!.start_time, c!.end_time];
+    }
+
+    return "nope";
   }
 
 }

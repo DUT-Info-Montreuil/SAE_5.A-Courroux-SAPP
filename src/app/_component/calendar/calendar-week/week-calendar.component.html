@@ -30,7 +30,43 @@
         (eventClicked)="eventClicked($event)"
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
+        [eventTitleTemplate]="customEWeekViewTemplate">    
     ></mwl-calendar-week-view>
+
+    <ng-template #customEWeekViewTemplate>
+        <div *ngFor="let event of events" class="titre h-full flex flex-col justify-between" >
+          <div class="item-center text-center">
+            <div class="flex justify-between">
+
+              <div class="max-w-min inline-block" >
+                {{ getCourseByEventId(getEventId(event))?.name_salle ? getCourseByEventId(getEventId(event))?.name_salle : "Là" }}
+              </div>
+
+              <div class="item-center text-center" >
+                {{ (getCourseByEventId(getEventId(event))?.initial_ressource!) ? getNomRessourceByInitial(getCourseByEventId(getEventId(event))?.initial_ressource!) : "BDD" }}
+              </div>
+
+              <div class="max-w-min inline-block">
+                {{ getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) ? getNomProfesseurById(getCourseByEventId(getEventId(event))?.id_enseignant!) : "AC" }}
+              </div>
+
+            </div>
+
+            <div class="flex justify-between">
+
+                <div class="max-w-min inline-block" >
+                  {{ event ? getTimeOfEvent(event)[0] : "JSP" }}
+                </div>
+
+                <div class="max-w-min inline-block">
+                  {{ event ? getTimeOfEvent(event)[1] : "JSP2" }}
+                </div>
+
+            </div>
+
+          </div>
+        </div>
+      </ng-template>
 </div>
  <ng-container *ngIf="showModalAdd">
     <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addEvent($event)" (closeModal)="closeModalAdd()"></course-add>
