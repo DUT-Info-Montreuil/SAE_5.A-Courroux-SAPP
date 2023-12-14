@@ -110,12 +110,12 @@ export class CourseEditComponent implements OnInit{
             next: course => {
                 this.courseEvent.emit(course);
                 this.closeModalEdit()
-                this.toastr.success('Le cours a été modifié', 'Cours modifié');
+                this.toastr.success('Le cours a été modifié', 'Cours modifié',{timeOut: 1500});
                 // this.courseService.addCourseList(course);
             },
             error: error => {
                 console.log(error)
-                this.toastr.error(error, 'Erreur');
+                this.toastr.error(error, 'Erreur',{timeOut: 2000});
 
             }
         })

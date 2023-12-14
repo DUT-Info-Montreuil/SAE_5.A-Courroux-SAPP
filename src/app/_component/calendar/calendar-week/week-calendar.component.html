@@ -50,10 +50,12 @@
         <div class="titre h-full flex flex-col justify-between relative">
           <div class="item-center text-center">
             <!-- Votre contenu principal ici -->
-            <div class="flex-row justify-center text-center">
-              <div class="flex-1 max-w-min inline-block items-center justify-items-center">
+            <div class="flex flex-row">
+                <div class="flex-1 text-start">{{getCourseByEventId(event.id)!.name_salle}}</div>
+                <div class="flex-1 text-center">
                 {{ getRessourcesByInitial(getCourseByEventId(event.id)!.initial_ressource) }}
-              </div>
+                </div>
+                <div class="flex-1 text-end">{{ getInitialTeacher(event.id) }}</div>
             </div>
           </div>
           
@@ -71,6 +73,6 @@
     <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
-<ng-container *ngIf="showModalMod">
+<ng-container *ngIf="showModalMod" >
     <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="replaceCourse($event)" (closeModal)="closeModalMod()"></course-edit>
 </ng-container> 

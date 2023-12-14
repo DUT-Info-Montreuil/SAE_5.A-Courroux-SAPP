@@ -289,7 +289,7 @@ export class WeekCalendarComponent{
         console.log(response);
         this.events = this.events.filter((event) => event.id !== course_find!.id);
         this.events.push(event_backup!);
-        this.toastr.error(response.error.error, 'Erreur');
+        this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
       }
     })
 
@@ -341,29 +341,10 @@ export class WeekCalendarComponent{
 
 
 
-  getNomProfesseurById(id_enseignant: number) {
-    
-    console.log("Debut recherche professeur");
-    console.log(id_enseignant);
-    for (const professeur of this.teachers) {
-      if (professeur.id === id_enseignant) {
-        console.log("Fin recherche professeur");
-        console.log(professeur.id);
-        return professeur.staff.user.username;
-      }
-    }
-    
-    return null;
-  }
-
-  getNomGroupeById(id_group: number) {
-    for (const groupe of this.groupes) {
-      if (groupe.id === id_group) {
-        return groupe.name;
-      }
-    }
-    
-    return null;
+  getInitialTeacher(id: number) {
+    let id_teacher =  this.courses.find(course => course.id == id)?.id_enseignant;
+    let teacher = this.teachers.find(teacher => teacher.id == id_teacher);
+    return teacher? teacher.staff.initial : "";
   }
 
   
@@ -371,22 +352,22 @@ export class WeekCalendarComponent{
   publishCourse(){
     this.courseService.publishCourses().subscribe({
       next:() => {
-        this.toastr.success('Les cours ont été publiés', 'Succès');
+        this.toastr.success('Les cours ont été publiés', 'Succès',{timeOut: 1500,});
         this.loadEvents()
       },
       error: error => {
-        this.toastr.error(error, 'Erreur');
+        this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
     })
   }
   cancelCourse(){
     this.courseService.cancelCourses().subscribe({
       next:() => {
-        this.toastr.success('Les cours ont été annulés', 'Succès');
+        this.toastr.success('Les cours ont été annulés', 'Succès',{timeOut: 1500});
         this.loadEvents()
       },
       error: error => {
-        this.toastr.error(error, 'Erreur');
+        this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
     })
   }

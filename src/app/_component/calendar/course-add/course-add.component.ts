@@ -93,12 +93,12 @@ export class CourseAddComponent implements OnInit{
             next: course => {
                 this.courseEvent.emit(course);
                 this.closeModalAdd();
-                this.toastr.success('Cours ajouté', 'Succès');
+                this.toastr.success('Cours ajouté', 'Succès',{timeOut: 1500});
                 // this.courseService.addCourseList(course);
             },
             error: response => {
                 console.log(response);
-                this.toastr.error(response.error.error , 'Erreur');
+                this.toastr.error(response.error.error , 'Erreur',{timeOut: 2000});
             }
         })
 
