@@ -28,7 +28,7 @@ export class CourseEditComponent implements OnInit{
 
     @Output() courseEvent: EventEmitter<Course> = new EventEmitter<Course>();
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
-
+    @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
 
 
 
@@ -100,14 +100,15 @@ export class CourseEditComponent implements OnInit{
         if (this.courseForm.invalid) {
             return;
         }
-        const course: Course = Object.assign(this.course, this.courseForm.value);
+        const course_edit: Course = Object.assign(this.course, this.courseForm.value);
 
         
-        course.start_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.start);
-        course.end_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.end);
+        course_edit.start_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.start);
+        course_edit.end_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.end);
 
-        this.courseService.updateCourse(course).subscribe({
+        this.courseService.updateCourse(course_edit).subscribe({
             next: course => {
+                this.removeEvent.emit(course_edit);
                 this.courseEvent.emit(course);
                 this.closeModalEdit()
                 this.toastr.success('Le cours a été modifié', 'Cours modifié',{timeOut: 1500});

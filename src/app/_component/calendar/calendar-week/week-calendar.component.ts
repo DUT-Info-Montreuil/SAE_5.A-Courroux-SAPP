@@ -186,7 +186,7 @@ export class WeekCalendarComponent{
   addCourse(course: Course) {
     this.courses.push(course);
     this.addEvent(course);
-    this.refresh.next();
+    // this.refresh.next();
   }
     
 
@@ -210,6 +210,12 @@ export class WeekCalendarComponent{
     console.log(this.events);
   }
 
+
+  removeCourse(course: Course): void {
+    this.courses = this.courses.filter((course) => course.id !== course.id);
+    this.events = this.events.filter((event) => event.id !== course.id);
+    this.refresh.next();
+  }
   replaceCourse(course_replace: Course): void {
 
     this.courses = this.courses.filter((course) => course.id !== course_replace.id);
@@ -326,7 +332,6 @@ export class WeekCalendarComponent{
 
   getCourseByEventId(eventId: number) {
 
-    
     return this.courses.find(course => course.id == eventId);
   }
 
