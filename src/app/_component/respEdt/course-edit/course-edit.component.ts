@@ -104,7 +104,9 @@ export class CourseEditComponent implements OnInit{
         if (this.courseForm.invalid) {
             return;
         }
-        const course_edit: Course = Object.assign(this.course, this.courseForm.value);
+        const course_edit: Course = new Course()
+        Object.assign(course_edit, this.course);
+        Object.assign(course_edit, this.courseForm.value);
 
         
         course_edit.start_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.start);
@@ -119,9 +121,10 @@ export class CourseEditComponent implements OnInit{
                 // this.courseService.addCourseList(course);
                 // this.initializeForm();
             },
-            error: error => {
-                console.log(error)
-                this.toastr.error(error, 'Erreur',{timeOut: 2000});
+            error: response => {
+                console.log(response)
+                this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
+                console.log(this.course)
 
             }
         })
