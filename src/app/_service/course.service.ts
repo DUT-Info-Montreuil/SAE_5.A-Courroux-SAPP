@@ -101,4 +101,12 @@ export class CourseService {
             retry(1)
         );
     }
+
+    deleteCourse(course: Course): Observable<Course> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/course/${course.id}`;
+        return this.http.delete<Course>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
 }

@@ -232,6 +232,7 @@ export class WeekCalendarComponent{
   }
 
 
+
   eventClicked(event: any) {
     // console.log("safe");
     this.eventSelectionne = event;

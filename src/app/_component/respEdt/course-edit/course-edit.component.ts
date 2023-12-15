@@ -135,6 +135,22 @@ export class CourseEditComponent implements OnInit{
         this.closeModal.emit();
       }
 
+      deleteCourse(){
+        this.courseService.deleteCourse(this.course).subscribe({
+            next: course => {
+                this.removeEvent.emit(course);
+                this.closeModalEdit()
+                this.toastr.success('Le cours a été supprimé', 'Cours supprimé',{timeOut: 1500});
+            },
+            error: response => {
+                console.log(response)
+                this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
+                console.log(this.course)
+
+            }
+        })
+      }
+
   
 
 }
