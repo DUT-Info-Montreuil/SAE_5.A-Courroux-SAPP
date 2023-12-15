@@ -47,7 +47,7 @@
     ></mwl-calendar-week-view>
 
 
-    <div *ngIf="!isWeekCalendar"  class="w-full text-center bg-white p-1 text-black hover:bg-gray-200 ps-[70 px]" (click)="toggleWeekCalendar()">
+    <div *ngIf="!isWeekCalendar"  class="w-full text-center bg-white p-1 text-black hover:bg-gray-200 ps-[70px]" (click)="toggleWeekCalendar()">
         <h2 class="font-bold">{{ viewDate | date:'EEEE' | lowercase }}</h2>
         <h2 class="text-gray-500">{{ viewDate | date:'d MMM' | lowercase }}</h2>
     </div>

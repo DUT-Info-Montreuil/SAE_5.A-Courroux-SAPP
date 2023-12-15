@@ -42,6 +42,8 @@ export class WeekViewCalendarComponent{
 
   courseForEdit: Course;
 
+  isWeekCalendar = true
+
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -134,6 +136,19 @@ export class WeekViewCalendarComponent{
         }
       }
       )
+  }
+
+  toggleWeekCalendar(){
+    this.isWeekCalendar = !this.isWeekCalendar;
+  }
+
+  changeViewDay(event : any){
+
+    this.viewDate = new Date(event.day.date);
+    this.toggleWeekCalendar()
+    
+    
+    // this.loadEvents();
   }
 
   openModalMod(eventId: number) {
