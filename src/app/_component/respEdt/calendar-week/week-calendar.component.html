@@ -39,10 +39,10 @@
         [dayStartHour]="8"
         [dayEndHour]="18"
         (eventClicked)="eventClicked($event)"
-        (dayHeaderClicked)="changeViewDay($event)">
+        (dayHeaderClicked)="changeViewDay($event)"
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
-        [eventTitleTemplate]="customeWeekViewTemplate"> 
+        [eventTitleTemplate]="customeWeekViewTemplate"
         
     ></mwl-calendar-week-view>
 

@@ -227,6 +227,7 @@ export class WeekCalendarComponent{
     this.viewDate = new Date(event.day.date);
     this.toggleWeekCalendar()
     
+    
     // this.loadEvents();
   }
 
