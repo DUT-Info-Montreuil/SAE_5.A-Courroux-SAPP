@@ -30,7 +30,7 @@
         </div>
         
     </div>
-    <mwl-calendar-week-view
+    <mwl-calendar-week-view *ngIf="isWeekCalendar"
         [viewDate]="viewDate"
         class="week-view" 
         [events]="events"
@@ -39,10 +39,35 @@
         [dayStartHour]="8"
         [dayEndHour]="18"
         (eventClicked)="eventClicked($event)"
+        (dayHeaderClicked)="changeViewDay($event)">
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
         [eventTitleTemplate]="customeWeekViewTemplate"> 
+        
     ></mwl-calendar-week-view>
+
+
+    <div *ngIf="!isWeekCalendar"  class="w-full text-center bg-white p-1 text-black hover:bg-gray-200 ps-[70 px]" (click)="toggleWeekCalendar()">
+        <h2 class="font-bold">{{ viewDate | date:'EEEE' | lowercase }}</h2>
+        <h2 class="text-gray-500">{{ viewDate | date:'d MMM' | lowercase }}</h2>
+    </div>
+    <mwl-calendar-day-view *ngIf="!isWeekCalendar"
+    [viewDate]="viewDate"
+    
+
+    class="week-view" 
+    [events]="events"
+    locale="fr"
+    [dayStartHour]="8"
+    [dayEndHour]="18"
+    (eventClicked)="eventClicked($event)"
+    (eventTimesChanged)="eventTimesChanged($event)"
+    [refresh] = "refresh"
+
+
+    [eventTitleTemplate]="customeWeekViewTemplate"> 
+    
+</mwl-calendar-day-view>
 
     <!-- [eventTitleTemplate]="customEWeekViewTemplate">     -->
 

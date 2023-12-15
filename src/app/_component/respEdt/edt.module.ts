@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, DateAdapter, DateFormatterParams } from 'angular-calendar';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -56,6 +56,8 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     DatePipe,
     {provide: CalendarDateFormatter, useClass:CustomDateFormater},
     HttpClientModule,
+    { provide: LOCALE_ID, useValue: 'fr' }
+
     // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 
 

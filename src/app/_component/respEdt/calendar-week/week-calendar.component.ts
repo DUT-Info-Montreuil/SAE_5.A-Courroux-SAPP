@@ -41,6 +41,8 @@ export class WeekCalendarComponent{
 
   courseForEdit: Course;
 
+  isWeekCalendar = true;
+
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -186,7 +188,7 @@ export class WeekCalendarComponent{
   addCourse(course: Course) {
     this.courses.push(course);
     this.addEvent(course);
-    // this.refresh.next();
+    this.refresh.next();
   }
     
 
@@ -216,11 +218,21 @@ export class WeekCalendarComponent{
     // this.refresh.next();
   }
 
-  
+  toggleWeekCalendar(){
+    this.isWeekCalendar = !this.isWeekCalendar;
+  }
 
+  changeViewDay(event : any){
+
+    this.viewDate = new Date(event.day.date);
+    this.toggleWeekCalendar()
+    
+    // this.loadEvents();
+  }
 
 
   eventClicked(event: any) {
+    // console.log("safe");
     this.eventSelectionne = event;
     // this.maxStartTime = new Date(this.eventSelectionne.event.start - 15 * 60 * 1000).toISOString().slice(0, 16);
     // this.minEndTime = new Date(this.eventSelectionne.event.end + 15 * 60 * 1000).toISOString().slice(0, 16);
@@ -264,8 +276,11 @@ export class WeekCalendarComponent{
     if (!course_find){
       return;
     }
-    
 
+    let start_time_initial = course_find.start_time;
+    let end_time_initial = course_find.end_time;
+    
+    
     course_find.start_time = event.newStart;
     course_find.end_time = event.newEnd;
 
@@ -283,6 +298,8 @@ export class WeekCalendarComponent{
       },
       error: response => {
         console.log(response);
+        course_find!.start_time = start_time_initial;
+        course_find!.end_time = end_time_initial;
         this.events = this.events.filter((event) => event.id !== course_find!.id);
         this.events.push(event_backup!);
         this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
