@@ -4,7 +4,7 @@ import { EdtService } from '../services/edt.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
-import { Subscription, share } from 'rxjs';
+import { Observable, Subscription, map, share } from 'rxjs';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 import { TeacherService } from '../_service/teacher.service';
 import { Teacher } from '../_model/entity/teacher.model';
@@ -32,7 +32,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   ressource:Resource = new Resource();
   eleve:Student;
   promo:Group;
-  groupe: Group;
+  groupe: Group = new Group();
 
   showModal = false;
 
@@ -44,6 +44,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   eleves : Student[] = [];
   promos : Promotion[] = [];
   groups : Group[] = [];
+  sousGroupes : Group[] = [];
 
   isSection1Open = false;
   isSection2Open = false;
@@ -77,12 +78,11 @@ export class FormsComponent implements OnInit, OnDestroy{
   })
 
   formAddGroupe = new FormGroup({
-    niveau: new FormControl("", Validators.required),
-    TD : new FormControl("", Validators.required),
-    TP : new FormControl("", Validators.required)
+    name: new FormControl("", Validators.required),
+    id_group_parent: new FormControl<number|null>(null)
   })
 
-  promoSelectionnee: Promotion | null = null;
+  public idPromoSelectionnee: number | null = null;
   public formSelectionne: any = null;
   public selection: any = null;
   public typeGroupeSelectionne: any = null;
@@ -114,6 +114,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshGroupes();
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
+      this.refreshPromo();
     });
     this.eleveRefreshSubscription = this.studentService.studentRefresh$.subscribe(() => {
       this.refreshEleves();
@@ -127,6 +128,13 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.profRefreshSubscription = this.teacherService.profRefresh$.subscribe(() => {
       this.refreshProfs();
     });
+  }
+  ngOnDestroy() {
+    this.salleRefreshSubscription.unsubscribe();
+    this.profRefreshSubscription.unsubscribe();
+    this.ressourceRefreshSubscription.unsubscribe();
+    this.eleveRefreshSubscription.unsubscribe();
+    this.groupeRefreshSubscription.unsubscribe();
   }
 
   ouvrirModalModif(element: any){
@@ -149,46 +157,36 @@ export class FormsComponent implements OnInit, OnDestroy{
   }
 
   changerPromo(event: any) {
-    const selectedValue: Promotion | null = event.target.value;
-  
-    console.log('Selected Value:', selectedValue);
-  
-    if (selectedValue) {
-      this.promoSelectionnee = selectedValue;
-      console.log('Promo sélectionnée ID:', this.promoSelectionnee.id);
-      this.refreshGroupes();  
-    } else {
-      this.toastr.error("Veuillez sélectionner une promo");
-    }
+    this.idPromoSelectionnee = event.target.value;
+    this.refreshGroupes();
   }
   
-  ngOnDestroy() {
-    this.salleRefreshSubscription.unsubscribe();
-    this.profRefreshSubscription.unsubscribe();
-    this.ressourceRefreshSubscription.unsubscribe();
-    this.eleveRefreshSubscription.unsubscribe();
-    this.groupeRefreshSubscription.unsubscribe();
+  setFormGroupValues(id_group_parent: number){
+    this.formAddGroupe.patchValue({
+      id_group_parent: id_group_parent
+    });
+  }
+
+  loadSousGroupes(idGroupe: number): Group[] {
+    return this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
   }
 
   refreshGroupes(): void {
-    if (this.promoSelectionnee !== null) {
-      console.log(this.promoSelectionnee.id_resp);
-      this.groupeService.getTreeGroup(parseInt(this.promoSelectionnee.id)).subscribe(
-        (element: any) => {
-          this.groups = element.children;
-          // liste.forEach(element => {
-          //   if (element.id_group_parent == this.idPromoSelectionnee 
-          //     && element.id_group_parent != null) {
-          //     this.tds.push(element);
-          //   }
-          // });
-        },
-        (erreur) => {
-          console.error(erreur);
-          this.toastr.error("erreur");
-        }
-      );
-    }
+    this.groups = [];
+    this.groupeService.getGroups().subscribe(
+      (liste: Group[]) => {
+        this.sousGroupes = liste;
+        liste.forEach((groupe) => {
+          if (groupe.id_group_parent != null && groupe.id_group_parent == this.idPromoSelectionnee) {
+            this.groups.push(groupe);
+          }
+        });
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    )
   }
 
   refreshPromo(): void {
@@ -342,7 +340,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     }
   }
 
-  onSubmitAddGroupe() {
+  onSubmitAddGroupe(parentPromo: boolean) {
+    if (parentPromo){
+      this.setFormGroupValues(this.idPromoSelectionnee!);
+    }
     if (this.formAddGroupe.valid){
       this.groupe = Object.assign(this.groupe, this.formAddGroupe.value);
       this.groupeService.addGroup(this.groupe).subscribe({

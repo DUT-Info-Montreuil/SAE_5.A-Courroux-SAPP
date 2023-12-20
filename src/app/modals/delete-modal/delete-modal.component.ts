@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { GroupService } from 'src/app/_service/group.service';
 import { ResourceService } from 'src/app/_service/resource.service';
 import { RoomService } from 'src/app/_service/room.service';
 import { StudentService } from 'src/app/_service/student.service';
@@ -23,13 +24,13 @@ export class DeleteModalComponent implements OnInit{
     private roomService: RoomService,
     private ressourceService: ResourceService,
     private studentService: StudentService,
+    private groupService: GroupService,
     private toastr: ToastrService,
   ){}
 
   ngOnInit(): void {
     this.formSelectionne = this.data.formSelectionne;
     this.setElementASupp();
-    console.log(this.data);
   }
 
   setElementASupp(){
@@ -46,7 +47,14 @@ export class DeleteModalComponent implements OnInit{
       case "formEleve":
         this.elementASupp = this.data.element.user.name + " " + this.data.element.user.lastname;
         break;
+      case "formGroupe":
+        this.elementASupp = this.data.element.name;
+        break;
     }
+  }
+
+  groupesChanged(){
+    this.groupService.notifyGroupRefresh();
   }
 
   studentsChanged(){
@@ -103,6 +111,17 @@ export class DeleteModalComponent implements OnInit{
     this.studentService.deleteStudent(this.data.element.id).subscribe({
       next: response => {
         this.toastr.success("l'élève a bien été supprimé(e)!");
+        this.studentsChanged();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
+  }
+
+  supprimerGroupe(){
+    this.groupService.deleteGroup(this.data.element.id).subscribe({
+      next: response => {
+        this.toastr.success("le groupe a bien été supprimé!");
         this.studentsChanged();
       },
       error: error=> {this.toastr.error("erreur");}
