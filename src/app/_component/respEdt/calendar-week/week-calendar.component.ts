@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
-import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
+import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import { Observable, Subject, find } from 'rxjs';
@@ -14,7 +14,7 @@ import { ResourceService } from '../../../_service/resource.service';
 import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
-import { format } from 'date-fns';
+import { addDays, format, startOfWeek } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
 
@@ -50,6 +50,7 @@ export class WeekCalendarComponent{
 
   showModalMod = false;
   showModalAdd = false;
+  showModalCopy = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -75,12 +76,11 @@ export class WeekCalendarComponent{
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private roomService: RoomService) {
-
+      this.generateWeekDays();
   }
 
   ngOnInit(): void {
-    this.loadEvents();
-
+    this.weekChanged();
       this.teacherService.getTeachers().subscribe({
         next: data => {
           for(let teacher of data) {
@@ -144,12 +144,17 @@ export class WeekCalendarComponent{
     this.showModalAdd = true;
   }
   
-
   closeModalAdd() {
     this.showModalAdd = false;
   }
 
+  openModalCopy() {
+    this.showModalCopy = true;
+  }
 
+  closeModalCopy() {
+    this.showModalCopy = false;
+  }
 
   loadEvents(){
     console.log("loadEvents");
@@ -352,9 +357,6 @@ export class WeekCalendarComponent{
     return this.datePipe.transform(date, 'HH:mm');
   }
 
-
-
-
   getInitialTeacher(id: number) {
     let id_teacher =  this.courses.find(course => course.id == id)?.id_enseignant;
     let teacher = this.teachers.find(teacher => teacher.id == id_teacher);
@@ -384,6 +386,24 @@ export class WeekCalendarComponent{
         this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
     })
+  }
+
+  copy() {
+
+  }
+
+  generateWeekDays(): Date[] {
+    let displayedDates: Date[] = [];
+    const start: Date = startOfWeek(this.viewDate, { weekStartsOn: DAYS_OF_WEEK.MONDAY });
+    for (let i = 0; i < 7; i++) {
+      displayedDates.push(addDays(start, i));
+    }
+    return displayedDates;
+  }
+
+  weekChanged() {
+    this.loadEvents();
+    this.generateWeekDays();
   }
 
 }

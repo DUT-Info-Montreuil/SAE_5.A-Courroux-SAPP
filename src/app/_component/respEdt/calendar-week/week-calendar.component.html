@@ -19,11 +19,14 @@
             </div>
 
             <div>
+                <button (click)="openModalCopy()"
+                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded  mr-10 mt-10 mb-10"
+                >Copier</button>
                 <button (click)="cancelCourse()"
-                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded  mr-10 mt-10 mb-10"
                 >Annuler</button>
                 <button (click)="publishCourse()"
-                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-10 mb-10"
                 >Publier</button>
             </div>
             
@@ -94,10 +97,14 @@
 
       </ng-template>
 </div>
- <ng-container *ngIf="showModalAdd">
+<ng-container *ngIf="showModalAdd">
     <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
 <ng-container *ngIf="showModalMod" >
     <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit>
-</ng-container> 
+</ng-container>
+
+<ng-container *ngIf="showModalCopy">
+    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" (closeModal)="closeModalCopy()"></copy-course>
+</ng-container>

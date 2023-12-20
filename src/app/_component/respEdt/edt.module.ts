@@ -14,6 +14,7 @@ import { DeleteModalComponent } from 'src/app/modals/delete-modal/delete-modal.c
 import { CourseAddComponent } from './course-add/course-add.component';
 import { CourseEditComponent } from './course-edit/course-edit.component';
 import { AuthInterceptor } from 'src/app/_security/auth.interceptor';
+import { CopyCourseComponent } from './copy-course/copy-course.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -30,6 +31,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     WeekCalendarComponent,
     CourseAddComponent,
     CourseEditComponent,
+    CopyCourseComponent,
     // FormsComponent,
     // FilterPipe,
     ModifModalFormComponent,

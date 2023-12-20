@@ -109,4 +109,13 @@ export class CourseService {
             retry(1)
         );
     }
+
+    pasteCourse(course: Course): Observable<Course> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/course/paste`;
+        
+        return this.http.post<Course>(url, course, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
 }
