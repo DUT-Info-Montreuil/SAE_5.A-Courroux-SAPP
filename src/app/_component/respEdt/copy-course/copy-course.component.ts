@@ -61,14 +61,15 @@ export class CopyCourseComponent{
     }
 
     closeModalCopy() {
-      console.log("SelectInterval");
-      this.selectCoursesInInterval();
       this.closeModal.emit();
     }
 
     onSubmit() {
-        console.log("Submit");
-        console.log(this.selectedDays);
+        // console.log("Submit");
+        // console.log(this.selectedDays);
+        console.log("SelectInterval");
+        this.selectCoursesInInterval();
+        console.log(this.courses);
         this.closeModalCopy();
     }
 
@@ -87,43 +88,38 @@ export class CopyCourseComponent{
     }
 
     selectCoursesInInterval() {
+      this.coursesToCopy = [];
       for(let day of this.weekdays) {
         day.selected=false;
       }
 
-      let firstDay = new Date;
-      let lastDay;
-      let found=false;
-      let i=0;
-
-      while(!found) {
-        if(this.selectedDays[i].date<firstDay) {
-          firstDay = this.selectedDays[i].date;
-        }
-        lastDay = firstDay;
-        if(this.selectedDays[i].date>lastDay) {
-          lastDay = this.selectedDays[i].date;
-        }
-      }
-
+      let firstDay = this.selectedDays.reduce((minDate, currentDate) => currentDate.date < minDate.date ? currentDate : minDate);
+      let lastDay = this.selectedDays.reduce((maxDate, currentDate) => currentDate.date > maxDate.date ? currentDate : maxDate);
       
-      for(let day of this.selectedDays){
+      const firstDayDateOnly = new Date(firstDay.date.getFullYear(), firstDay.date.getMonth(), firstDay.date.getDate());
+      const lastDayDateOnly = new Date(lastDay.date.getFullYear(), lastDay.date.getMonth(), lastDay.date.getDate());
+      
+
+      console.log("Lowest", firstDayDateOnly);
+      console.log("Highest", lastDayDateOnly);
+      
         for(let cour of this.courses) {
-          if(cour.start_time.getDate()==day.date.getDate()) {
+
+          if(firstDayDateOnly<=cour.start_time && cour.start_time<=lastDayDateOnly) {
             this.coursesToCopy.push(cour);
           }
         }
-      }
+        console.log(this.coursesToCopy);
     }
 
     setWeekDays() {
-        console.log(this.weekdays);
-        console.log(this.displayedDates);   
+        // console.log(this.weekdays);
+        // console.log(this.displayedDates);   
       
         for (let i = 0; i < this.weekdays.length; i++) {
           this.weekdays[i].date = this.displayedDates[i];
         }
-        console.log(this.displayedDates);
+        // console.log(this.displayedDates);
     }  
       
 }
