@@ -167,15 +167,25 @@ export class FormsComponent implements OnInit, OnDestroy{
     });
   }
 
-  loadSousGroupes(idGroupe: number): Group[] {
-    return this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
-  }
+  // loadSousGroupes(idGroupe: number){
+  //   this.groupeService.getSousGroupes(idGroupe).subscribe(
+  //     (liste: Group[]) => {
+  //       this.sousGroupes = liste;
+  //     },
+  //     (erreur) => {
+  //       console.error(erreur);
+  //       this.toastr.error("erreur");
+  //     }
+  //   )
+  //   return this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
+  // }
 
   refreshGroupes(): void {
     this.groups = [];
     this.groupeService.getGroups().subscribe(
       (liste: Group[]) => {
         this.sousGroupes = liste;
+        this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
         liste.forEach((groupe) => {
           if (groupe.id_group_parent != null && groupe.id_group_parent == this.idPromoSelectionnee) {
             this.groups.push(groupe);

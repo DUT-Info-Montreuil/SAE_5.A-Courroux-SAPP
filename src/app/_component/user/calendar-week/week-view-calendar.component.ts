@@ -218,21 +218,21 @@ export class WeekViewCalendarComponent{
 
   addEvent(course: Course): void {
 
-    this.events.push({
-      id: course.id,
-      title: course.initial_ressource,
-      start: new Date(course.start_time),
-      end: new Date(course.end_time),
-      color: {
-        primary: "#1e90ff",
-        secondary: "#D1E8FF",
-      },        
-      draggable: false,
-      resizable: {
-        beforeStart: false,
-        afterEnd: false,
-      }
-    });
+    // this.events.push({
+    //   id: course.id,
+    //   title: course.initial_ressource,
+    //   start: new Date(course.start_time),
+    //   end: new Date(course.end_time),
+    //   color: {
+    //     primary: "#1e90ff",
+    //     secondary: "#D1E8FF",
+    //   },        
+    //   draggable: false,
+    //   resizable: {
+    //     beforeStart: false,
+    //     afterEnd: false,
+    //   }
+    // });
   }
 
 
