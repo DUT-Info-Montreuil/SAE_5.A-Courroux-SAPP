@@ -4,6 +4,7 @@ export class Resource implements Deserializable {
     initial: string;
     name: string;
     id_promo: number
+    color: string;
     
     deserialize(input: any): this {
         if (input) {

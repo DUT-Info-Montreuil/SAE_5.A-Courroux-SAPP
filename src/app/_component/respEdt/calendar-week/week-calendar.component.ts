@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Observable, Subject, find } from 'rxjs';
+import { Observable, Subject, find, forkJoin } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../../../services/edt.service';
@@ -79,7 +79,24 @@ export class WeekCalendarComponent{
   }
 
   ngOnInit(): void {
-    this.loadEvents();
+
+    forkJoin([
+      this.teacherService.getTeachers(), 
+      this.roomService.getSalles(), 
+      this.resourceService.getResources(), 
+      this.groupService.getGroups()
+    ]).subscribe({
+      next: data  => {
+        this.teachers = data[0]
+        this.salles = data[1]
+        this.ressources = data[2]
+        this.groupes = data[3]
+        this.loadEvents();
+      },
+      error :error => {
+        console.log(error);
+      }
+    });
 
       this.teacherService.getTeachers().subscribe({
         next: data => {
@@ -203,8 +220,9 @@ export class WeekCalendarComponent{
       start: new Date(course.start_time),
       end: new Date(course.end_time),
       color: {
-        primary: "#1e90ff",
-        secondary: "#D1E8FF",
+        primary: "#FFFFFF",
+        secondary: this.getRessourcesByInitial(course.initial_ressource)!.color,
+        // secondary: "#D1E8FF",
       },        
       draggable: true,
       resizable: {
@@ -347,8 +365,11 @@ export class WeekCalendarComponent{
     return this.courses.find(course => course.id == eventId);
   }
 
-  getRessourcesByInitial(initial_resource: string) {
+  getRessourcesNameByInitial(initial_resource: string) {
     return this.ressources.find(resource => resource.initial == initial_resource)?.name;
+  }
+  getRessourcesByInitial(initial_resource: string) {
+    return this.ressources.find(resource => resource.initial == initial_resource);
   }
 
   getTimeString(date: Date) {

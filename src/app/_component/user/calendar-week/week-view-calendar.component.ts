@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Observable, Subject, find } from 'rxjs';
+import { Observable, Subject, find, forkJoin } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { TeacherService } from '../../../_service/teacher.service';
@@ -81,61 +81,23 @@ export class WeekViewCalendarComponent{
   }
 
   ngOnInit(): void {
-    this.loadEvents();
-
-      this.teacherService.getTeachers().subscribe({
-        next: data => {
-          for(let teacher of data) {
-            this.teachers.push(teacher);
-          }
-        },
-        error :error => {
-          console.log(error);
-        }
+    forkJoin([
+      this.teacherService.getTeachers(), 
+      this.roomService.getSalles(), 
+      this.resourceService.getResources(), 
+      this.groupService.getGroups()
+    ]).subscribe({
+      next: data  => {
+        this.teachers = data[0]
+        this.salles = data[1]
+        this.ressources = data[2]
+        this.groupes = data[3]
+        this.loadEvents();
+      },
+      error :error => {
+        console.log(error);
       }
-      );
-      this.roomService.getSalles().subscribe({
-        next: data => {
-          for (let salle of data) {
-            this.salles.push(salle);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      );
-      this.resourceService.getResources().subscribe({
-        next: data => {
-          for(let resource of data) {
-            this.ressources.push(resource);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
-      this.groupService.getGroups().subscribe({
-        next: data => {
-          for(let group of data) {
-            this.groupes.push(group);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
-      this.userService.getIdentify().subscribe({
-        next: data => {
-          console.log(data)
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
+    });
   }
 
   toggleWeekCalendar(){
@@ -224,8 +186,10 @@ export class WeekViewCalendarComponent{
       start: new Date(course.start_time),
       end: new Date(course.end_time),
       color: {
-        primary: "#1e90ff",
-        secondary: "#D1E8FF",
+        primary: "#FFFFFF",
+        // secondary: "#D1E8FF",
+        secondary: this.getResourceByInitial(course.initial_ressource)!.color,
+
       },        
       draggable: false,
       resizable: {
@@ -351,8 +315,11 @@ export class WeekViewCalendarComponent{
     return this.courses.find(course => course.id == eventId);
   }
 
-  getRessourcesByInitial(initial_resource: string) {
+  getRessourceNameByInitial(initial_resource: string) {
     return this.ressources.find(resource => resource.initial == initial_resource)?.name;
+  }
+  getResourceByInitial(initial_resource: string) {
+    return this.ressources.find(resource => resource.initial == initial_resource);
   }
 
   getTimeString(date: Date) {

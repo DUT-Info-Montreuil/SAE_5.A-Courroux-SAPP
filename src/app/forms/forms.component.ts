@@ -51,8 +51,10 @@ export class FormsComponent implements OnInit, OnDestroy{
   formAddRessource = new FormGroup({
     name: new FormControl("", Validators.required),
     initial: new FormControl("", Validators.required),
-    id_promo: new FormControl("", Validators.required)
+    id_promo: new FormControl("", Validators.required),
+    color: new FormControl("#0D4378", Validators.required)
   })
+  color: string = "#0D4378"
 
   formAddSalle = new FormGroup({
     name: new FormControl("", Validators.required),
