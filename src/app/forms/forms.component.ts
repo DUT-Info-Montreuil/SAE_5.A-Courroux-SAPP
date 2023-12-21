@@ -170,6 +170,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.groupeRefreshSubscription.unsubscribe();
   }
 
+  redirectToEdt(){
+    window.location.href = "/";
+  }
+
   refreshGroupes(): void {
     if (this.promoSelectionnee !== null) {
       console.log(this.promoSelectionnee.id_resp);

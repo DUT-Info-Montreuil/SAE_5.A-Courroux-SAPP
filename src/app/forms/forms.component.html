@@ -1,4 +1,9 @@
 <div id="centre" class="w-3/4 mt-10" >
+    <div class="w-full flex items-center justify-center ms-4">
+        <button (click)="redirectToEdt()"
+                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10"
+                    >Retour à l'emploi du temps</button>
+    </div>
     <label for="choix"  class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez une option</label>
     <select id="choix" [(ngModel)]="formSelectionne" (change)="changerSelection()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
         <option value="formSalle">Salle</option>

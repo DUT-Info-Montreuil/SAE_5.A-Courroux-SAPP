@@ -184,6 +184,9 @@ export class WeekCalendarComponent{
     )
   }
 
+  redirectToUtilitaires(){
+    window.location.href = "/ajout";
+  }
 
   addCourse(course: Course) {
     this.courses.push(course);
