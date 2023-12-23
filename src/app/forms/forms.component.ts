@@ -179,7 +179,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   refreshGroupes(): void {
     if (this.promoSelectionnee !== null) {
       console.log(this.promoSelectionnee.id_resp);
-      this.groupeService.getTreeGroup(parseInt(this.promoSelectionnee.id)).subscribe(
+      this.groupeService.getTreeGroup(this.promoSelectionnee.id).subscribe(
         (element: any) => {
           this.groups = element.children;
           // liste.forEach(element => {

@@ -19,6 +19,9 @@ import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
 import { WeekCommentService } from 'src/app/_service/weekComment.service';
 import { WeekComment } from 'src/app/_model/entity/weekComment.model';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
+import { EdtManagerService } from 'src/app/_service/edtManager.service';
+import { th } from 'date-fns/locale';
 
 
 export function momentAdapterFactory() {
@@ -41,6 +44,9 @@ export class WeekCalendarComponent{
   ressources: Resource[] = [];
   groupes: Group[] = [];
   comments: WeekComment[] = [];
+
+  promoManaged: Promotion[] = [];
+  promoSelected: Promotion = new Promotion();
 
   loading = true;
 
@@ -82,7 +88,8 @@ export class WeekCalendarComponent{
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private roomService: RoomService,
-    private weekCommentService: WeekCommentService) {
+    private weekCommentService: WeekCommentService,
+    private edtManagerService: EdtManagerService) {
   }
 
   ngOnInit(): void {
@@ -91,7 +98,8 @@ export class WeekCalendarComponent{
       this.roomService.getSalles(), 
       this.resourceService.getResources(), 
       this.groupService.getGroups(),
-      this.weekCommentService.getComments()
+      this.weekCommentService.getComments(),
+      this.edtManagerService.getPromoEdtManager()
     ]).subscribe({
       next: data  => {
         this.teachers = data[0]
@@ -99,6 +107,10 @@ export class WeekCalendarComponent{
         this.ressources = data[2]
         this.groupes = data[3]
         this.comments = data[4]
+        this.promoManaged = data[5]
+        if (this.promoManaged.length > 0){
+          this.promoSelected = this.promoManaged[0];
+        }
         // console.log(this.comments)
         this.loadEvents();
         this.loading = false;
@@ -124,6 +136,12 @@ export class WeekCalendarComponent{
 
     this.showModalMod = true;
 
+  }
+
+  changePromotion(event: any){
+    let id_promo = event.target.value;
+    this.promoSelected = this.promoManaged.find(promo => promo.id == id_promo)!;
+    this.loadEvents();
   }
 
   addOrUpdateComment(comment: WeekComment){
@@ -179,7 +197,7 @@ export class WeekCalendarComponent{
     let monday = new Date(date_temp.setDate(diff));
     let friday = new Date(date_temp.setDate(diff + 4));
 
-    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
+    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}, {group: this.promoSelected.group.id}];
 
     this.courseService.getCourses(args).subscribe({
       next : courses => {

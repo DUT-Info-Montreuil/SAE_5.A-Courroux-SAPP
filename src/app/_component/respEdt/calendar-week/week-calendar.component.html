@@ -36,8 +36,13 @@
         
     </div>
     <ng-container *ngIf="!loading">
-
+        <div class="ms-10">
+            <select class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded w-52" (change)="changePromotion($event)" >
+                <option *ngFor="let promo of promoManaged" [value]="promo.id">{{promo.group.name}}</option>
+            </select>
+        </div>
     <div class="w-full text-center items-center justify-center relative">
+        
         <div class="text-center items-center justify-center ms-16 flex flex-col relative">
             
             <div class="flex flex-row gap-3">
