@@ -93,6 +93,8 @@ export class WeekCalendarComponent{
   }
 
   ngOnInit(): void {
+    // this.setViewDate();
+    console.log(this.viewDate)
     forkJoin([
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
@@ -119,15 +121,26 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     });
+    console.log(this.viewDate)
 
 
+  }
+
+  setViewDate(){
+    let day = this.viewDate.getDay();
+    let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+
+    if (this.viewDate.getDay() == 0){this.viewDate.setDate(this.viewDate.setDate(1));}
   }
 
   getWeek(date: Date) {
     const dayOfWeek = date.getDay(); // Obtient le jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
     const diff = date.getDate() - dayOfWeek; // Calcul de la différence pour obtenir le dimanche de la semaine
     const sunday = new Date(date); // Crée une nouvelle instance de Date basée sur la date d'origine
+    // console.log(this.viewDate)
     sunday.setDate(diff);
+    // console.log(this.viewDate)
+
     return getWeek(sunday, { weekStartsOn: 0 });
   }
 
@@ -152,6 +165,9 @@ export class WeekCalendarComponent{
       this.comments[index] = comment;
     }
   }
+  deleteComment(comment: WeekComment){
+    this.comments = this.comments.filter(comment_find => comment_find.id != comment.id);
+  }
   
   closeModalMod() {
     this.showModalMod = false;
@@ -171,11 +187,7 @@ export class WeekCalendarComponent{
   getComment(date : Date){
     let week_number = this.getWeek(date);
     let year = date.getFullYear().toString();
-    console.log(week_number);
-    console.log(year);
-    console.log(this.comments);
-    console.log(this.comments.find(comment => comment.week_number == week_number && comment.year == year));
-    return this.comments.find(comment => comment.week_number == week_number && comment.year == year);
+    return this.comments.find(comment => comment.week_number == week_number && comment.year == year && comment.id_promo == this.promoSelected.id);
   }
 
   toggleModalComment(){
@@ -191,10 +203,12 @@ export class WeekCalendarComponent{
     this.events = [];
 
     let day = this.viewDate.getDay();
-    let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+    // let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+    let diff = this.viewDate.getDate() - day + 1;
     console.log(diff);
     let date_temp = new Date(this.viewDate);
     let monday = new Date(date_temp.setDate(diff));
+    console.log(monday);
     let friday = new Date(date_temp.setDate(diff + 4));
 
     const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}, {group: this.promoSelected.group.id}];

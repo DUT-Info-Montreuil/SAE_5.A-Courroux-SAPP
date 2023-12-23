@@ -4,6 +4,7 @@ import { FormControl, FormBuilder, FormGroup, Validators, AbstractControl } from
 import { ToastrService } from 'ngx-toastr';
 import { WeekCommentService } from 'src/app/_service/weekComment.service';
 import { WeekComment } from 'src/app/_model/entity/weekComment.model';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
 
 
 @Component({
@@ -19,8 +20,12 @@ export class CommentAddComponent implements OnInit{
     @Input() comment ?: WeekComment;
     @Input() date: Date;
     @Input() weekNumber: number;
+    @Input() promo: Promotion;
+
 
     @Output() updateOrCreate: EventEmitter<WeekComment> = new EventEmitter<WeekComment>();
+    @Output() remove: EventEmitter<WeekComment> = new EventEmitter<WeekComment>();
+
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
 
@@ -35,6 +40,7 @@ export class CommentAddComponent implements OnInit{
 
 
     ngOnInit() {
+        console.log('this.promo', this.promo)
         console.log("this.comment", this.comment);
         if (!this.comment){
             this.comment = new WeekComment();
@@ -42,7 +48,7 @@ export class CommentAddComponent implements OnInit{
 
         this.commentForm = this.formBuilder.group({
             content: [this.comment.content, [
-                Validators.required,
+                // Validators.required,
             ]],
         });
     }
@@ -52,13 +58,18 @@ export class CommentAddComponent implements OnInit{
         if (this.commentForm.invalid) {
             return;
         }
-        const comment: WeekComment = this.commentForm.value;
-        comment.year = this.date.getFullYear().toString();
-        comment.week_number = this.weekNumber;
+        const comment_value: WeekComment = this.commentForm.value;
+        comment_value.year = this.date.getFullYear().toString();
+        comment_value.week_number = this.weekNumber;
+        comment_value.id_promo = this.promo.id;
 
-        this.commentService.addComment(comment).subscribe({
+        this.commentService.addComment(comment_value).subscribe({
             next: comment => {
-                this.updateOrCreate.emit(comment);
+                if (comment_value.content != "")
+                    this.updateOrCreate.emit(comment);
+                else {
+                    this.remove.emit(comment);
+                }
                 this.closeModalAdd();
                 // this.toastr.success('Comm ajouté', 'Succès',{timeOut: 1500});
                 // this.courseService.addCourseList(course);

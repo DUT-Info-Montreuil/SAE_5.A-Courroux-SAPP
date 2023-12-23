@@ -53,7 +53,7 @@
                 </button>
             </div>
             <ng-container class="block" *ngIf="showModalComment">
-                <comment-add [comment]="getComment(viewDate)" [date]="viewDate" [weekNumber]="getWeek(viewDate)" (closeModal)="toggleModalComment()" (updateOrCreate)="addOrUpdateComment($event)"></comment-add>
+                <comment-add [comment]="getComment(viewDate)" [date]="viewDate" [weekNumber]="getWeek(viewDate)" [promo]="promoSelected" (closeModal)="toggleModalComment()" (updateOrCreate)="addOrUpdateComment($event)" (remove)="deleteComment($event)"></comment-add>
             </ng-container>
         </div>
     </div>
