@@ -1,11 +1,11 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 
-export class Resource implements Deserializable {
-    initial: string;
-    name: string;
-    id_promo: number
-    color: string;
-    
+export class WeekComment implements Deserializable {
+    id: number;
+    year: string;
+    content: number;
+    week_number: number;
+
     deserialize(input: any): this {
         if (input) {
             Object.assign(this, input)
@@ -13,4 +13,3 @@ export class Resource implements Deserializable {
         return this
     }
 }
-    

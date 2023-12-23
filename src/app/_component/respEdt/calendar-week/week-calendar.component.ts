@@ -14,9 +14,11 @@ import { ResourceService } from '../../../_service/resource.service';
 import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
-import { format } from 'date-fns';
+import { format, getISOWeek, getWeek } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
+import { WeekCommentService } from 'src/app/_service/weekComment.service';
+import { WeekComment } from 'src/app/_model/entity/weekComment.model';
 
 
 export function momentAdapterFactory() {
@@ -38,6 +40,11 @@ export class WeekCalendarComponent{
   salles: any[] = [];
   ressources: Resource[] = [];
   groupes: Group[] = [];
+  comments: WeekComment[] = [];
+
+  loading = true;
+
+  showModalComment = false;
 
   courseForEdit: Course;
 
@@ -74,74 +81,42 @@ export class WeekCalendarComponent{
     private groupService: GroupService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private roomService: RoomService) {
-
+    private roomService: RoomService,
+    private weekCommentService: WeekCommentService) {
   }
 
   ngOnInit(): void {
-
     forkJoin([
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
       this.resourceService.getResources(), 
-      this.groupService.getGroups()
+      this.groupService.getGroups(),
+      this.weekCommentService.getComments()
     ]).subscribe({
       next: data  => {
         this.teachers = data[0]
         this.salles = data[1]
         this.ressources = data[2]
         this.groupes = data[3]
+        this.comments = data[4]
+        // console.log(this.comments)
         this.loadEvents();
+        this.loading = false;
       },
       error :error => {
         console.log(error);
       }
     });
 
-      this.teacherService.getTeachers().subscribe({
-        next: data => {
-          for(let teacher of data) {
-            this.teachers.push(teacher);
-          }
-        },
-        error :error => {
-          console.log(error);
-        }
-      }
-      );
-      this.roomService.getSalles().subscribe({
-        next: data => {
-          for (let salle of data) {
-            this.salles.push(salle);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      );
-      this.resourceService.getResources().subscribe({
-        next: data => {
-          for(let resource of data) {
-            this.ressources.push(resource);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
-      this.groupService.getGroups().subscribe({
-        next: data => {
-          for(let group of data) {
-            this.groupes.push(group);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
+
+  }
+
+  getWeek(date: Date) {
+    const dayOfWeek = date.getDay(); // Obtient le jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
+    const diff = date.getDate() - dayOfWeek; // Calcul de la différence pour obtenir le dimanche de la semaine
+    const sunday = new Date(date); // Crée une nouvelle instance de Date basée sur la date d'origine
+    sunday.setDate(diff);
+    return getWeek(sunday, { weekStartsOn: 0 });
   }
 
   openModalMod(eventId: number) {
@@ -149,6 +124,15 @@ export class WeekCalendarComponent{
 
     this.showModalMod = true;
 
+  }
+
+  addOrUpdateComment(comment: WeekComment){
+    let index = this.comments.findIndex(comment_find => comment_find.id == comment.id);
+    if (index == -1){
+      this.comments.push(comment);
+    }else{
+      this.comments[index] = comment;
+    }
   }
   
   closeModalMod() {
@@ -166,9 +150,25 @@ export class WeekCalendarComponent{
     this.showModalAdd = false;
   }
 
+  getComment(date : Date){
+    let week_number = this.getWeek(date);
+    let year = date.getFullYear().toString();
+    console.log(week_number);
+    console.log(year);
+    console.log(this.comments);
+    console.log(this.comments.find(comment => comment.week_number == week_number && comment.year == year));
+    return this.comments.find(comment => comment.week_number == week_number && comment.year == year);
+  }
+
+  toggleModalComment(){
+    this.showModalComment = !this.showModalComment;
+  }
+
+
 
 
   loadEvents(){
+    this.showModalComment = false;
     console.log("loadEvents");
     this.events = [];
 
