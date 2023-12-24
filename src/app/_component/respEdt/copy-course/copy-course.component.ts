@@ -89,6 +89,7 @@ export class CopyCourseComponent{
 
     selectCoursesInInterval() {
       this.coursesToCopy = [];
+      
       for(let day of this.weekdays) {
         day.selected=false;
       }
