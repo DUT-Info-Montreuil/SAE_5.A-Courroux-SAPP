@@ -46,6 +46,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   groups : Group[] = [];
   sousGroupes : Group[] = [];
 
+
   isSection1Open = false;
   isSection2Open = false;
 
@@ -114,7 +115,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshGroupes();
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
-      this.refreshPromo();
+      this.sousGroupes = [];
     });
     this.eleveRefreshSubscription = this.studentService.studentRefresh$.subscribe(() => {
       this.refreshEleves();
@@ -129,6 +130,7 @@ export class FormsComponent implements OnInit, OnDestroy{
       this.refreshProfs();
     });
   }
+
   ngOnDestroy() {
     this.salleRefreshSubscription.unsubscribe();
     this.profRefreshSubscription.unsubscribe();
@@ -159,12 +161,29 @@ export class FormsComponent implements OnInit, OnDestroy{
   changerPromo(event: any) {
     this.idPromoSelectionnee = event.target.value;
     this.refreshGroupes();
+    this.sousGroupes = [];
   }
   
   setFormGroupValues(id_group_parent: number){
     this.formAddGroupe.patchValue({
       id_group_parent: id_group_parent
     });
+  }
+
+  getTreeGroup(idGroupe: number){
+    this.groupeService.getTreeGroup(idGroupe).subscribe(
+      (element) => {
+        console.log(element);
+        this.sousGroupes = element.children;
+        if (element.children.length == 0) {
+          this.toastr.warning("Aucun sous-groupe");
+        }
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    )
   }
 
   // loadSousGroupes(idGroupe: number){
@@ -182,12 +201,12 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   refreshGroupes(): void {
     this.groups = [];
+    this.sousGroupes = [];
     this.groupeService.getGroups().subscribe(
       (liste: Group[]) => {
-        this.sousGroupes = liste;
-        this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
         liste.forEach((groupe) => {
-          if (groupe.id_group_parent != null && groupe.id_group_parent == this.idPromoSelectionnee) {
+          if (groupe.id_group_parent != null 
+            && groupe.id_group_parent == this.idPromoSelectionnee) {
             this.groups.push(groupe);
           }
         });

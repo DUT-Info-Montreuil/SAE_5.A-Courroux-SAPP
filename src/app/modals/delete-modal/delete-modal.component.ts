@@ -122,7 +122,7 @@ export class DeleteModalComponent implements OnInit{
     this.groupService.deleteGroup(this.data.element.id).subscribe({
       next: response => {
         this.toastr.success("le groupe a bien été supprimé!");
-        this.studentsChanged();
+        this.groupesChanged();
       },
       error: error=> {this.toastr.error("erreur");}
     });
