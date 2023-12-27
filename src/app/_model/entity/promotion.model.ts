@@ -2,7 +2,7 @@ import { Deserializable } from "../fonctional/deserializable.model"
 import { Group } from "./group.model";
 
 export class Promotion implements Deserializable {
-    id: string;
+    id: number;
     niveau: number;
     id_resp: number;
     group: Group

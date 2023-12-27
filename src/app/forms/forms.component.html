@@ -1,12 +1,19 @@
 <div id="centre" class="w-3/4 mt-10" >
-    <label for="choix"  class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez une option</label>
-    <select id="choix" [(ngModel)]="formSelectionne" (change)="changerSelection()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option value="formSalle">Salle</option>
-        <option value="formProfesseur">Professeur</option>
-        <option value="formEleve">Eleve</option>
-        <option value="formRessource">Ressource</option>
-        <option value="formGroupe">Groupe</option>
-    </select>
+    <div>
+        <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10">Retour à l'emploi du temps</button>
+        <label for="promo" class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
+        <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
+        </select>
+        <label for="choix"  class="mt-5 text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez vos options</label>
+        <select id="choix" [(ngModel)]="formSelectionne" (change)="changerSelection()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option value="formSalle">Salle</option>
+            <option value="formProfesseur">Professeur</option>
+            <option value="formEleve">Eleve</option>
+            <option value="formRessource">Ressource</option>
+            <option value="formGroupe">Groupe</option>
+        </select>        
+    </div>
 
     <!-- CSS Moon par Tech Tream Titans sur codePen -->
     <div *ngIf="!formSelectionne" class="container">
@@ -31,15 +38,7 @@
     </div>
     <!-- CSS Moon par Tech Tream Titans sur codePen -->
 
-    <div *ngIf="formSelectionne === 'formGroupe'" >
-        <label for="promo" class="mt-5 text-xl text-center block mb-2 font-medium text-gray-900 dark:text-white">Promotion</label>
-        <select required id="niveau" [(ngModel)]="promoSelectionnee"   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option value="">Veuillez sélectionner une promo</option>
-            <option *ngFor="let promo of promos" [value]="promo">{{promo.group.name}}</option>
-          </select>          
-    </div>
-
-    <div class="mt-10">
+    <div class="mt-10" *ngIf="formSelectionne !== 'formGroupe' && idPromoSelectionnee">
         <div id="accordion-collapse" data-accordion="collapse" *ngIf="formSelectionne">
             <h2 id="accordion-collapse-heading-1">
             <button type="button" class="bg-gray-300 dark:bg-slate-900 flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-700 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
@@ -103,25 +102,30 @@
                         <select required formControlName="id_promo" id="id_promo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
                         </select>
+                        <label for="hs-color-input" class="block text-sm font-medium my-2 dark:text-white w-full">Color picker</label>
+                        <div class="flex flex-row">
+                            <input formControlName="color"  type="color" class="flex-1 block cursor-default h-12 rounded-3xl"  [(ngModel)]="color" title="Choose your color"/>
+                            <!-- <div class="flex-1 flex items-center justify-center w-full">
+                                <div class="titre h-full w-3/4 flex flex-col justify-between relative bg-[{{color}}]">
+                                    <div class="item-center text-center">
+                                    <div class="flex flex-row">
+                                        <div class="flex-1 text-start">A2.05</div>
+                                        <div class="flex-1 text-center">
+                                        Cours
+                                        </div>
+                                        <div class="flex-1 text-end">PB</div>
+                                    </div>
+                                    </div>
+                                    
+                                    <div class="flex flex-row items-center justify-center">
+                                    <img src="assets/images/clock.png" alt="Logo" class="w-[18px]" >
+                                    <h2>00:00 - 00:00 </h2>
+                                    </div>
+                                    
+                                </div>
+                                </div> -->
+                        </div>
                         <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
-                    </form>
-
-                    <form [formGroup]="formAddGroupe" *ngIf="formSelectionne === 'formGroupe'" (ngSubmit)="onSubmitAddGroupe()">
-                        <button type="button" value="TP" (click)="onBoutonClique('TP')" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Créer un groupe de TP</button>
-                        <button type="button" value="TD" (click)="onBoutonClique('TD')" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Créer un groupe de TD</button>
-                        <div *ngIf="typeGroupeSelectionne === 'TP'" >
-                            <label for="TD" class="text-xl text-center block mb-2 font-medium text-gray-900 dark:text-white">TD</label>
-                            <select name="TD" id="selectTD" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
-                            </select>
-                            <label for="TP" class="mt-5 text-xl text-center block mb-2 font-medium text-gray-900 dark:text-white">TP</label>
-                            <input required formControlName="TP" type="text" id="TP" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        </div>
-                        <div *ngIf="typeGroupeSelectionne === 'TD'" >
-                            <label for="TD" class="text-xl text-center block mb-2 font-medium text-gray-900 dark:text-white">TD</label>
-                            <input required formControlName="TD" type="text" id="TD" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        </div>
-                        <button *ngIf="typeGroupeSelectionne" type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
                     </form>
                 </div>
             </div>
@@ -224,24 +228,79 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <table *ngIf="formSelectionne === 'formGroupe'" class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">nom</th>
-                                    <th scope="col" class="px-6 py-3"><span class="sr-only">Edit</span>
-                                    </th><th scope="col" class="px-6 py-3"><span class="sr-only">Remove</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let group of groups | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{group.name}}</th>
-                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(group)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
-                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(group)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-10" *ngIf="formSelectionne == 'formGroupe' && idPromoSelectionnee">
+        <div class="grid grid-cols-4 gap-4">
+            <div class="col-span-2">
+                <form [formGroup]="formAddGroupe" (ngSubmit)="onSubmitAddGroupe(true)">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Ajouter un groupe</h5>
+                    <div class="mb-5">
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du groupe</label>
+                        <input formControlName="name" type="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ajouter</button>
+                </form>
+            </div>
+            <div class="col-span-2">
+                <form [formGroup]="formAddGroupe" (ngSubmit)="onSubmitAddGroupe(false)">
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Ajouter un sous-groupe</h5>
+                    <div class="mb-5">
+                        <label for="parent" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Groupe parent</label>
+                        <select formControlName="id_group_parent" required id="parent"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option *ngFor="let group of groups" [value]="group.id">{{group.name}}</option>
+                        </select>
+                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom du sous-groupe</label>
+                        <input formControlName="name" type="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ajouter</button>
+                </form>
+            </div>
+            <!-- <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                Dropdown hover 
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+                
+            <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                    <li>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                    </li>
+                    <li>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                    </li>
+                    <li>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                    </li>
+                    <li>
+                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
+                    </li>
+                </ul>
+            </div> -->
+            <div *ngFor="let group of groups" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead (click)="getTreeGroup(group.id)" class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">{{group.name}}</th>
+                            <th scope="col" class="px-6 py-3 text-right">
+                                <button (click)="ouvrirModalDelete(group)" type="button" class="px-3 py-2 text-xs font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Supprimer</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sousGroupe of sousGroupes" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <th *ngIf="sousGroupe.id_group_parent == group.id" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{sousGroupe.name}}</th>
+                            <td *ngIf="sousGroupe.id_group_parent == group.id" class="px-6 py-4 text-right">
+                                <a (click)="ouvrirModalDelete(sousGroupe)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

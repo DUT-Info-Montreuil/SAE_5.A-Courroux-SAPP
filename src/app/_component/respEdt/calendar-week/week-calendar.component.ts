@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Observable, Subject, find } from 'rxjs';
+import { Observable, Subject, find, forkJoin } from 'rxjs';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { EdtService } from '../../../services/edt.service';
@@ -14,9 +14,14 @@ import { ResourceService } from '../../../_service/resource.service';
 import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
-import { addDays, format, startOfWeek } from 'date-fns';
+import { addDays, format, getISOWeek, getWeek, startOfWeek } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
+import { WeekCommentService } from 'src/app/_service/weekComment.service';
+import { WeekComment } from 'src/app/_model/entity/weekComment.model';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
+import { EdtManagerService } from 'src/app/_service/edtManager.service';
+import { th } from 'date-fns/locale';
 
 
 export function momentAdapterFactory() {
@@ -38,6 +43,14 @@ export class WeekCalendarComponent{
   salles: any[] = [];
   ressources: Resource[] = [];
   groupes: Group[] = [];
+  comments: WeekComment[] = [];
+
+  promoManaged: Promotion[] = [];
+  promoSelected: Promotion = new Promotion();
+
+  loading = true;
+
+  showModalComment = false;
 
   courseForEdit: Course;
   coursesToPaste: Course[] = [];
@@ -77,56 +90,61 @@ export class WeekCalendarComponent{
     private groupService: GroupService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private roomService: RoomService) {
-      this.generateWeekDays();
+    private roomService: RoomService,
+    private weekCommentService: WeekCommentService,
+    private edtManagerService: EdtManagerService) {
   }
 
   ngOnInit(): void {
-    this.weekChanged();
-      this.teacherService.getTeachers().subscribe({
-        next: data => {
-          for(let teacher of data) {
-            this.teachers.push(teacher);
-          }
-        },
-        error :error => {
-          console.log(error);
+    // this.setViewDate();
+    console.log(this.viewDate)
+    forkJoin([
+      this.teacherService.getTeachers(), 
+      this.roomService.getSalles(), 
+      this.resourceService.getResources(), 
+      this.groupService.getGroups(),
+      this.weekCommentService.getComments(),
+      this.edtManagerService.getPromoEdtManager()
+    ]).subscribe({
+      next: data  => {
+        this.teachers = data[0]
+        this.salles = data[1]
+        this.ressources = data[2]
+        this.groupes = data[3]
+        this.comments = data[4]
+        this.promoManaged = data[5]
+        if (this.promoManaged.length > 0){
+          this.promoSelected = this.promoManaged[0];
         }
+        // console.log(this.comments)
+        this.loadEvents();
+        this.loading = false;
+      },
+      error :error => {
+        console.log(error);
       }
-      );
-      this.roomService.getSalles().subscribe({
-        next: data => {
-          for (let salle of data) {
-            this.salles.push(salle);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      );
-      this.resourceService.getResources().subscribe({
-        next: data => {
-          for(let resource of data) {
-            this.ressources.push(resource);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
-      this.groupService.getGroups().subscribe({
-        next: data => {
-          for(let group of data) {
-            this.groupes.push(group);
-          }
-        },
-        error: error => {
-          console.log(error);
-        }
-      }
-      )
+    });
+    console.log(this.viewDate)
+
+
+  }
+
+  setViewDate(){
+    let day = this.viewDate.getDay();
+    let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+
+    if (this.viewDate.getDay() == 0){this.viewDate.setDate(this.viewDate.setDate(1));}
+  }
+
+  getWeek(date: Date) {
+    const dayOfWeek = date.getDay(); // Obtient le jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
+    const diff = date.getDate() - dayOfWeek; // Calcul de la différence pour obtenir le dimanche de la semaine
+    const sunday = new Date(date); // Crée une nouvelle instance de Date basée sur la date d'origine
+    // console.log(this.viewDate)
+    sunday.setDate(diff);
+    // console.log(this.viewDate)
+
+    return getWeek(sunday, { weekStartsOn: 0 });
   }
 
   openModalMod(eventId: number) {
@@ -134,6 +152,24 @@ export class WeekCalendarComponent{
 
     this.showModalMod = true;
 
+  }
+
+  changePromotion(event: any){
+    let id_promo = event.target.value;
+    this.promoSelected = this.promoManaged.find(promo => promo.id == id_promo)!;
+    this.loadEvents();
+  }
+
+  addOrUpdateComment(comment: WeekComment){
+    let index = this.comments.findIndex(comment_find => comment_find.id == comment.id);
+    if (index == -1){
+      this.comments.push(comment);
+    }else{
+      this.comments[index] = comment;
+    }
+  }
+  deleteComment(comment: WeekComment){
+    this.comments = this.comments.filter(comment_find => comment_find.id != comment.id);
   }
   
   closeModalMod() {
@@ -149,6 +185,17 @@ export class WeekCalendarComponent{
   closeModalAdd() {
     this.showModalAdd = false;
   }
+
+  getComment(date : Date){
+    let week_number = this.getWeek(date);
+    let year = date.getFullYear().toString();
+    return this.comments.find(comment => comment.week_number == week_number && comment.year == year && comment.id_promo == this.promoSelected.id);
+  }
+
+  toggleModalComment(){
+    this.showModalComment = !this.showModalComment;
+  }
+
 
   openModalCopy() {
     this.showModalCopy = true;
@@ -167,17 +214,20 @@ export class WeekCalendarComponent{
   }
 
   loadEvents(){
+    this.showModalComment = false;
     console.log("loadEvents");
     this.events = [];
 
     let day = this.viewDate.getDay();
-    let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+    // let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
+    let diff = this.viewDate.getDate() - day + 1;
     console.log(diff);
     let date_temp = new Date(this.viewDate);
     let monday = new Date(date_temp.setDate(diff));
+    console.log(monday);
     let friday = new Date(date_temp.setDate(diff + 4));
 
-    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
+    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}, {group: this.promoSelected.group.id}];
 
     this.courseService.getCourses(args).subscribe({
       next : courses => {
@@ -199,6 +249,9 @@ export class WeekCalendarComponent{
     )
   }
 
+  redirectToUtilitaires(){
+    window.location.href = "/ajout";
+  }
 
   addCourse(course: Course) {
     this.courses.push(course);
@@ -215,8 +268,9 @@ export class WeekCalendarComponent{
       start: new Date(course.start_time),
       end: new Date(course.end_time),
       color: {
-        primary: "#1e90ff",
-        secondary: "#D1E8FF",
+        primary: "#FFFFFF",
+        secondary: this.getRessourcesByInitial(course.initial_ressource)!.color,
+        // secondary: "#D1E8FF",
       },        
       draggable: true,
       resizable: {
@@ -359,8 +413,11 @@ export class WeekCalendarComponent{
     return this.courses.find(course => course.id == eventId);
   }
 
-  getRessourcesByInitial(initial_resource: string) {
+  getRessourcesNameByInitial(initial_resource: string) {
     return this.ressources.find(resource => resource.initial == initial_resource)?.name;
+  }
+  getRessourcesByInitial(initial_resource: string) {
+    return this.ressources.find(resource => resource.initial == initial_resource);
   }
 
   getTimeString(date: Date) {

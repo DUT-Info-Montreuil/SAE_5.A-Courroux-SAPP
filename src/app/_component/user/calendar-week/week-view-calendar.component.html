@@ -59,13 +59,13 @@
     <!-- [eventTitleTemplate]="customEWeekViewTemplate">     -->
 
     <ng-template #customeWeekViewTemplate let-event="event">
-        <div class="titre h-full flex flex-col justify-between relative">
+        <div class="titre h-full flex flex-col justify-between relative text-white">
           <div class="item-center text-center">
             <!-- Votre contenu principal ici -->
             <div class="flex flex-row">
                 <div class="flex-1 text-start">{{getCourseByEventId(event.id)!.name_salle}}</div>
                 <div class="flex-1 text-center">
-                {{ getRessourcesByInitial(getCourseByEventId(event.id)!.initial_ressource) }}
+                {{ getRessourceNameByInitial(getCourseByEventId(event.id)!.initial_ressource) }}
                 </div>
                 <div class="flex-1 text-end">{{ getInitialTeacher(event.id) }}</div>
             </div>
