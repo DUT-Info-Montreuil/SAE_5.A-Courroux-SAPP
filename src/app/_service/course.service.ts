@@ -110,12 +110,19 @@ export class CourseService {
         );
     }
 
-    pasteCourse(course: Course): Observable<Course> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/course/paste`;
+    pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string): Observable<Course> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
         
-        return this.http.post<Course>(url, course, this.utilsService.getJsonHeader())
-        .pipe(
-            retry(1)
-        );
+        const body = {
+            start_time: start_time,
+            end_time: end_time,
+            id_group: id_group,
+            start_time_attempt: start_time_attempt
+        };
+    
+        return this.http.post<Course>(url, body, this.utilsService.getJsonHeader())
+            .pipe(
+                retry(1)
+            );
     }
 }

@@ -29,8 +29,13 @@ export class CopyCourseComponent{
 
     @Input() courses: Course[];
     @Input() displayedDates: Date[] = [];
+    @Input() showModal: boolean = false;
+    @Input() showModalPaste: boolean = false;
+    @Input() promotionId: number;
   
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
+    @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
+    @Output() coursesToCopyEmitter: EventEmitter<Course[]> = new EventEmitter<Course[]>();
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -41,11 +46,13 @@ export class CopyCourseComponent{
     ];;
 
     selectedDays: { name: string, selected: boolean, date: Date }[] = [];
+    selectedStartDateToAttempt: Date = new Date();
     coursesToCopy: Course[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private courseService: CourseService) {
             this.setWeekDays();
     }
 
@@ -61,66 +68,95 @@ export class CopyCourseComponent{
     }
 
     closeModalCopy() {
+      this.showModal=false;
       this.closeModal.emit();
     }
 
-    onSubmit() {
+    closeModalPaste() {
+      for(let c of this.weekdays) {
+        console.log(c.name, c.date);
+      }
+      this.showModalPaste=false;
+      this.closeModalP.emit();
+    }
+
+    onSubmitCopy() {
         // console.log("Submit");
         // console.log(this.selectedDays);
         console.log("SelectInterval");
-        this.selectCoursesInInterval();
+        // this.selectCoursesInInterval();
         console.log(this.courses);
         this.closeModalCopy();
     }
 
-    updateSelection(day: { name: string, selected: boolean, date: Date }) {
-      day.selected = !day.selected; // Inverse l'état de sélection du jour
-      if (day.selected) {
+    onSubmitPaste() {
+      console.log(this.courses);
+      this.closeModalPaste();
+  }
+
+  updateSelection(day: { name: string, selected: boolean, date: Date }) {
+    if (this.selectedDays.length > 2) {
+      this.selectedDays.splice(0, 2);
+
+      this.weekdays.forEach((weekday) => {
+          if (weekday.selected) {
+              weekday.selected = false;
+          }
+      });
+
+    }
+
+    day.selected = !day.selected; // Inverse l'état de sélection du jour
+    if (day.selected) {
         this.selectedDays.push(day); // Ajoute le jour sélectionné
-      } else {
+    } else {
         const index = this.selectedDays.indexOf(day);
         if (index !== -1) {
-          this.selectedDays.splice(index, 1); // Retire le jour désélectionné
+            this.selectedDays.splice(index, 1); // Retire le jour désélectionné
         }
-      }
-      console.log('Jours sélectionnés : ', this.selectedDays);
-
     }
+    console.log('Jours sélectionnés : ', this.selectedDays);
+  }
 
-    selectCoursesInInterval() {
-      this.coursesToCopy = [];
-      
-      for(let day of this.weekdays) {
-        day.selected=false;
-      }
-
-      let firstDay = this.selectedDays.reduce((minDate, currentDate) => currentDate.date < minDate.date ? currentDate : minDate);
-      let lastDay = this.selectedDays.reduce((maxDate, currentDate) => currentDate.date > maxDate.date ? currentDate : maxDate);
-      
-      const firstDayDateOnly = new Date(firstDay.date.getFullYear(), firstDay.date.getMonth(), firstDay.date.getDate());
-      const lastDayDateOnly = new Date(lastDay.date.getFullYear(), lastDay.date.getMonth(), lastDay.date.getDate());
-      
-
-      console.log("Lowest", firstDayDateOnly);
-      console.log("Highest", lastDayDateOnly);
-      
-        for(let cour of this.courses) {
-
-          if(firstDayDateOnly<=cour.start_time && cour.start_time<=lastDayDateOnly) {
-            this.coursesToCopy.push(cour);
-          }
-        }
-        console.log(this.coursesToCopy);
-    }
 
     setWeekDays() {
-        // console.log(this.weekdays);
-        // console.log(this.displayedDates);   
-      
         for (let i = 0; i < this.weekdays.length; i++) {
           this.weekdays[i].date = this.displayedDates[i];
         }
-        // console.log(this.displayedDates);
-    }  
-      
+        console.log(this.displayedDates);
+    }
+    
+    // paste() {
+    //   let sAndHdays = this.findSmallestAndHighestDate();
+    //   this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], promotionId,this.selectedStartDateToAttempt).subscribe({
+        
+    //   })
+    // }
+
+    findSmallestAndHighestDate() {
+        let smallestDate: Date = this.selectedDays[0].date;
+        let highestDate: Date = this.selectedDays[0].date;
+
+        this.selectedDays.forEach(day => {
+          if (smallestDate === null || day.date < smallestDate) {
+            smallestDate = day.date;
+          }
+          if (highestDate === null || day.date > highestDate) {
+            highestDate = day.date;
+          }
+        });
+        console.log(smallestDate, highestDate);
+        return { smallestDate, highestDate };
+    }
+
+    selectWeekday(weekday: any): void {
+      this.weekdays.forEach(day => {
+        if (day !== weekday) {
+          day.selected = false;
+        }
+      });
+      weekday.selected = !weekday.selected;
+
+      this.selectedStartDateToAttempt = weekday.date;
+    }
 }

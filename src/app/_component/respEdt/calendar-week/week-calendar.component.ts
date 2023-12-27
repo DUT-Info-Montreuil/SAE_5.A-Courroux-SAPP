@@ -40,6 +40,7 @@ export class WeekCalendarComponent{
   groupes: Group[] = [];
 
   courseForEdit: Course;
+  coursesToPaste: Course[] = [];
 
   isWeekCalendar = true;
 
@@ -51,6 +52,7 @@ export class WeekCalendarComponent{
   showModalMod = false;
   showModalAdd = false;
   showModalCopy = false;
+  showModalPaste = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -154,6 +156,14 @@ export class WeekCalendarComponent{
 
   closeModalCopy() {
     this.showModalCopy = false;
+  }
+
+  openModalPaste() {
+    this.showModalPaste = true;
+  }
+
+  closeModalPaste() {
+    this.showModalPaste = false;
   }
 
   loadEvents(){
@@ -388,9 +398,7 @@ export class WeekCalendarComponent{
     })
   }
 
-  copy() {
 
-  }
 
   generateWeekDays(): Date[] {
     let displayedDates: Date[] = [];
@@ -404,6 +412,16 @@ export class WeekCalendarComponent{
   weekChanged() {
     this.loadEvents();
     this.generateWeekDays();
+  }
+
+  receiveArray(arrayData: Course[]): void {
+    console.log('Received Array:', arrayData);
+
+    this.coursesToPaste = arrayData;
+  }
+
+  paste() {
+    console.log("Courses to paste", this.coursesToPaste);
   }
 
 }
