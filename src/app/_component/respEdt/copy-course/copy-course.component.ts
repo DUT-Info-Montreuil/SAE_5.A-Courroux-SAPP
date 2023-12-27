@@ -16,6 +16,7 @@ import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
 import { format } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
 
 
 
@@ -31,11 +32,10 @@ export class CopyCourseComponent{
     @Input() displayedDates: Date[] = [];
     @Input() showModal: boolean = false;
     @Input() showModalPaste: boolean = false;
-    @Input() promotionId: number;
+    @Input() promotion: Promotion;
   
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
-    @Output() coursesToCopyEmitter: EventEmitter<Course[]> = new EventEmitter<Course[]>();
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -47,7 +47,6 @@ export class CopyCourseComponent{
 
     selectedDays: { name: string, selected: boolean, date: Date }[] = [];
     selectedStartDateToAttempt: Date = new Date();
-    coursesToCopy: Course[] = [];
 
     constructor(
         private formBuilder: FormBuilder,
@@ -90,6 +89,7 @@ export class CopyCourseComponent{
     }
 
     onSubmitPaste() {
+      this.paste();
       console.log(this.courses);
       this.closeModalPaste();
   }
@@ -123,15 +123,23 @@ export class CopyCourseComponent{
         for (let i = 0; i < this.weekdays.length; i++) {
           this.weekdays[i].date = this.displayedDates[i];
         }
-        console.log(this.displayedDates);
+        // console.log(this.displayedDates);
     }
     
-    // paste() {
-    //   let sAndHdays = this.findSmallestAndHighestDate();
-    //   this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], promotionId,this.selectedStartDateToAttempt).subscribe({
-        
-    //   })
-    // }
+    paste() {
+      let sAndHdays = this.findSmallestAndHighestDate();
+
+      let dateAttempt = this.formatDate(this.selectedStartDateToAttempt);
+      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt).subscribe({
+        next: courses => {
+          console.log("paste");
+          console.log(courses);
+        },
+        error: error => {
+          console.log(error);
+        }
+      })
+    }
 
     findSmallestAndHighestDate() {
         let smallestDate: Date = this.selectedDays[0].date;
@@ -145,8 +153,13 @@ export class CopyCourseComponent{
             highestDate = day.date;
           }
         });
+    
         console.log(smallestDate, highestDate);
-        return { smallestDate, highestDate };
+        let sDate = this.formatDate(smallestDate);
+        let hDate = this.formatDate(highestDate);
+
+        console.log(sDate, hDate);
+        return [String(sDate), String(hDate)];
     }
 
     selectWeekday(weekday: any): void {
@@ -158,5 +171,13 @@ export class CopyCourseComponent{
       weekday.selected = !weekday.selected;
 
       this.selectedStartDateToAttempt = weekday.date;
+    }
+
+    formatDate(date: Date): string {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding leading zero if needed
+      const day = ('0' + date.getDate()).slice(-2); // Adding leading zero if needed
+    
+      return `${year}-${month}-${day}`;
     }
 }
