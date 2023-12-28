@@ -1,6 +1,6 @@
 <div id="centre" class="w-3/4 mt-10" >
     <div>
-        <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-10 mt-10 mb-10">Retour à l'emploi du temps</button>
+        <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-2 mb-2">Retour à l'emploi du temps</button>
         <label for="promo" class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
         <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
