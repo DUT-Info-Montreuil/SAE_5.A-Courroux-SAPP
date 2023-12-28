@@ -110,14 +110,16 @@ export class CourseService {
         );
     }
 
-    pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string): Observable<Course> {
+    pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string, sat_date: string, sun_date: string): Observable<Course> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
         
         const body = {
             start_time: start_time,
             end_time: end_time,
             id_group: id_group,
-            start_time_attempt: start_time_attempt
+            start_time_attempt: start_time_attempt,
+            sat_date: sat_date,
+            sun_date: sun_date
         };
     
         return this.http.post<Course>(url, body, this.utilsService.getJsonHeader())

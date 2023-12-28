@@ -45,6 +45,9 @@ export class CopyCourseComponent{
         { name: 'Vendredi', selected: false, date: new Date() }
     ];;
 
+    sat = new Date();
+    sun = new Date();
+
     selectedDays: { name: string, selected: boolean, date: Date }[] = [];
     selectedStartDateToAttempt: Date = new Date();
 
@@ -53,6 +56,7 @@ export class CopyCourseComponent{
         private toastr: ToastrService,
         private courseService: CourseService) {
             this.setWeekDays();
+
     }
 
     ngOnInit(): void {
@@ -123,14 +127,22 @@ export class CopyCourseComponent{
         for (let i = 0; i < this.weekdays.length; i++) {
           this.weekdays[i].date = this.displayedDates[i];
         }
-        // console.log(this.displayedDates);
+
+        this.sat = this.displayedDates[5];
+        this.sun = this.displayedDates[6];
+        console.log("displayed dates", this.displayedDates);
+        console.log("Saturday", this.sat);
+        console.log("Sunday", this.sun);
     }
     
     paste() {
       let sAndHdays = this.findSmallestAndHighestDate();
 
       let dateAttempt = this.formatDate(this.selectedStartDateToAttempt);
-      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt).subscribe({
+      let SatFormatted = this.formatDate(this.sat);
+      let SunFormatted = this.formatDate(this.sun);
+
+      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe({
         next: courses => {
           console.log("paste");
           console.log(courses);
