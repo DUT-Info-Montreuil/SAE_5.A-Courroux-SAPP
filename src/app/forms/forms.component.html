@@ -221,8 +221,8 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let eleve of eleves | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.user.name}}</th>
-                                    <td class="px-6 py-4">{{eleve.user.lastname}}</td>
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.user.lastname}}</th>
+                                    <td class="px-6 py-4">{{eleve.user.name}}</td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(eleve)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(eleve)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                                 </tr>

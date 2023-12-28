@@ -18,6 +18,7 @@ import { Group } from '../_model/entity/group.model';
 import { StudentService } from '../_service/student.service';
 import { Promotion } from '../_model/entity/promotion.model';
 import { PromotionService } from '../_service/promotion.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -193,19 +194,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     )
   }
 
-  // loadSousGroupes(idGroupe: number){
-  //   this.groupeService.getSousGroupes(idGroupe).subscribe(
-  //     (liste: Group[]) => {
-  //       this.sousGroupes = liste;
-  //     },
-  //     (erreur) => {
-  //       console.error(erreur);
-  //       this.toastr.error("erreur");
-  //     }
-  //   )
-  //   return this.sousGroupes.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe);
-  // }
-
   refreshGroupes(): void {
     this.groups = [];
     this.sousGroupes = [];
@@ -301,26 +289,43 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.typeGroupeSelectionne = valeurBouton;
   }
 
-  onSubmitAddProfesseur(){
-    if (this.formAddProfesseur.valid){
+  handleError(error: HttpErrorResponse, entityName: string): void {
+    if (error.status === 400) {
+      this.toastr.error("Veuillez remplir correctement tous les champs du formulaire.");
+    } else if (error.status === 403) {
+      this.toastr.error("Erreur d'autorisation. Vous n'avez pas les droits nécessaires.");
+    } else if (error.status === 404) {
+      this.toastr.error("Erreur : " + entityName + " non trouvé.");
+    } else {
+      this.toastr.error("Une erreur inattendue s'est produite.");
+    }
+  }
+
+  onSubmitAddProfesseur() {
+    if (this.formAddProfesseur.valid) {
       let id = this.profs[this.profs.length - 1].id - 1;
       let name = this.formAddProfesseur.value.name!;
       let lastname = this.formAddProfesseur.value.lastname!;
       let username = this.formAddProfesseur.value.username!;
       let password = this.formAddProfesseur.value.password!;
       this.teacher = new Teacher(id, name, lastname, username, password);
+  
       this.teacherService.addTeacher(this.teacher).subscribe({
         next: response => {
-          this.toastr.success("le prof a bien été ajouté !");
+          // Si la requête est réussie, affiche un toast de succès
+          this.toastr.success("Le prof a bien été ajouté !");
           this.refreshProfs();
         },
-        error: error=> {this.toastr.error("erreur");}
+        error: error => {
+          this.handleError(error, "professeur");
+        }
       });
       this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
-    } 
+    }
   }
+  
 
   onSubmitAddRessource(){
     if (this.formAddRessource.valid) {
@@ -330,7 +335,9 @@ export class FormsComponent implements OnInit, OnDestroy{
           this.toastr.success("la ressource a bien été ajoutée !");
           this.refreshRessources();
         },
-        error: error=> {this.toastr.error("erreur");}
+        error: error => {
+          this.handleError(error, "ressource");
+        }
       });
       this.formAddProfesseur.reset();
     } else {
@@ -346,9 +353,11 @@ export class FormsComponent implements OnInit, OnDestroy{
           this.toastr.success("la salle a bien été ajouté !");
           this.refreshSalle();
         },
-        error: error=> {this.toastr.error("erreur");}
+        error: error => {
+          this.handleError(error, "salle");
+        }
       });
-      this.formAddSalle.reset();
+      this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
@@ -368,9 +377,11 @@ export class FormsComponent implements OnInit, OnDestroy{
           this.toastr.success("l'élève a bien été ajouté !");
           this.refreshEleves();
         },
-        error: error=> {this.toastr.error("erreur");}
+        error: error => {
+          this.handleError(error, "élément");
+        }
       });
-      this.formAddEleve.reset();
+      this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
@@ -387,9 +398,11 @@ export class FormsComponent implements OnInit, OnDestroy{
           this.toastr.success("le groupe a bien été ajouté !");
           this.refreshGroupes();
         },
-        error: error=> {this.toastr.error("erreur");}
+        error: error => {
+          this.handleError(error, "groupe");
+        }
       });
-      this.formAddGroupe.reset();
+      this.formAddProfesseur.reset();
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
