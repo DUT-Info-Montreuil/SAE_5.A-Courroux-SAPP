@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
-import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
+import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import { Observable, Subject, find, forkJoin } from 'rxjs';
@@ -14,7 +14,7 @@ import { ResourceService } from '../../../_service/resource.service';
 import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
-import { format, getISOWeek, getWeek } from 'date-fns';
+import { addDays, format, getISOWeek, getWeek, startOfWeek } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
 import { WeekCommentService } from 'src/app/_service/weekComment.service';
@@ -53,6 +53,7 @@ export class WeekCalendarComponent{
   showModalComment = false;
 
   courseForEdit: Course;
+  coursesToPaste: Course[] = [];
 
   isWeekCalendar = true;
 
@@ -63,6 +64,8 @@ export class WeekCalendarComponent{
 
   showModalMod = false;
   showModalAdd = false;
+  showModalCopy = false;
+  showModalPaste = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -179,7 +182,6 @@ export class WeekCalendarComponent{
     this.showModalAdd = true;
   }
   
-
   closeModalAdd() {
     this.showModalAdd = false;
   }
@@ -195,7 +197,22 @@ export class WeekCalendarComponent{
   }
 
 
+  openModalCopy() {
+    this.showModalCopy = true;
+  }
 
+  closeModalCopy() {
+    this.showModalCopy = false;
+  }
+
+  openModalPaste() {
+    this.showModalPaste = true;
+  }
+
+  closeModalPaste() {
+    this.showModalPaste = false;
+    this.refresh.next();
+  }
 
   loadEvents(){
     this.showModalComment = false;
@@ -408,9 +425,6 @@ export class WeekCalendarComponent{
     return this.datePipe.transform(date, 'HH:mm');
   }
 
-
-
-
   getInitialTeacher(id: number) {
     let id_teacher =  this.courses.find(course => course.id == id)?.id_enseignant;
     let teacher = this.teachers.find(teacher => teacher.id == id_teacher);
@@ -440,6 +454,32 @@ export class WeekCalendarComponent{
         this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
     })
+  }
+
+
+
+  generateWeekDays(): Date[] {
+    let displayedDates: Date[] = [];
+    const start: Date = startOfWeek(this.viewDate, { weekStartsOn: DAYS_OF_WEEK.MONDAY });
+    for (let i = 0; i < 7; i++) {
+      displayedDates.push(addDays(start, i));
+    }
+    return displayedDates;
+  }
+
+  weekChanged() {
+    this.loadEvents();
+    this.generateWeekDays();
+  }
+
+  receiveArray(arrayData: Course[]): void {
+    console.log('Received Array:', arrayData);
+
+    this.coursesToPaste = arrayData;
+  }
+
+  paste() {
+    console.log("Courses to paste", this.coursesToPaste);
   }
 
 }
