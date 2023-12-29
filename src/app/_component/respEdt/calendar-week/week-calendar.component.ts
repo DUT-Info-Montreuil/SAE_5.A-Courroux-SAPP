@@ -211,6 +211,7 @@ export class WeekCalendarComponent{
 
   closeModalPaste() {
     this.showModalPaste = false;
+    this.refresh.next();
   }
 
   loadEvents(){

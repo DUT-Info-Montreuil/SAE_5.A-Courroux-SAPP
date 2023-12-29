@@ -93,9 +93,14 @@ export class CopyCourseComponent{
     }
 
     onSubmitPaste() {
-      this.paste();
-      console.log(this.courses);
-      this.closeModalPaste();
+      if(this.selectedDays.length===0) {
+        this.toastr.error("Veuillez sélectionner au moins un jour");
+        return;
+      } else {
+        this.paste();
+        console.log(this.courses);
+        this.closeModalPaste();
+      }  
   }
 
   updateSelection(day: { name: string, selected: boolean, date: Date }) {
@@ -130,9 +135,9 @@ export class CopyCourseComponent{
 
         this.sat = this.displayedDates[5];
         this.sun = this.displayedDates[6];
-        console.log("displayed dates", this.displayedDates);
-        console.log("Saturday", this.sat);
-        console.log("Sunday", this.sun);
+        // console.log("displayed dates", this.displayedDates);
+        // console.log("Saturday", this.sat);
+        // console.log("Sunday", this.sun);
     }
     
     paste() {
@@ -154,24 +159,25 @@ export class CopyCourseComponent{
     }
 
     findSmallestAndHighestDate() {
-        let smallestDate: Date = this.selectedDays[0].date;
-        let highestDate: Date = this.selectedDays[0].date;
+      
+      let smallestDate: Date = this.selectedDays[0].date;
+      let highestDate: Date = this.selectedDays[0].date;
 
-        this.selectedDays.forEach(day => {
-          if (smallestDate === null || day.date < smallestDate) {
-            smallestDate = day.date;
-          }
-          if (highestDate === null || day.date > highestDate) {
-            highestDate = day.date;
-          }
-        });
-    
-        console.log(smallestDate, highestDate);
-        let sDate = this.formatDate(smallestDate);
-        let hDate = this.formatDate(highestDate);
+      this.selectedDays.forEach(day => {
+        if (smallestDate === null || day.date < smallestDate) {
+          smallestDate = day.date;
+        }
+        if (highestDate === null || day.date > highestDate) {
+          highestDate = day.date;
+        }
+      });
+  
+      console.log(smallestDate, highestDate);
+      let sDate = this.formatDate(smallestDate);
+      let hDate = this.formatDate(highestDate);
 
-        console.log(sDate, hDate);
-        return [String(sDate), String(hDate)];
+      console.log(sDate, hDate);
+      return [String(sDate), String(hDate)];
     }
 
     selectWeekday(weekday: any): void {
