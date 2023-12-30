@@ -90,6 +90,8 @@ export class CopyCourseComponent{
         // this.selectCoursesInInterval();
         console.log(this.courses);
         this.closeModalCopy();
+        this.weekdays.forEach((weekday) => weekday.selected=false);
+        console.log("SelectedDays", this.selectedDays);
     }
 
     onSubmitPaste() {
