@@ -30,6 +30,9 @@ export class CourseEditComponent implements OnInit{
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
 
+    showModalDuplicate: boolean;
+    selectedGroups: number[] = [];
+
 
 
 
@@ -43,6 +46,7 @@ export class CourseEditComponent implements OnInit{
 
         
         this.initializeForm();
+        console.log("Groupes", this.groupes);
     }
 
     initializeForm() {
@@ -151,6 +155,32 @@ export class CourseEditComponent implements OnInit{
         })
       }
 
-  
+      openModalDuplicate() {
+        this.selectedGroups = [];
+        this.showModalDuplicate = true;
+        console.log("Course viewed", this.course);
+      }
 
+      closeModalDuplicate() {
+        this.showModalDuplicate = false;
+        // console.log("Groups to duplicate", this.selectedGroups);
+      }
+
+      onSubmitDuplicate() {
+        this.closeModalDuplicate();
+        console.log("courseToDup", this.course);
+        console.log("SelectedGroups", this.selectedGroups);
+        // this.courseService.duplicate(this.course, this.selectedGroups);
+      }
+
+      groupsToDuplicateCourse(groupId: number) {
+        const index = this.selectedGroups.indexOf(groupId);
+        if (index === -1) {
+            // Si le groupe n'est pas déjà dans la liste, l'ajouter
+            this.selectedGroups.push(groupId);
+        } else {
+            // Si le groupe est déjà dans la liste, le retirer
+            this.selectedGroups.splice(index, 1);
+        }
+    }
 }

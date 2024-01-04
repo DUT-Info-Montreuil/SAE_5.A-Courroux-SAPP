@@ -111,7 +111,7 @@ export class CourseService {
     }
 
     pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string, sat_date: string, sun_date: string): Observable<Course> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/paste`;
         
         const body = {
             start_time: start_time,
@@ -126,5 +126,18 @@ export class CourseService {
             .pipe(
                 retry(1)
             );
+    }
+
+    duplicate(course: Course, groupsToDuplicateTo: number[]) {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
+
+        const body = {
+            course: course,
+            groups: groupsToDuplicateTo
+        }
+        return this.http.post<Course>(url, body, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
     }
 }

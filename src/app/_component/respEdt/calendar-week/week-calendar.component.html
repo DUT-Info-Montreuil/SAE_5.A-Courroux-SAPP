@@ -134,9 +134,8 @@
 </ng-container> 
 
 <ng-container *ngIf="showModalMod" >
-    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit></ng-container>
-
-
+    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit>
+</ng-container>
 
 <ng-container>
     <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()"></copy-course>
