@@ -20,6 +20,7 @@ import { ModifModalFormComponent } from './modals/modif-modal-form/modif-modal-f
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 import { WeekCalendarComponent, momentAdapterFactory } from './_component/respEdt/calendar-week/week-calendar.component';
 import { EdtModule } from './_component/respEdt/edt.module';
+import { ElevesGroupesComponent } from './eleves-groupes/eleves-groupes.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -36,6 +37,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     // CalendarWeekComponent,
     FormsComponent,
     FilterPipe,
+    ElevesGroupesComponent,
     // ModifModalFormComponent,
     // DeleteModalComponent,
   ],

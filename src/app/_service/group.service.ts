@@ -25,11 +25,6 @@ export class GroupService {
             retry(1)
         );
     }
-    getSousGroupes(idGroupe: number): Observable<Group[]> {
-        return this.getGroups().pipe(
-            map((liste: Group[]) => liste.filter(groupe => groupe.id_group_parent != null && groupe.id_group_parent === idGroupe))
-        );
-    }
     addGroup(group: Group): Observable<Group> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/groupe`;
         return this.http.post<Group>(url, group, this.utilsService.getJsonHeader())
@@ -53,6 +48,13 @@ export class GroupService {
     }
     getTreeGroup(id: number): Observable<Group> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/groupe/tree/${id}`;
+        return this.http.get<Group>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+    getChildsGroup(id: number): Observable<Group> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/groupe/childs/${id}`;
         return this.http.get<Group>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
