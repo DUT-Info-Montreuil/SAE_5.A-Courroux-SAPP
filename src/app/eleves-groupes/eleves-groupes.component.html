@@ -10,7 +10,7 @@
         <div *ngFor="let key of groupesKeys; let i = index" class="mt-5 w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-slate-900 dark:border-gray-700">
             <h5 class="text-3xl text-center block mb-4 font-medium text-gray-900 dark:text-white">{{ key.name }}</h5>
             <div class="grid grid-cols-2 gap-4 mt-5">
-                <div *ngFor="let value of groupesValues[i]" class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <div *ngFor="let value of groupesValues[i]; let j = index" class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <caption class="pt-2 pb-2 text-center text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
                             {{ value.name }}
@@ -19,19 +19,20 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3">Nom</th>
                                 <th scope="col" class="px-6 py-3">Prénom</th>
-                                <th scope="col" class="px-6 py-3"><span>Changer groupe</span></th>
-                                <th scope="col" class="px-6 py-3"><span class="sr-only">Mofifier groupe</span></th>
+                                <th scope="col" class="px-6 py-3">Changement rapide</th>
+                                <th scope="col" class="px-6 py-3">Mofifier groupe</th>
                             </tr>
                         </thead>
-                        <!-- <tbody *ngFor="let eleve of getElevesDuGroupe>
+                        <tbody *ngFor="let eleve of eleve_groupes.get(value)">
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.name}}</th>
                                 <td class="px-6 py-4">{{eleve.lastname}}</td>
-                                <td class="px-6 py-4"></td>
-                                <td class="px-6 py-4"></td>
-                                <td class="px-6 py-4 text-right"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a></td>
+                                <td class="px-6 py-4">
+                                    <a href=""><span class="material-symbols-outlined">swap_horiz</span></a>
+                                </td>
+                                <td class="px-6 py-4"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a></td>
                             </tr>
-                        </tbody> -->
+                        </tbody>
                     </table>
                 </div>
             </div>

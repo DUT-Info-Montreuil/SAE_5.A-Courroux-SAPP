@@ -22,6 +22,8 @@ export class ElevesGroupesComponent {
   eleve_groupes = new Map<Group, any[]>();
   groupesKeys : Group[] = [];
   groupesValues : Group[][] = [];
+  eleve_groupesKeys : Group[] = [];
+  eleve_groupesValues : any[][] = [];
 
   constructor(
     private promotionService: PromotionService,
@@ -32,6 +34,10 @@ export class ElevesGroupesComponent {
 
   ngOnInit(){
     this.initPromotions();
+  }
+
+  redirectToEdt(){
+    window.location.href = "/";
   }
 
   initPromotions(){
@@ -46,55 +52,55 @@ export class ElevesGroupesComponent {
     })
   }
 
-  initGroupes(){
+  initGroupes(): Observable<any> {
     this.groupes.clear();
-    this.groupService.getTreeGroup(this.idPromoSelectionnee!).subscribe({
-      next :(element) => {
+    return this.groupService.getTreeGroup(this.idPromoSelectionnee!).pipe(
+      map((element) => {
         element.children.forEach((group) => {
-          let sousGroupes : Group[] = [];
+          let sousGroupes: Group[] = [];
           if (group.children.length > 0) {
             group.children.forEach((sousGroupe) => {
               sousGroupes.push(sousGroupe);
-            })
+            });
           }
           this.groupes.set(group, sousGroupes);
         });
         this.groupesKeys = Array.from(this.groupes.keys());
         this.groupesValues = Array.from(this.groupes.values());
-      },
-      error: (error: HttpErrorResponse) => {
+      }),
+      catchError((error: any) => {
         this.toastr.error('Une erreur est survenue au chargement des groupes');
         console.log(error);
-      }
-    });
+        return of(null);
+      })
+    );
   }
 
   setElevesGroupe(){
     this.eleve_groupes.clear();
-    this.groupes.forEach((values: Group[], key: Group) => {
-      console.log(values);
-      values.forEach((tp: Group) => {
-        this.userGroupService.getStudentsFromGroup(tp.id).subscribe({
-          next :(liste: any[]) => {
-            this.eleve_groupes.set(tp, liste);
-          },
-          error: (error: HttpErrorResponse) => {
-            this.toastr.error('Une erreur est survenue au chargement des eleves');
-            console.log(error);
-          }
+    if (this.groupes.size > 0) {
+      this.groupes.forEach((values: Group[]) => {
+        values.forEach((tp: Group) => {
+          this.userGroupService.getStudentsFromGroup(tp.id).subscribe({
+            next :(liste: any[]) => {
+              this.eleve_groupes.set(tp, liste);
+            },
+            error: (error: HttpErrorResponse) => {
+              this.toastr.error('Une erreur est survenue au chargement des eleves');
+              console.log(error);
+            }
+          });
         });
       });
-    });
-  }
-
-  redirectToEdt(){
-    window.location.href = "/";
+    } else {
+      console.log('La Map est encore vide.');
+    }
   }
 
   changerPromo(event: any) {
     this.idPromoSelectionnee = event.target.value;
-    this.initGroupes();
-    this.setElevesGroupe();
-    console.log(this.eleve_groupes);
+    this.initGroupes().subscribe(() => {
+      this.setElevesGroupe();
+    });
   }
 }
