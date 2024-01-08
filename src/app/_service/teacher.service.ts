@@ -62,8 +62,8 @@ export class TeacherService {
 
     parseUpdateTeacher(teacher: Teacher): any {
         return {
-            "name": teacher.name,
-            "lastname": teacher.lastname,
+            "name": teacher.staff.user.name,
+            "lastname": teacher.staff.user.lastname,
             // "password": teacher.staff.user.password!,
             // "username": teacher.staff.user.username,
         }
@@ -71,8 +71,8 @@ export class TeacherService {
 
     parseAddTeacher(teacher: Teacher): any {
         return {
-            "name": teacher.name,
-            "lastname": teacher.lastname,
+            "name": teacher.staff.user.name,
+            "lastname": teacher.staff.user.lastname,
             "password": teacher.staff.user.password!,
             "username": teacher.staff.user.username,
         }

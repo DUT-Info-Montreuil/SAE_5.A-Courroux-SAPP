@@ -18,6 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
 import { StorageService } from 'src/app/_security/storage.service';
 import { UserService } from 'src/app/_service/user.service';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
+import { PromotionService } from 'src/app/_service/promotion.service';
 
 
 export function momentAdapterFactory() {
@@ -39,10 +41,13 @@ export class WeekViewCalendarComponent{
   salles: any[] = [];
   ressources: Resource[] = [];
   groupes: Group[] = [];
+  promos: Promotion[] = [];
 
   courseForEdit: Course;
 
   isWeekCalendar = true
+
+  args: any[] = [];
 
   // minEndTime!: string;
   // maxStartTime!: string;
@@ -76,7 +81,8 @@ export class WeekViewCalendarComponent{
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private roomService: RoomService,
-    private userService: UserService) {
+    private userService: UserService,
+    private promotionService: PromotionService,) {
 
   }
 
@@ -85,13 +91,16 @@ export class WeekViewCalendarComponent{
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
       this.resourceService.getResources(), 
-      this.groupService.getGroups()
+      this.groupService.getGroups(),
+      this.promotionService.getPromotions()
+
     ]).subscribe({
       next: data  => {
         this.teachers = data[0]
         this.salles = data[1]
         this.ressources = data[2]
         this.groupes = data[3]
+        this.promos = data[4]
         this.loadEvents();
       },
       error :error => {
@@ -136,6 +145,11 @@ export class WeekViewCalendarComponent{
   }
 
 
+  addArguments(args: any){
+    //supprimer les arguments deja existant
+    this.args = this.args.filter(arg => Object.keys(arg)[0] != Object.keys(args)[0]);
+    this.args.push(args);
+  }
 
   loadEvents(){
     console.log("loadEvents");
@@ -147,10 +161,11 @@ export class WeekViewCalendarComponent{
     let date_temp = new Date(this.viewDate);
     let monday = new Date(date_temp.setDate(diff));
     let friday = new Date(date_temp.setDate(diff + 4));
+    this.addArguments({date_min: format(monday, 'yyyy-MM-dd')});
+    this.addArguments({date_max: format(friday, 'yyyy-MM-dd')});
+    // const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
 
-    const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}];
-
-    this.courseService.getCourses(args).subscribe({
+    this.courseService.getCourses(this.args).subscribe({
       next : courses => {
         this.courses = courses;
         this.events = [];
@@ -359,5 +374,27 @@ export class WeekViewCalendarComponent{
       }
     })
   }
+
+  filterByPromo(event: any){
+    const promo = this.promos.find(promo => promo.id == event.target.value)!
+    const arg = {group: promo.group.id};
+    this.addArguments(arg);
+    this.loadEvents();
+  }
+
+  filterByRoom(event: any){
+    // const room = this.salles.find(room => room.nom == event.target.value)!
+    const arg = {room: event.target.value};
+    this.addArguments(arg);
+    this.loadEvents();
+  }
+
+  filterByTeacher(event: any){
+    // const teacher = this.teachers.find(teacher => teacher.id == event.target.value)!
+    const arg = {teacher: event.target.value};
+    this.addArguments(arg);
+    this.loadEvents();
+  }
+
 
 }
