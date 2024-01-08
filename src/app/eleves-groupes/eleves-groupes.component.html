@@ -14,21 +14,26 @@
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <caption class="pt-2 pb-2 text-center text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
                             {{ value.name }}
+                            <button type="button" (click)="ouvrirModalAjoutEleve(value)" class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ajouter un élève au groupe</button>
                         </caption>
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3">Nom</th>
-                                <th scope="col" class="px-6 py-3">Prénom</th>
-                                <th scope="col" class="px-6 py-3">Changer de groupe</th>
+                                <th scope="col" class="px-3 py-3">Nom</th>
+                                <th scope="col" class="px-3 py-3">Prénom</th>
+                                <th scope="col" class="px-3 py-3">Changer de groupe</th>
+                                <th scope="col" class="px-3 py-3">Modifier élève</th>
+                                <th scope="col" class="px-3 py-3">Supprimer élève</th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let eleve of eleve_groupes.get(value)">
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.name}}</th>
-                                <td class="px-6 py-4">{{eleve.lastname}}</td>
-                                <td class="px-6 py-4">
+                                <th scope="row" class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.name}}</th>
+                                <td class="px-3 py-4">{{eleve.lastname}}</td>
+                                <td class="px-3 py-4">
                                     <button type="button" (click)="ouvrirModalModifGroupe(eleve, value)" class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Modifier</button>
                                 </td>
+                                <td class="px-3 py-4"><a (click)="ouvrirModalModif(eleve.id_student)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
+                                <td class="px-3 py-4"><a (click)="ouvrirModalDelete(eleve.id_student)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                             </tr>
                         </tbody>
                     </table>
