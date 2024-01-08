@@ -64,6 +64,7 @@ export class TeacherService {
         return {
             "name": teacher.staff.user.name,
             "lastname": teacher.staff.user.lastname,
+            "activated": teacher.activated
             // "password": teacher.staff.user.password!,
             // "username": teacher.staff.user.username,
         }

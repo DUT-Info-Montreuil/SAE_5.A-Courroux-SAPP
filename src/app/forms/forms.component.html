@@ -177,6 +177,8 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3">Professeur</th>
                                     <th scope="col" class="px-6 py-3">prenom</th>
+                                    <th scope="col" class="px-6 py-3">initial</th>
+                                    <th scope="col" class="text-center py-3">activation</th>
                                     <th scope="col" class="px-6 py-3"><span class="sr-only">Edit</span>
                                     </th><th scope="col" class="px-6 py-3"><span class="sr-only">Remove</span></th>
                                 </tr>
@@ -185,6 +187,10 @@
                                 <tr *ngFor="let prof of profs | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{prof.staff.user.lastname}}</th>
                                     <td class="px-6 py-4">{{prof.staff.user.name}}</td>
+                                    <td class="px-6 py-4">{{prof.staff.initial}}</td>
+                                    <td class="flex justify-center items-center pt-2">
+                                        <button type="button" [ngClass]="{'bg-blue-500': prof.activated, 'bg-gray-300': !prof.activated}" (click)="toggleActivationTeacher(prof)" class="rounded-xl bg-blue-500 w-full h-8"></button>
+                                    </td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(prof)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(prof)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                                 </tr>
