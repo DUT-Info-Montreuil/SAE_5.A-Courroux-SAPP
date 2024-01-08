@@ -158,7 +158,7 @@ export class CourseEditComponent implements OnInit{
       openModalDuplicate() {
         this.selectedGroups = [];
         this.showModalDuplicate = true;
-        console.log("Course viewed", this.course);
+        // console.log("Course viewed", this.course);
       }
 
       closeModalDuplicate() {
@@ -170,7 +170,7 @@ export class CourseEditComponent implements OnInit{
         this.closeModalDuplicate();
         console.log("courseToDup", this.course);
         console.log("SelectedGroups", this.selectedGroups);
-        // this.courseService.duplicate(this.course, this.selectedGroups);
+        this.courseService.duplicate(this.course.id, this.selectedGroups);
       }
 
       groupsToDuplicateCourse(groupId: number) {

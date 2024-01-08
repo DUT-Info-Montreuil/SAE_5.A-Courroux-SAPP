@@ -128,13 +128,16 @@ export class CourseService {
             );
     }
 
-    duplicate(course: Course, groupsToDuplicateTo: number[]) {
+    duplicate(courseId: number, groupsToDuplicateTo: number[]) {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
 
         const body = {
-            course: course,
+            course: courseId,
             groups: groupsToDuplicateTo
-        }
+        };
+
+        console.log("CourseIdDuplicate", courseId, "groupsToDuplicateTo", groupsToDuplicateTo);
+        
         return this.http.post<Course>(url, body, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
