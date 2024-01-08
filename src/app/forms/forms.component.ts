@@ -177,7 +177,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     window.location.href = "/";
   }
 
-
   getTreeGroup(idGroupe: number){
     this.groupeService.getTreeGroup(idGroupe).subscribe(
       (element) => {

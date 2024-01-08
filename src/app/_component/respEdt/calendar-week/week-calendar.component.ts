@@ -45,6 +45,9 @@ export class WeekCalendarComponent{
   groupes: Group[] = [];
   comments: WeekComment[] = [];
 
+  ressourcesShow: Resource[] = [];
+  group_show: Group[] = [];
+
   promoManaged: Promotion[] = [];
   promoSelected: Promotion = new Promotion();
 
@@ -107,7 +110,7 @@ export class WeekCalendarComponent{
       this.edtManagerService.getPromoEdtManager()
     ]).subscribe({
       next: data  => {
-        this.teachers = data[0]
+        this.teachers = data[0].filter(teacher => teacher.activated);
         this.salles = data[1]
         this.ressources = data[2]
         this.groupes = data[3]
@@ -240,6 +243,9 @@ export class WeekCalendarComponent{
         }
         this.refresh.next();
 
+        this.ressourcesShow = this.ressources.filter(ressource => ressource.id_promo == this.promoSelected.id);
+        this.getGroupTree();
+
         console.log(this.events);
 
       },
@@ -252,6 +258,10 @@ export class WeekCalendarComponent{
 
   redirectToUtilitaires(){
     window.location.href = "/ajout";
+  }
+
+  redirectToGestionGroupes(){
+    window.location.href = "/groupes";
   }
 
   addCourse(course: Course) {
@@ -299,6 +309,29 @@ export class WeekCalendarComponent{
     
     
     // this.loadEvents();
+  }
+
+  getGroupTree(){
+    this.group_show = [];
+    const group_ids: number[] = [];
+    group_ids.push(this.promoSelected.group.id);
+    console.log("this.promoSelected.group.id", this.promoSelected.group.id)
+    console.log("this.group_ids", group_ids)
+    console.table(group_ids)
+    while (group_ids.length > 0){
+      const group_id = group_ids.pop();
+      const group_find = this.groupes.find(group => group.id == group_id);
+      if (group_find){
+        this.group_show.push(group_find);
+        const groups_temps = this.groupes.filter(group => group.id_group_parent == group_find.id);
+        if (groups_temps.length > 0){
+          for (let group of groups_temps){
+            group_ids.push(group.id);
+          }
+        }
+      }
+    }
+    console.log("this.group_show", this.group_show)
   }
 
 
@@ -481,5 +514,4 @@ export class WeekCalendarComponent{
   paste() {
     console.log("Courses to paste", this.coursesToPaste);
   }
-
 }

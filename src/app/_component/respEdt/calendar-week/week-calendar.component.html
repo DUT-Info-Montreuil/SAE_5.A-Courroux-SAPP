@@ -21,6 +21,11 @@
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ms-9"
                 (click)="redirectToUtilitaires()"
                 >Ajout utilitaires</button>
+
+                <button 
+                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ms-9"
+                (click)="redirectToGestionGroupes()"
+                >Eleves groupes</button>
             </div>
 
             <div>
@@ -130,12 +135,13 @@
 </div>
 
 <ng-container *ngIf="showModalAdd && !loading">
-    <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
+    <course-add [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
 <ng-container *ngIf="showModalMod" >
-    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit>
-</ng-container>
+    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit></ng-container>
+
+
 
 <ng-container>
     <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()"></copy-course>
