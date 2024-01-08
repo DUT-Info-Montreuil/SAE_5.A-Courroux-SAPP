@@ -1,19 +1,21 @@
-import { Component, Input, OnDestroy, OnInit, SimpleChanges, OnChanges  } from '@angular/core';
+import { Component, OnDestroy, OnInit  } from '@angular/core';
 import { Promotion } from '../_model/entity/promotion.model';
 import { PromotionService } from '../_service/promotion.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GroupService } from '../_service/group.service';
 import { Group } from '../_model/entity/group.model';
-import { BehaviorSubject, Observable, catchError, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, catchError, map, of } from 'rxjs';
 import { UserGroupService } from '../_service/user_group.service';
+import { ModifModalGroupComponent } from '../modals/modif-modal-group/modif-modal-group.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-eleves-groupes',
   templateUrl: './eleves-groupes.component.html',
   styleUrls: ['./eleves-groupes.component.scss']
 })
-export class ElevesGroupesComponent {
+export class ElevesGroupesComponent implements OnInit, OnDestroy{
 
   public idPromoSelectionnee: number | null = null;
 
@@ -22,10 +24,11 @@ export class ElevesGroupesComponent {
   eleve_groupes = new Map<Group, any[]>();
   groupesKeys : Group[] = [];
   groupesValues : Group[][] = [];
-  eleve_groupesKeys : Group[] = [];
-  eleve_groupesValues : any[][] = [];
+
+  private userGroupeSubscription: Subscription;
 
   constructor(
+    private dialogModif: MatDialog,
     private promotionService: PromotionService,
     private groupService: GroupService,
     private userGroupService: UserGroupService,
@@ -34,6 +37,15 @@ export class ElevesGroupesComponent {
 
   ngOnInit(){
     this.initPromotions();
+    this.userGroupeSubscription = this.userGroupService.userGroupeRefresh$.subscribe(() => {
+      this.initGroupes().subscribe(() => {
+        this.setElevesGroupe();
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.userGroupeSubscription.unsubscribe();
   }
 
   redirectToEdt(){
@@ -95,6 +107,16 @@ export class ElevesGroupesComponent {
     } else {
       console.log('La Map est encore vide.');
     }
+  }
+
+  ouvrirModalModifGroupe(eleve: any, ancienGroupe: Group) {
+    this.dialogModif.open(ModifModalGroupComponent, {
+      data: {
+        eleve: eleve,
+        ancienGroupe: ancienGroupe,
+        groupes: this.groupes
+      }
+    });
   }
 
   changerPromo(event: any) {

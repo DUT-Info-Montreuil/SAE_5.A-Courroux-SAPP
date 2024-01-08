@@ -19,8 +19,7 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3">Nom</th>
                                 <th scope="col" class="px-6 py-3">Prénom</th>
-                                <th scope="col" class="px-6 py-3">Changement rapide</th>
-                                <th scope="col" class="px-6 py-3">Mofifier groupe</th>
+                                <th scope="col" class="px-6 py-3">Changer de groupe</th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let eleve of eleve_groupes.get(value)">
@@ -28,9 +27,8 @@
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.name}}</th>
                                 <td class="px-6 py-4">{{eleve.lastname}}</td>
                                 <td class="px-6 py-4">
-                                    <a href=""><span class="material-symbols-outlined">swap_horiz</span></a>
+                                    <button type="button" (click)="ouvrirModalModifGroupe(eleve, value)" class="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Modifier</button>
                                 </td>
-                                <td class="px-6 py-4"><a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a></td>
                             </tr>
                         </tbody>
                     </table>
