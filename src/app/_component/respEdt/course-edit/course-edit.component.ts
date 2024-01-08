@@ -170,7 +170,14 @@ export class CourseEditComponent implements OnInit{
         this.closeModalDuplicate();
         console.log("courseToDup", this.course);
         console.log("SelectedGroups", this.selectedGroups);
-        this.courseService.duplicate(this.course.id, this.selectedGroups);
+        this.courseService.duplicate(this.course.id, this.selectedGroups).subscribe(
+          (response) => {
+            this.toastr.success("Duplication reussie");
+          },
+          (error) => {
+            this.toastr.error(error.error.error, 'Erreur',{timeOut: 2000});
+          }
+      );
       }
 
       groupsToDuplicateCourse(groupId: number) {
