@@ -406,4 +406,17 @@ export class FormsComponent implements OnInit, OnDestroy{
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
   }
+
+  toggleActivationTeacher(teacher: Teacher) {
+    teacher.activated = !teacher.activated
+    this.teacherService.updateTeacher(teacher).subscribe({
+      next: response => {
+        this.toastr.success("Le prof a bien été modifié !");
+        this.refreshProfs();
+      },
+      error: error => {
+        this.handleError(error, "professeur");
+      }
+    });
+  }
 }
