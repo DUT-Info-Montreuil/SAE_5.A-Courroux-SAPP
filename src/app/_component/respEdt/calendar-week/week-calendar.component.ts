@@ -254,6 +254,10 @@ export class WeekCalendarComponent{
     window.location.href = "/ajout";
   }
 
+  redirectToGestionGroupes(){
+    window.location.href = "/groupes";
+  }
+
   addCourse(course: Course) {
     this.courses.push(course);
     this.addEvent(course);
