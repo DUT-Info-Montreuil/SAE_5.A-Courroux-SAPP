@@ -135,11 +135,11 @@
 </div>
 
 <ng-container *ngIf="showModalAdd && !loading">
-    <course-add [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
+    <course-add [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
 <ng-container *ngIf="showModalMod" >
-    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressources" [salles]="salles" [groupes]="groupes" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit></ng-container>
+    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit></ng-container>
 
 
 
