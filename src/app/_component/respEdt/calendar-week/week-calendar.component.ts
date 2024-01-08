@@ -107,7 +107,7 @@ export class WeekCalendarComponent{
       this.edtManagerService.getPromoEdtManager()
     ]).subscribe({
       next: data  => {
-        this.teachers = data[0]
+        this.teachers = data[0].filter(teacher => teacher.activated);
         this.salles = data[1]
         this.ressources = data[2]
         this.groupes = data[3]
@@ -481,5 +481,4 @@ export class WeekCalendarComponent{
   paste() {
     console.log("Courses to paste", this.coursesToPaste);
   }
-
 }
