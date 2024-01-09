@@ -65,10 +65,10 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     window.location.href = "/";
   }
 
-  ouvrirModalAjoutEleve(groupe : Group){
+  ouvrirModalAjoutEleve(){
     this.dialog.open(AddModalEleveComponent, {
       data: {
-        groupe : groupe
+        groupes: this.groupes
       }
     });
   }
@@ -76,7 +76,6 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
   ouvrirModalModif(id_student: number){
     this.studentService.getStudent(id_student).subscribe({
       next :(student: Student) => {
-        console.log(student);
         this.dialog.open(ModifModalFormComponent, {
           data: {
             formSelectionne : "formEleve",

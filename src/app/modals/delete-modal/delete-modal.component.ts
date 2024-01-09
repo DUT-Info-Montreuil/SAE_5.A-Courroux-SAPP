@@ -6,6 +6,7 @@ import { ResourceService } from 'src/app/_service/resource.service';
 import { RoomService } from 'src/app/_service/room.service';
 import { StudentService } from 'src/app/_service/student.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
+import { UserGroupService } from 'src/app/_service/user_group.service';
 import { EdtService } from 'src/app/services/edt.service';
 
 @Component({
@@ -25,6 +26,7 @@ export class DeleteModalComponent implements OnInit{
     private ressourceService: ResourceService,
     private studentService: StudentService,
     private groupService: GroupService,
+    private userGroupService: UserGroupService,
     private toastr: ToastrService,
   ){}
 
@@ -108,10 +110,29 @@ export class DeleteModalComponent implements OnInit{
   }
 
   supprimerEleve(){
+    try {
+      this.supprimerEleveGroupe();
+      this.supprimerEleveUser();
+      this.toastr.success("l'élève(e) a bien été supprimé(e)!");
+    } catch (error) {
+      this.toastr.error("Une erreur est survenue lors de la suppression de l'élève(e)");
+    }
+  }
+
+  supprimerEleveUser(){
     this.studentService.deleteStudent(this.data.element.id).subscribe({
       next: response => {
-        this.toastr.success("l'élève a bien été supprimé(e)!");
         this.studentsChanged();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
+  }
+
+  supprimerEleveGroupe(){
+    this.userGroupService.deleteUserFromGroup(this.data.element.id).subscribe({
+      next: response => {
+        this.groupesChanged();
       },
       error: error=> {this.toastr.error("erreur");}
     });
