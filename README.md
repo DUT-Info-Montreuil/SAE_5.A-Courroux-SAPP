@@ -1,27 +1,50 @@
 # Courroux
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.5.
+## Contexte
 
-## Development server
+Courroux est une web-app de gestion d'emploie du temps. De l’initiative du responsable pédagogique du département informatique de l’IUT de Montreuil, nous devions réaliser la refonte du site de l’emploi du temps utilisé à l’IUT. Ce projet est né du fait que l’emploi du temps codé en Java JWT en 2004, ne répond pas aux nouveaux besoins des différents utilisateurs de cet emploi du temps. L'application est aussi utilisable par d'autres universités. La manière dont elle a été conçu lui permet d'etre fléxible.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Technologies
 
-## Code scaffolding
+**Frameworks :**
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+<div>
+  <img src="https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white">
+  <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white">
+</div>
 
-## Build
+**Languages :**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+<div>
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+  <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+</div>
 
-## Running unit tests
+**Database :**
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+<div>
+  <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white">
+</div>
 
-## Running end-to-end tests
+**CICD :**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+<div>
+  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white">
+  <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white">
+  <img src="https://img.shields.io/badge/Sonarqube-5190cf?style=for-the-badge&logo=sonarqube&logoColor=white">
+</div>
 
-## Further help
+## Mise en place
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+//TODO
+
+## Contributors
+
+- **Onur Genc**
+- **Cyril Grosjean**
+- **Nicolas Ramirez**
+- **Jonas Obrun**
+- **Ismaël Argence**
