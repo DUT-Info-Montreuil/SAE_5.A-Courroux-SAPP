@@ -1,44 +1,22 @@
 <div class="mx-10 mt-10">
     <div>
         <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-2 mb-2">Retour à l'emploi du temps</button>
-        <label for="promo" class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
-        <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
-        </select>
-        <label for="choix"  class="mt-5 text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez vos options</label>
+        <label for="choix"  class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez vos options</label>
         <select id="choix" [(ngModel)]="formSelectionne" (change)="changerSelection()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option value="formSalle">Salle</option>
             <option value="formProfesseur">Professeur</option>
-            <option value="formEleve">Eleve</option>
             <option value="formRessource">Ressource</option>
             <option value="formGroupe">Groupe</option>
-        </select>        
-    </div>
-
-    <!-- CSS Moon par Tech Tream Titans sur codePen -->
-    <div *ngIf="!formSelectionne" class="container">
-        <div class="moon">
-            <div class="crater crater1"></div>
-            <div class="crater crater2"></div>
-            <div class="crater crater3"></div>
-            <div class="crater crater4"></div>
-            <div class="crater crater5"></div>
-            <div class="shadow"></div>
-            <div class="eye eye-l"></div>
-            <div class="eye eye-r"></div>
-            <div class="mouth"></div>
-            <div class="blush blush1"></div>
-            <div class="blush blush2"></div>
-        </div>
-        <div class="orbit">
-            <div class="rocket">
-            <div class="window"></div>
-            </div>
+        </select>
+        <div *ngIf="formSelectionne != 'formSalle'">
+            <label for="promo" class="mt-5 text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
+            <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
+            </select>
         </div>
     </div>
-    <!-- CSS Moon par Tech Tream Titans sur codePen -->
 
-    <div class="mt-10" *ngIf="formSelectionne !== 'formGroupe' && idPromoSelectionnee">
+    <div class="mt-10" *ngIf="formSelectionne !== 'formGroupe'">
         <div id="accordion-collapse" data-accordion="collapse" *ngIf="formSelectionne">
             <h2 id="accordion-collapse-heading-1">
             <button type="button" class="bg-gray-300 dark:bg-slate-900 flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-700 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
@@ -51,6 +29,10 @@
             </h2>
             <div id="accordion-collapse-body-1" [hidden]="!isSection1Open" aria-labelledby="accordion-collapse-heading-1">
                 <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                    <div *ngIf="formSelectionne !== 'formSalle' && idPromoSelectionnee === null">
+                        <h5 class="text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Veuillez séléctionner une promo</h5>
+                    </div>
+
                     <form [formGroup]="formAddSalle" (ngSubmit)="onSubmitAddSalle()"
                     *ngIf="formSelectionne === 'formSalle'">
                         <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
@@ -65,26 +47,11 @@
                     </form>
 
                     <form [formGroup]="formAddProfesseur" (ngSubmit)="onSubmitAddProfesseur()"
-                    *ngIf="formSelectionne === 'formProfesseur'">
+                    *ngIf="formSelectionne === 'formProfesseur' && idPromoSelectionnee">
                         <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
                         <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
                         <input formControlName="name" required type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <label for="username" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Identifiant</label>
-                        <input formControlName="username" required type="text" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <label for="password" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
-                        <input formControlName="password" required type="text" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
-                    </form>
-
-                    <form [formGroup]="formAddEleve" (ngSubmit)="onSubmitAddEleve()"
-                    *ngIf="formSelectionne === 'formEleve'">
-                        <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
-                        <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
-                        <input formControlName="name" required type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <label for="INE" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numéro INE</label>
-                        <input formControlName="INE" required type="number" id="INE" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="username" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Identifiant</label>
                         <input formControlName="username" required type="text" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="password" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
@@ -93,7 +60,7 @@
                     </form>
 
                     <form [formGroup]="formAddRessource" (ngSubmit)="onSubmitAddRessource()"
-                    *ngIf="formSelectionne === 'formRessource'">
+                    *ngIf="formSelectionne === 'formRessource' && idPromoSelectionnee">
                         <label for="nonamem" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
                         <input required formControlName="name" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="initial" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Initial</label>
@@ -213,24 +180,6 @@
                                     <td class="px-6 py-4">{{ressource.id_promo}}</td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(ressource)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(ressource)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table *ngIf="formSelectionne === 'formEleve'" class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">nom</th>
-                                    <th scope="col" class="px-6 py-3">prenom</th>
-                                    <th scope="col" class="px-6 py-3"><span class="sr-only">Edit</span>
-                                    </th><th scope="col" class="px-6 py-3"><span class="sr-only">Remove</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let eleve of eleves | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{eleve.user.lastname}}</th>
-                                    <td class="px-6 py-4">{{eleve.user.name}}</td>
-                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(eleve)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
-                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(eleve)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                                 </tr>
                             </tbody>
                         </table>

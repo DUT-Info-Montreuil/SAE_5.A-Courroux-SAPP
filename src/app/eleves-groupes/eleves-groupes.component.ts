@@ -9,6 +9,11 @@ import { BehaviorSubject, Observable, Subscription, catchError, map, of } from '
 import { UserGroupService } from '../_service/user_group.service';
 import { ModifModalGroupComponent } from '../modals/modif-modal-group/modif-modal-group.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
+import { Student } from '../_model/entity/student.model';
+import { StudentService } from '../_service/student.service';
+import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
 
 @Component({
   selector: 'app-eleves-groupes',
@@ -29,12 +34,14 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
   idPromoToMigrateTo: number;
 
   private userGroupeSubscription: Subscription;
+  private eleveSubscription: Subscription;
 
   constructor(
-    private dialogModif: MatDialog,
+    private dialog: MatDialog,
     private promotionService: PromotionService,
     private groupService: GroupService,
     private userGroupService: UserGroupService,
+    private studentService: StudentService,
     private toastr: ToastrService,
   ){}
 
@@ -45,14 +52,72 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
         this.setElevesGroupe();
       });
     });
+    this.eleveSubscription = this.studentService.studentRefresh$.subscribe(() => {
+      this.initGroupes().subscribe(() => {
+        this.setElevesGroupe();
+      });
+    });
   }
 
   ngOnDestroy(): void {
     this.userGroupeSubscription.unsubscribe();
+    this.eleveSubscription.unsubscribe();
   }
 
   redirectToEdt(){
     window.location.href = "/";
+  }
+
+  ouvrirModalAjoutEleve(){
+    this.dialog.open(AddModalEleveComponent, {
+      data: {
+        groupes: this.groupes
+      }
+    });
+  }
+
+  ouvrirModalModif(id_student: number){
+    this.studentService.getStudent(id_student).subscribe({
+      next :(student: Student) => {
+        this.dialog.open(ModifModalFormComponent, {
+          data: {
+            formSelectionne : "formEleve",
+            element : student
+          }
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error('Une erreur est survenue au chargement de l\'élève');
+        console.log(error);
+      }
+    })
+  }
+
+  ouvrirModalDelete(id_student: number){
+    this.studentService.getStudent(id_student).subscribe({
+      next :(student: Student) => {
+        this.dialog.open(DeleteModalComponent, {
+          data: {
+            formSelectionne : "formEleve",
+            element: student
+          }
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error('Une erreur est survenue au chargement de l\'élève');
+        console.log(error);
+      }
+    })
+  }
+
+  ouvrirModalModifGroupe(eleve: any, ancienGroupe: Group) {
+    this.dialog.open(ModifModalGroupComponent, {
+      data: {
+        eleve: eleve,
+        ancienGroupe: ancienGroupe,
+        groupes: this.groupes
+      }
+    });
   }
 
   initPromotions(){
@@ -110,16 +175,6 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     } else {
       console.log('La Map est encore vide.');
     }
-  }
-
-  ouvrirModalModifGroupe(eleve: any, ancienGroupe: Group) {
-    this.dialogModif.open(ModifModalGroupComponent, {
-      data: {
-        eleve: eleve,
-        ancienGroupe: ancienGroupe,
-        groupes: this.groupes
-      }
-    });
   }
 
   changerPromo(event: any) {

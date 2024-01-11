@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EdtService } from '../services/edt.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
-import { Observable, Subscription, map, share } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 import { TeacherService } from '../_service/teacher.service';
 import { Teacher } from '../_model/entity/teacher.model';
@@ -19,6 +18,7 @@ import { StudentService } from '../_service/student.service';
 import { Promotion } from '../_model/entity/promotion.model';
 import { PromotionService } from '../_service/promotion.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserGroupService } from '../_service/user_group.service';
 
 
 @Component({
@@ -31,7 +31,6 @@ export class FormsComponent implements OnInit, OnDestroy{
   teacher:Teacher;
   room:Room = new Room();
   ressource:Resource = new Resource();
-  eleve:Student;
   promo:Group;
   groupe: Group = new Group();
 
@@ -42,7 +41,6 @@ export class FormsComponent implements OnInit, OnDestroy{
   ressources : Resource[] = [];
   profs : Teacher[] = [];
   salles : Room[] = [];
-  eleves : Student[] = [];
   promos : Promotion[] = [];
   groups : Group[] = [];
   sousGroupes : Group[] = [];
@@ -73,14 +71,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     password: new FormControl("", Validators.required)
   })
 
-  formAddEleve = new FormGroup({
-    lastname: new FormControl("", Validators.required),
-    name: new FormControl("", Validators.required),
-    INE: new FormControl("", Validators.required),
-    username: new FormControl("", Validators.required),
-    password: new FormControl("", Validators.required)
-  })
-
   formAddGroupe = new FormGroup({
     name: new FormControl("", Validators.required),
     id_group_parent: new FormControl<number|null>(null)
@@ -94,19 +84,18 @@ export class FormsComponent implements OnInit, OnDestroy{
   private salleRefreshSubscription!: Subscription;
   private profRefreshSubscription!: Subscription;
   private ressourceRefreshSubscription!: Subscription;
-  private eleveRefreshSubscription!: Subscription;
   private groupeRefreshSubscription!: Subscription;
 
   constructor(
     private toastr: ToastrService,
-    private dialogModif: MatDialog,
-    private dialogDelete: MatDialog,
+    private dialog: MatDialog,
     private teacherService: TeacherService,
     private roomService: RoomService,
     private ressourceService: ResourceService,
     private groupeService: GroupService,
     private studentService: StudentService,
-    private promotionService: PromotionService,){
+    private promotionService: PromotionService,
+    ){
   }
 
   ngOnInit(): void{
@@ -114,14 +103,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshProfs();
     this.refreshRessources();
     this.refreshPromo();
-    this.refreshEleves();
     this.refreshGroupes();
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
       this.sousGroupes = [];
-    });
-    this.eleveRefreshSubscription = this.studentService.studentRefresh$.subscribe(() => {
-      this.refreshEleves();
     });
     this.ressourceRefreshSubscription = this.ressourceService.ressourceRefresh$.subscribe(() => {
       this.refreshRessources();
@@ -138,12 +123,11 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.salleRefreshSubscription.unsubscribe();
     this.profRefreshSubscription.unsubscribe();
     this.ressourceRefreshSubscription.unsubscribe();
-    this.eleveRefreshSubscription.unsubscribe();
     this.groupeRefreshSubscription.unsubscribe();
   }
 
   ouvrirModalModif(element: any){
-    this.dialogModif.open(ModifModalFormComponent, {
+    this.dialog.open(ModifModalFormComponent, {
       data: {
         promos : this.promos,
         formSelectionne : this.formSelectionne,
@@ -153,7 +137,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   }
 
   ouvrirModalDelete(element: any){
-    this.dialogDelete.open(DeleteModalComponent, {
+    this.dialog.open(DeleteModalComponent, {
       data: {
         formSelectionne : this.formSelectionne,
         element: element
@@ -216,18 +200,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.promotionService.getPromotions().subscribe(
       (liste: Promotion[]) => {
         this.promos = liste;
-      },
-      (erreur) => {
-        console.error(erreur);
-        this.toastr.error("erreur");
-      }
-    );
-  }
-
-  refreshEleves(): void {
-    this.studentService.getStudents().subscribe(
-      (liste: Student[]) => {
-        this.eleves = liste;
       },
       (erreur) => {
         console.error(erreur);
@@ -362,29 +334,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     }
   }
 
-  onSubmitAddEleve(){
-    if (this.formAddEleve.valid){
-      let id = this.eleves[this.eleves.length - 1].id - 1;;
-      let INE = parseInt(this.formAddEleve.value.INE!, 10);
-      let name = this.formAddEleve.value.name!;
-      let lastname = this.formAddEleve.value.lastname!;
-      let username = this.formAddEleve.value.username!;
-      let password = this.formAddEleve.value.password!;
-      this.eleve = new Student(id, INE, name, lastname, username, password);
-      this.studentService.addStudent(this.eleve).subscribe({
-        next: responde => {
-          this.toastr.success("l'élève a bien été ajouté !");
-          this.refreshEleves();
-        },
-        error: error => {
-          this.handleError(error, "élément");
-        }
-      });
-      this.formAddProfesseur.reset();
-    } else {
-      this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
-    }
-  }
+  
 
   onSubmitAddGroupe(parentPromo: boolean) {
     if (parentPromo){

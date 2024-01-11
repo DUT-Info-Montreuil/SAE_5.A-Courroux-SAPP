@@ -24,7 +24,7 @@ export class StudentService {
         .pipe(
             retry(1)
         );
-      }
+    }
     addStudent(student: Student): Observable<Student> {
         const studentData = this.parseStudent(student);
         let url = `${this.utilsService.getEndPoint().apiUrl}/student`;
