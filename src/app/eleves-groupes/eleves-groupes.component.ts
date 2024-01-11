@@ -25,6 +25,9 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
   groupesKeys : Group[] = [];
   groupesValues : Group[][] = [];
 
+  showModalMigrate: boolean = false;
+  idPromoToMigrateTo: number;
+
   private userGroupeSubscription: Subscription;
 
   constructor(
@@ -124,5 +127,17 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     this.initGroupes().subscribe(() => {
       this.setElevesGroupe();
     });
+  }
+
+  toggleModalMigrate() {
+    this.showModalMigrate = !this.showModalMigrate;
+  }
+
+  changeSelectedPromoToMigrateTo(id:number) {
+    this.idPromoToMigrateTo = id;
+  }
+
+  onSubmitMigrate() {
+
   }
 }
