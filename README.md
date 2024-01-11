@@ -4,7 +4,13 @@
 
 Courroux est une web-app de gestion d'emploie du temps. De l’initiative du responsable pédagogique du département informatique de l’IUT de Montreuil, nous devions réaliser la refonte du site de l’emploi du temps utilisé à l’IUT. Ce projet est né du fait que l’emploi du temps codé en Java JWT en 2004, ne répond pas aux nouveaux besoins des différents utilisateurs de cet emploi du temps. L'application est aussi utilisable par d'autres universités. La manière dont elle a été conçu lui permet d'etre fléxible.
 
+## Table des matières
+
+- [Technologies](#techonolies)
+- [Contributors](#contributors)
+
 ## Technologies
+<a name="techonolies"></a>
 
 **Frameworks :**
 
@@ -42,6 +48,7 @@ Courroux est une web-app de gestion d'emploie du temps. De l’initiative du res
 //TODO
 
 ## Contributors
+<a name="contributors"></a>
 
 - **Onur Genc**
 - **Cyril Grosjean**
