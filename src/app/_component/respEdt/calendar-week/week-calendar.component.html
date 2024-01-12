@@ -81,6 +81,7 @@
         (eventTimesChanged)="eventTimesChanged($event)"
         [refresh] = "refresh"
         [eventTitleTemplate]="customeWeekViewTemplate"
+        [snapDraggedEvents]="true"        
         
     ></mwl-calendar-week-view>
 
@@ -101,6 +102,7 @@
     (eventClicked)="eventClicked($event)"
     (eventTimesChanged)="eventTimesChanged($event)"
     [refresh] = "refresh"
+    
 
 
     [eventTitleTemplate]="customeWeekViewTemplate"
@@ -109,7 +111,7 @@
 
     <!-- [eventTitleTemplate]="customEWeekViewTemplate">     -->
 
-    <ng-template #customeWeekViewTemplate let-event="event">
+    <ng-template #customeWeekViewTemplate let-event="event" >
         <div class="titre h-full flex flex-col justify-between relative text-white">
           <div class="item-center text-center">
             <!-- Votre contenu principal ici -->
