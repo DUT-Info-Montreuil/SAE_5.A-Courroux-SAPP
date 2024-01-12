@@ -14,6 +14,7 @@ import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.compon
 import { Student } from '../_model/entity/student.model';
 import { StudentService } from '../_service/student.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
+import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-modal.component';
 
 @Component({
   selector: 'app-eleves-groupes',
@@ -63,6 +64,10 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
 
   redirectToEdt(){
     window.location.href = "/";
+  }
+
+  ouvrirModalCSV(){
+    this.dialog.open(CsvEleveModalComponent);
   }
 
   ouvrirModalAjoutEleve(){
