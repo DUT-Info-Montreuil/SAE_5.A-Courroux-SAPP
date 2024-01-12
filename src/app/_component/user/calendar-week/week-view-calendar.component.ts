@@ -20,7 +20,10 @@ import { StorageService } from 'src/app/_security/storage.service';
 import { UserService } from 'src/app/_service/user.service';
 import { Promotion } from 'src/app/_model/entity/promotion.model';
 import { PromotionService } from 'src/app/_service/promotion.service';
-
+import {
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+} from '@angular/core';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -29,9 +32,11 @@ export function momentAdapterFactory() {
 
 
 @Component({
-  selector: 'app-calendar-week-view',
+  selector: 'app-calendar-week-view-user',
   templateUrl: './week-view-calendar.component.html',
-  styleUrls: ['./week-view-calendar.component.scss']
+  styleUrls: ['./week-view-calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+
 })
 
 export class WeekViewCalendarComponent{
@@ -206,12 +211,56 @@ export class WeekViewCalendarComponent{
         secondary: this.getResourceByInitial(course.initial_ressource)!.color,
 
       },        
-      draggable: false,
+      draggable: true,
       resizable: {
-        beforeStart: false,
-        afterEnd: false,
-      }
+        beforeStart: true,
+        afterEnd: true,
+      },
+      cssClass: `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
+
     });
+  }
+
+  getWidth(course: Course): number {
+    let group = this.groupes.find(group => group.id == course.id_group);
+    let width = 100
+    while (group && group.id_group_parent != null){
+      const groupsInParent = this.groupes.filter(group_curr => group_curr.id_group_parent == group!.id_group_parent);
+      width = width / groupsInParent.length;
+      group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
+    }
+    console.log("width ::: ", width)
+    return Math.ceil(width)
+  }
+
+  getPosition(course: Course): number {
+    let group = this.groupes.find(group => group.id == course.id_group);
+    let pourcents: any[] = []
+    while (group && group.id_group_parent != null){
+      const groupsInParent = this.groupes.filter(group_curr => group_curr.id_group_parent == group!.id_group_parent);
+      const index = groupsInParent.indexOf(group!);
+      pourcents.push({index: index, length: groupsInParent.length})
+      group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
+    }
+    let left = 0
+    if (pourcents.length > 0){
+      const last = pourcents.pop()
+      let parentPourcent = 100 / last.length
+      left = last.index * parentPourcent
+      
+      for (let item of pourcents.reverse()){
+        console.log(item)
+        parentPourcent = parentPourcent / item.length
+        left = left + item.index * parentPourcent
+      }
+    }
+      console.log('left :::', left)
+
+    return Math.ceil(left)
+
+    
+
+    // return position
   }
 
 

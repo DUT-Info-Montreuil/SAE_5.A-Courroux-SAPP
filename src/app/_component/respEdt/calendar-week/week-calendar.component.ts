@@ -298,7 +298,6 @@ export class WeekCalendarComponent{
 
       
     });
-    this.getPosition(course);
   }
 
   getWidth(course: Course): number {

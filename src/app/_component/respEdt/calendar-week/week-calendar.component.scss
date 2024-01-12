@@ -1,3 +1,4 @@
+@use "sass:math";
 
 .week-view{
     color: black;
@@ -6,22 +7,11 @@
 #contenu-table{
     color: black;
 }
-// .test{
-//     width: 50% !important;
-//     position: absolute;
-//     left: 0% !important;
-//     // translate: 100% !important;
-//     background-color: black;
-// }
-
-// ::ng-deep .cal-drag-active {
-//     right: 0 !important;
-// }
 
 
 @for $i from 0 through 100 {
     .calendar-width-#{$i} {
-        width: percentage($i/100) !important;
+        width: percentage(math.div($i,100)) !important;
     }
   }
 
@@ -29,10 +19,7 @@
 @for $j from 0 through 100 {
     .calendar-position-#{$j} {
         position: absolute !important;
-        left: percentage($j/100) !important;
+        left: percentage(math.div($j,100)) !important;
     }
 }
 
-.test {
-    left : 0% !important;
-}
