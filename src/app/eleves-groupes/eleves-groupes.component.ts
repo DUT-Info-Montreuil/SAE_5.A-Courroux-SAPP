@@ -31,7 +31,7 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
   groupesValues : Group[][] = [];
 
   showModalMigrate: boolean = false;
-  idPromoToMigrateTo: number;
+  idPromoToMigrateTo: number | null = null;
 
   private userGroupeSubscription: Subscription;
   private eleveSubscription: Subscription;
@@ -188,11 +188,26 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     this.showModalMigrate = !this.showModalMigrate;
   }
 
-  changeSelectedPromoToMigrateTo(id:number) {
-    this.idPromoToMigrateTo = id;
-  }
-
   onSubmitMigrate() {
+    let studentToMigrate = null;
+    this.toggleModalMigrate();
+    this.studentService.getStudentsPerGroup(this.idPromoSelectionnee!).subscribe(
+        (response) => {
+            console.log(response);
+            studentToMigrate = response;
+        },
+        (error) => {
+            console.error(error);
+        }
+    );
 
-  }
+    this.userGroupService.migratePromotion(studentToMigrate!, this.idPromoSelectionnee!).subscribe({
+        next: (response) => {
+            console.log(response);
+        },
+        error: (error) => {
+            console.error(error);
+        }
+    });
+}
 }
