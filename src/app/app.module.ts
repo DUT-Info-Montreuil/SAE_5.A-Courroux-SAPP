@@ -23,6 +23,7 @@ import { EdtModule } from './_component/respEdt/edt.module';
 import { ElevesGroupesComponent } from './eleves-groupes/eleves-groupes.component';
 import { ModifModalGroupComponent } from './modals/modif-modal-group/modif-modal-group.component';
 import { AddModalEleveComponent } from './modals/add-modal-eleve/add-modal-eleve.component';
+import { CsvEleveModalComponent } from './modals/csv-eleve-modal/csv-eleve-modal.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -42,6 +43,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     ElevesGroupesComponent,
     ModifModalGroupComponent,
     AddModalEleveComponent,
+    CsvEleveModalComponent,
     // ModifModalFormComponent,
     // DeleteModalComponent,
   ],
