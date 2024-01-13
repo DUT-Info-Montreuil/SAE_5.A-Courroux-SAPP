@@ -14,6 +14,7 @@ import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.compon
 import { Student } from '../_model/entity/student.model';
 import { StudentService } from '../_service/student.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
+import { id } from 'date-fns/locale';
 import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-modal.component';
 
 @Component({
@@ -30,6 +31,9 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
   eleve_groupes = new Map<Group, any[]>();
   groupesKeys : Group[] = [];
   groupesValues : Group[][] = [];
+
+  showModalMigrate: boolean = false;
+  idPromoToMigrateTo: number | null = null;
 
   private userGroupeSubscription: Subscription;
   private eleveSubscription: Subscription;
@@ -185,4 +189,38 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
       this.setElevesGroupe();
     });
   }
+
+  toggleModalMigrate() {
+    this.showModalMigrate = !this.showModalMigrate;
+  }
+
+  onSubmitMigrate() {
+    let studentToMigrate: number[] = [];
+    this.toggleModalMigrate();
+    this.studentService.getStudentsPerGroup(this.idPromoSelectionnee!).subscribe(
+      (response) => {
+          console.log(response);
+          response.forEach((st: any) => {
+            st.forEach((element: any) => {
+              studentToMigrate.push(element.id_student);
+            });
+          });
+  
+          console.log("StudentToMigrate", studentToMigrate);
+          console.log("idPromoToMigrateTo", this.idPromoToMigrateTo);
+  
+          this.userGroupService.migratePromotion(studentToMigrate, this.idPromoToMigrateTo!).subscribe(
+              (response) => {
+                  console.log("migrer",response);
+              },
+              (error) => {
+                  console.error(error);
+              }
+          );
+      },
+      (error) => {
+          console.error(error);
+      }
+  );
+}
 }

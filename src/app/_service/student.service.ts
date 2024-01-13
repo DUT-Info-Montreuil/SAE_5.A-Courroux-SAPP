@@ -64,4 +64,12 @@ export class StudentService {
             "username": student.user.username,
         }
     }
+
+    getStudentsPerGroup(idGroup: number): Observable<Student[]> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/students/groupe/${idGroup}`;
+        return this.http.get<Student[]>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
 }

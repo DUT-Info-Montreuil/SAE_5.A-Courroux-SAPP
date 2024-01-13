@@ -111,7 +111,7 @@ export class CourseService {
     }
 
     pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string, sat_date: string, sun_date: string): Observable<Course> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/paste`;
+        let url = `http://localhost:5000/courses/paste`;
         
         const body = {
             start_time: start_time,

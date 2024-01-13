@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
 import { Observable, Subject, map, retry } from 'rxjs';
+import { Student } from '../_model/entity/student.model';
 
 @Injectable({
     providedIn: 'root'
@@ -53,6 +54,20 @@ export class UserGroupService {
     modifyGroupStudent(idStudent: number, newIdGroupe: number, idGroupe: number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/modify/${idStudent}/${newIdGroupe}/${idGroupe}`;
         return this.http.put<any>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+
+    migratePromotion(idEtudiants: number[], idNvPromo: number): Observable<any> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/migrate`;
+
+        const body = {
+            idEtudiants: idEtudiants,
+            idNvPromo: idNvPromo
+        };
+
+        return this.http.post<any>(url, body, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );

@@ -7,8 +7,30 @@
         </option>          
     </select>
     <button *ngIf="idPromoSelectionnee" type="button" (click)="ouvrirModalAjoutEleve()" class="mt-5 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" >Ajouter un(e) élève(e)</button>
+
     <button *ngIf="idPromoSelectionnee" type="button" (click)="ouvrirModalCSV()" class="mt-5 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" >Ajouter élèves via un fichier csv</button>
     <div *ngIf="idPromoSelectionnee">
+        <button type="button" (click)="toggleModalMigrate()" class="w-full mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Migrer la promotion</button>
+
+        <div *ngIf="showModalMigrate" class="grid grid-cols-2 gap-4 w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-slate-900 dark:border-gray-700">
+            <form class="space-y-6" (ngSubmit)="onSubmitMigrate() ">
+                <div class="checkbox" *ngFor="let p of promos">
+                    <label class="flex items-center">
+                        <input 
+                            type="radio" 
+                            [value]="p.id"
+                            [(ngModel)]="idPromoToMigrateTo"
+                            name="promoGroup"
+                            class="h-4 w-4 mr-2 text-blue-600 bg-gray-900 border-gray-300 rounded focus:ring-0 dark:bg-gray-800 dark:border-gray-600"
+                        >
+                        <span class="text-white dark:text-gray-200">{{ p.group.name }}</span>
+                    </label>
+                </div>    
+                <button [disabled]="idPromoToMigrateTo === null" type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
+            </form>
+        </div>
+        
+
         <div *ngFor="let key of groupesKeys; let i = index" class="mt-5 w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-slate-900 dark:border-gray-700">
             <h5 class="text-3xl text-center block mb-4 font-medium text-gray-900 dark:text-white">{{ key.name }}</h5>
             <div class="grid grid-cols-2 gap-4 mt-5">
