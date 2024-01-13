@@ -60,6 +60,8 @@ export class WeekCalendarComponent{
 
   isWeekCalendar = true;
 
+  selectedDays: {name: string, selected: boolean, date: Date}[] = [];
+
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -218,6 +220,7 @@ export class WeekCalendarComponent{
   }
 
   loadEvents(){
+    console.log("selectedDays", this.selectedDays);
     this.showModalComment = false;
     console.log("loadEvents");
     this.events = [];
@@ -306,7 +309,6 @@ export class WeekCalendarComponent{
 
     this.viewDate = new Date(event.day.date);
     this.toggleWeekCalendar()
-    
     
     // this.loadEvents();
   }
@@ -513,5 +515,9 @@ export class WeekCalendarComponent{
 
   paste() {
     console.log("Courses to paste", this.coursesToPaste);
+  }
+
+  onChangeSelectedDays(selectedDays: any) {
+    this.selectedDays = selectedDays;
   }
 }

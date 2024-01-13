@@ -33,9 +33,11 @@ export class CopyCourseComponent{
     @Input() showModal: boolean = false;
     @Input() showModalPaste: boolean = false;
     @Input() promotion: Promotion;
+    @Input() selectedDays: any[];
   
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
+    @Output() selectedDaysOutput: EventEmitter<any[]> = new EventEmitter<any[]>();
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -48,7 +50,6 @@ export class CopyCourseComponent{
     sat = new Date();
     sun = new Date();
 
-    selectedDays: { name: string, selected: boolean, date: Date }[] = [];
     selectedStartDateToAttempt: Date = new Date();
 
     constructor(
@@ -92,6 +93,8 @@ export class CopyCourseComponent{
         this.closeModalCopy();
         this.weekdays.forEach((weekday) => weekday.selected=false);
         console.log("SelectedDays", this.selectedDays);
+        let copiedSelectedDays = JSON.parse(JSON.stringify(this.selectedDays));
+        this.selectedDaysOutput.emit(copiedSelectedDays);
     }
 
     onSubmitPaste() {
@@ -118,12 +121,21 @@ export class CopyCourseComponent{
     }
 
     day.selected = !day.selected; // Inverse l'état de sélection du jour
+
+    // Trouve une entrée existante avec le même nom
+    const existingEntryIndex = this.selectedDays.findIndex(existingDay => existingDay.name === day.name);
+
     if (day.selected) {
-        this.selectedDays.push(day); // Ajoute le jour sélectionné
+        if (existingEntryIndex !== -1) {
+            // Si une entrée avec le même nom existe déjà, la supprime
+            this.selectedDays.splice(existingEntryIndex, 1);
+        }
+        // Ajoute le jour sélectionné
+        this.selectedDays.push(day);
     } else {
-        const index = this.selectedDays.indexOf(day);
-        if (index !== -1) {
-            this.selectedDays.splice(index, 1); // Retire le jour désélectionné
+        if (existingEntryIndex !== -1) {
+            // Retire le jour désélectionné
+            this.selectedDays.splice(existingEntryIndex, 1);
         }
     }
     console.log('Jours sélectionnés : ', this.selectedDays);
@@ -143,21 +155,22 @@ export class CopyCourseComponent{
     }
     
     paste() {
+      console.log("selectedDays paste", this.selectedDays);
       let sAndHdays = this.findSmallestAndHighestDate();
 
       let dateAttempt = this.formatDate(this.selectedStartDateToAttempt);
       let SatFormatted = this.formatDate(this.sat);
       let SunFormatted = this.formatDate(this.sun);
 
-      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe({
-        next: courses => {
+      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe(
+        (response) => {
           console.log("paste");
-          console.log(courses);
+          console.log(response);
         },
-        error: error => {
+        (error) => {
           console.log(error);
         }
-      })
+      )
     }
 
     findSmallestAndHighestDate() {
@@ -193,11 +206,12 @@ export class CopyCourseComponent{
       this.selectedStartDateToAttempt = weekday.date;
     }
 
-    formatDate(date: Date): string {
+    formatDate(date: any): string {
+      date = new Date(date); // Convertit date en Date si ce n'est pas déjà le cas
       const year = date.getFullYear();
       const month = ('0' + (date.getMonth() + 1)).slice(-2); // Adding leading zero if needed
       const day = ('0' + date.getDate()).slice(-2); // Adding leading zero if needed
-    
+  
       return `${year}-${month}-${day}`;
     }
 }
