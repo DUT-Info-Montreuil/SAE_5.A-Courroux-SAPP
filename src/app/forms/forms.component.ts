@@ -19,6 +19,8 @@ import { Promotion } from '../_model/entity/promotion.model';
 import { PromotionService } from '../_service/promotion.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserGroupService } from '../_service/user_group.service';
+import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
+import { AddModalPromoComponent } from '../modals/add-modal-promo/add-modal-promo.component';
 
 
 @Component({
@@ -124,6 +126,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.profRefreshSubscription.unsubscribe();
     this.ressourceRefreshSubscription.unsubscribe();
     this.groupeRefreshSubscription.unsubscribe();
+  }
+
+  ouvrirModalAjoutPromo() {
+    this.dialog.open(AddModalPromoComponent);
   }
 
   ouvrirModalModif(element: any){
