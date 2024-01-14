@@ -16,6 +16,7 @@ import { CourseEditComponent } from './course-edit/course-edit.component';
 import { AuthInterceptor } from 'src/app/_security/auth.interceptor';
 import { CommentAddComponent } from './comment-add/comment-add.component';
 import { CopyCourseComponent } from './copy-course/copy-course.component';
+import { StatsTeacherComponent } from '../teacher/stats-teacher/stats-teacher.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -38,6 +39,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     // FilterPipe,
     ModifModalFormComponent,
     DeleteModalComponent,
+    StatsTeacherComponent
     
   ],
   imports: [

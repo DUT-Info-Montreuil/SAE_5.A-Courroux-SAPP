@@ -141,4 +141,13 @@ export class CourseService {
             retry(1)
         );
     }
+
+    getByTeacher(id_teacher: number): Observable<Course[]> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/teacher/${id_teacher}`;
+
+        return this.http.get<Course[]>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
 }
