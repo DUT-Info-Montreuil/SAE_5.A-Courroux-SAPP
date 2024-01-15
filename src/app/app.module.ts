@@ -45,7 +45,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     ModifModalGroupComponent,
     AddModalEleveComponent,
     CsvEleveModalComponent,
-    AddModalPromoComponent,
+    AddModalPromoComponent
     // ModifModalFormComponent,
     // DeleteModalComponent,
   ],
