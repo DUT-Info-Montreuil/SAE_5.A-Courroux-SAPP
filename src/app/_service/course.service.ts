@@ -15,9 +15,6 @@ export class CourseService {
 
     getCourses(args: any[]= []): Observable<Course[]> {
 
-        if (args.length > 2) {
-            args.push({method: 'filter'})
-        }
 
         let params: String[] = []
 
