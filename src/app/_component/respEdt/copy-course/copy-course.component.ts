@@ -100,7 +100,6 @@ export class CopyCourseComponent{
         let copiedSelectedDays = JSON.parse(JSON.stringify(this.selectedDays));
 
         this.selectedDaysOutput.emit(copiedSelectedDays);
-        this.loadEvents.emit();
 
         this.toastr.success('Les cours ont été copiés', 'Succès',{timeOut: 1500});
 
