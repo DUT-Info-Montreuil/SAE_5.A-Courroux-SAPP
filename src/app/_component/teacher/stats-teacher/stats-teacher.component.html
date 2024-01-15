@@ -16,7 +16,7 @@
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Statistiques</h3>
                 <ul>
                     <li *ngFor="let stat of stats">
-                        {{ stat.name }} : {{ (stat.hours | number: '1.0-1') }} heures
+                        {{ stat.name }} : {{ stat.hours }}h{{ stat.minutes }}min
                     </li>
                 </ul>
             </div>
