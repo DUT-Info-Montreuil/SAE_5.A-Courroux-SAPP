@@ -157,6 +157,10 @@ export class WeekViewCalendarComponent{
   }
 
   loadEvents(){
+
+    if (this.args.length > 2 && this.args.find(arg => Object.keys(arg)[0] == "method") == undefined){
+      this.args.push({method: "filter"});
+    }
     console.log("loadEvents");
     this.events = [];
 
@@ -452,6 +456,18 @@ export class WeekViewCalendarComponent{
     const arg = {teacher: event.target.value};
     this.addArguments(arg);
     this.loadEvents();
+  }
+
+  removeFilter(key: string, select: any){
+    this.args = this.args.filter(arg => Object.keys(arg)[0] != key);
+    
+    if (this.args.length <= 3){
+      this.args = this.args.filter(arg => Object.keys(arg)[0] != 'method');
+
+    }
+    this.loadEvents();
+    select.value = "";
+    console.table(this.args);
   }
 
 
