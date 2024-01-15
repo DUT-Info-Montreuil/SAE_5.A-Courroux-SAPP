@@ -22,3 +22,12 @@
         left: percentage(math.div($j,100)) !important;
     }
 }
+
+
+.calendar-user-position-auto {
+    position: absolute !important;
+    left: auto !important;
+}
+.calendar-user-width-auto {
+    width: auto !important;
+}
