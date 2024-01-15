@@ -1,17 +1,30 @@
-# Utiliser une image Node.js basée sur Alpine comme base
-FROM node:21-alpine3.18
+# Stage 1: Compile and Build angular codebase
 
-# Définir le répertoire de travail dans le conteneur
-WORKDIR /usr/src/app
+# Use official node image as the base image
+FROM node:latest as build
 
-# Copier le package.json et le package-lock.json dans le conteneur
-COPY . .
+# Set the working directory
+WORKDIR /usr/local/app
 
-# Installer les dépendances
+# Add the source code to app
+COPY ./ /usr/local/app/
+
+# Install all the dependencies
 RUN npm install
 
-RUN npm install -g @angular/cli
+# Generate the build of the application
+RUN npm run build
 
 
-# Commande pour démarrer l'application avec npm start au lancement du conteneur
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+# Stage 2: Serve app with nginx server
+
+# Use official nginx image as the base image
+FROM nginx:latest
+
+# Copy the build output to replace the default nginx contents.
+COPY --from=build /usr/local/app/dist/courroux-sapp /usr/share/nginx/html
+COPY /nginx-app.conf /etc/nginx/conf.d/default.conf
+
+
+# Expose port 80
+EXPOSE 80

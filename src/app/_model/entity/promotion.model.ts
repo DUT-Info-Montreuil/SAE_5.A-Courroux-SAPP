@@ -5,7 +5,7 @@ export class Promotion implements Deserializable {
     id: number;
     niveau: number;
     id_resp: number;
-    group: Group
+    group: Group;
 
     deserialize(input: any): this {
         if (input) {

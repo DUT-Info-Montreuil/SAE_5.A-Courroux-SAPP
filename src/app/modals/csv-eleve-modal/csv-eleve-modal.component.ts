@@ -31,7 +31,7 @@ export class CsvEleveModalComponent {
 
   parseCSV(file: File) {
     this.papa.parse(file, {
-      complete: (result) => {
+      complete: (result: any) => {
         // result.data contient les données du fichier CSV sous forme de tableau
         const students = result.data.slice(1); // Ignorer la première ligne (entêtes)
         // Traiter les étudiants ici et les envoyer au backend
