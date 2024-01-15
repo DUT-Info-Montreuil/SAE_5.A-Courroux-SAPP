@@ -38,6 +38,7 @@ export class CopyCourseComponent{
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
     @Output() selectedDaysOutput: EventEmitter<any[]> = new EventEmitter<any[]>();
+    @Output() loadEvents: EventEmitter<void> = new EventEmitter<void>();
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -91,10 +92,17 @@ export class CopyCourseComponent{
         // this.selectCoursesInInterval();
         console.log(this.courses);
         this.closeModalCopy();
+
         this.weekdays.forEach((weekday) => weekday.selected=false);
         console.log("SelectedDays", this.selectedDays);
+
         let copiedSelectedDays = JSON.parse(JSON.stringify(this.selectedDays));
+
         this.selectedDaysOutput.emit(copiedSelectedDays);
+        this.loadEvents.emit();
+
+        this.toastr.success('Les cours ont été copiés', 'Succès',{timeOut: 1500});
+
     }
 
     onSubmitPaste() {
