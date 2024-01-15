@@ -16,7 +16,9 @@ export class AddModalPromoComponent {
 
   formAddPromo = new FormGroup({
     name: new FormControl("", Validators.required),
-    niveau: new FormControl("", Validators.required)
+    niveau: new FormControl("", Validators.required), 
+    // id_resp: new FormControl("", Validators.required),
+    // group: new FormControl("", Validators.required)
   })
 
   searchText: any;
@@ -49,16 +51,24 @@ export class AddModalPromoComponent {
   }
 
   addPromo(){
-    let promotion: Promotion = new Promotion();
-    let group: Group = new Group();
-    let id_resp = this.profSelected?.id;
-    group = Object.assign(group, this.formAddPromo.value.name);
-    promotion = Object.assign(promotion, this.formAddPromo.value.niveau, id_resp, group);
-    console.log(promotion);
-    this.promoService.addPromotion(promotion).subscribe({
+    let promotionO: Promotion = new Promotion();
+    let groupO: Group = new Group();
+    let group = {
+      name: this.formAddPromo.value.name,
+      id_group_parent: null
+    };
+    groupO = Object.assign(group);
+    let promotion = {
+      niveau: this.formAddPromo.value.niveau,
+      id_resp: this.profSelected?.id,
+      group: groupO
+    };
+    promotionO = Object.assign(promotion);
+    this.promoService.addPromotion(promotionO).subscribe({
       next: response => {
         this.clear();
         this.toastr.success('promotion ajoutée');
+        this.promoService.notifyPromoRefresh();
       },
       error: error => {
         this.toastr.error('erreur lors de l ajout de la promotion');

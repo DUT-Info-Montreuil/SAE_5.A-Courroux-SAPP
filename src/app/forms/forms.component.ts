@@ -87,6 +87,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   private profRefreshSubscription!: Subscription;
   private ressourceRefreshSubscription!: Subscription;
   private groupeRefreshSubscription!: Subscription;
+  private promoRefreshSubscription!: Subscription;
 
   constructor(
     private toastr: ToastrService,
@@ -106,6 +107,9 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshRessources();
     this.refreshPromo();
     this.refreshGroupes();
+    this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
+      this.refreshPromo();
+    });
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
       this.sousGroupes = [];
