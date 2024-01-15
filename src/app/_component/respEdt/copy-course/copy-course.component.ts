@@ -38,6 +38,8 @@ export class CopyCourseComponent{
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
     @Output() selectedDaysOutput: EventEmitter<any[]> = new EventEmitter<any[]>();
+    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -162,15 +164,16 @@ export class CopyCourseComponent{
       let SatFormatted = this.formatDate(this.sat);
       let SunFormatted = this.formatDate(this.sun);
 
-      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe(
-        (response) => {
+      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe({
+        next: response => {
           console.log("paste");
           console.log(response);
+          this.refresh.emit();
         },
-        (error) => {
+        error: error => {
           console.log(error);
         }
-      )
+    })
     }
 
     findSmallestAndHighestDate() {

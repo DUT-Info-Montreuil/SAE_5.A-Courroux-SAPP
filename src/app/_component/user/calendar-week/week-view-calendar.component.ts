@@ -200,6 +200,15 @@ export class WeekViewCalendarComponent{
 
   addEvent(course: Course): void {
 
+    let cssClass : string;
+    console.log(this.args.length > 2)
+    if (this.args.length > 2){
+      cssClass = `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
+    }
+    else {
+      cssClass = `calendar-user-position-0 calendar-user-width-100`
+    }
+
     this.events.push({
       id: course.id,
       title: course.initial_ressource,
@@ -211,12 +220,12 @@ export class WeekViewCalendarComponent{
         secondary: this.getResourceByInitial(course.initial_ressource)!.color,
 
       },        
-      draggable: true,
+      draggable: false,
       resizable: {
-        beforeStart: true,
-        afterEnd: true,
+        beforeStart: false,
+        afterEnd: false,
       },
-      cssClass: `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
+      cssClass: cssClass
 
     });
   }

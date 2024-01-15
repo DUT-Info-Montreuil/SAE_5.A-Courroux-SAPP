@@ -15,12 +15,17 @@ export class CourseService {
 
     getCourses(args: any[]= []): Observable<Course[]> {
 
+        if (args.length > 2) {
+            args.push({method: 'filter'})
+        }
+
         let params: String[] = []
 
         args.forEach(arg => {
             const key = Object.keys(arg)[0];
             params.push(`${key}=${arg[key]}`);
         });
+        
 
 
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses`;

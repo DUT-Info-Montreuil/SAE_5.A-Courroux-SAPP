@@ -152,7 +152,7 @@
 
 
 <ng-container>
-    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()"></copy-course>
+    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()"></copy-course>
 </ng-container>
 
 <ng-container *ngIf="showModalStats">
