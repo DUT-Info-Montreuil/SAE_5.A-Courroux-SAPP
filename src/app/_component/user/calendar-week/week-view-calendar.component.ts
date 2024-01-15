@@ -206,12 +206,15 @@ export class WeekViewCalendarComponent{
 
     let cssClass : string;
     console.log(this.args.length > 2)
-    if (this.args.length > 2){
+    if (this.args.find(arg => Object.keys(arg)[0] == "group") != undefined){
       cssClass = `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
     }
     else {
-      cssClass = `calendar-user-position-0 calendar-user-width-100`
+      cssClass = ``
     }
+    // else {
+    //   cssClass = `calendar-user-position-0 calendar-user-width-100`
+    // }
 
     this.events.push({
       id: course.id,
