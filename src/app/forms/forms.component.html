@@ -1,4 +1,4 @@
-<div class="mx-10 mt-10">
+<div class="mx-10 mt-5">
     <div>
         <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-2 mb-2">Retour à l'emploi du temps</button>
         <label for="choix"  class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez vos options</label>
@@ -28,7 +28,7 @@
                 </svg>
             </button>
             </h2>
-            <div id="accordion-collapse-body-1" [hidden]="!isSection1Open" aria-labelledby="accordion-collapse-heading-1">
+            <div id="accordion-collapse-body-1" [hidden]="!isSection1Open" aria-labelledby="accordion-collapse-heading-1" class="bg-stone-100 dark:bg-slate-800">
                 <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
                     <div *ngIf="formSelectionne !== 'formSalle' && idPromoSelectionnee === null">
                         <h5 class="text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Veuillez séléctionner une promo</h5>
@@ -106,7 +106,7 @@
                 </svg>
             </button>
             </h2>
-            <div id="accordion-collapse-body-2" [hidden]="!isSection2Open" aria-labelledby="accordion-collapse-heading-2">
+            <div id="accordion-collapse-body-2" [hidden]="!isSection2Open" aria-labelledby="accordion-collapse-heading-2" class="bg-stone-100 dark:bg-slate-800">
                 <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
                     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                     <div class="relative">
@@ -130,7 +130,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let salle of salles | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr *ngFor="let salle of salles | filter:searchText" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{salle.nom}}</th>
                                     <td class="px-6 py-4">{{salle.ordi}}</td>
                                     <td class="px-6 py-4">{{salle.tableauNumerique}}</td>
@@ -152,7 +152,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let prof of profs | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr *ngFor="let prof of profs | filter:searchText" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{prof.staff.user.lastname}}</th>
                                     <td class="px-6 py-4">{{prof.staff.user.name}}</td>
                                     <td class="px-6 py-4">{{prof.staff.initial}}</td>
@@ -175,7 +175,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let ressource of ressources | filter:searchText" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <tr *ngFor="let ressource of ressources | filter:searchText" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ressource.initial}}</th>
                                     <td class="px-6 py-4">{{ressource.name}}</td>
                                     <td class="px-6 py-4">{{ressource.id_promo}}</td>
@@ -249,7 +249,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let sousGroupe of sousGroupes" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr *ngFor="let sousGroupe of sousGroupes" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                             <th *ngIf="sousGroupe.id_group_parent == group.id" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{sousGroupe.name}}</th>
                             <td *ngIf="sousGroupe.id_group_parent == group.id" class="px-6 py-4 text-right">
                                 <a (click)="ouvrirModalDelete(sousGroupe)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a>

@@ -9,15 +9,9 @@ body{
     font-family: 'Poppins', sans-serif;
 }
 
-@media (prefers-color-scheme: dark){
-    body{
-        color: white;
-    }
-}
-
-@media (prefers-color-scheme: light){
-    body{
-        color: black;
+.white-text-white-mode {
+    @media (prefers-color-scheme: light){
+        color: white !important;
     }
 }
 

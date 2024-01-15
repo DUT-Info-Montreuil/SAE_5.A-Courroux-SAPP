@@ -1,4 +1,4 @@
-<div  class="mx-10 mt-10">
+<div  class="mx-10 mt-5">
     <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-2 mb-2">Retour à l'emploi du temps</button>
     <label for="promo" class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
     <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -31,7 +31,7 @@
         </div>
         
 
-        <div *ngFor="let key of groupesKeys; let i = index" class="mt-5 w-full p-4 text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-slate-900 dark:border-gray-700">
+        <div *ngFor="let key of groupesKeys; let i = index" class="mt-5 w-full p-4 text-center bg-stone-100 border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-slate-900 dark:border-gray-700">
             <h5 class="text-3xl text-center block mb-4 font-medium text-gray-900 dark:text-white">{{ key.name }}</h5>
             <div class="grid grid-cols-2 gap-4 mt-5">
                 <div *ngFor="let value of groupesValues[i]; let j = index" class="relative overflow-x-auto shadow-md sm:rounded-lg">

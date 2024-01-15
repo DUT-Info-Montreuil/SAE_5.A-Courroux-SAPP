@@ -1,46 +1,3 @@
-@media (prefers-color-scheme: dark){
-    #id{
-        color: #8692A6;
-    }
-    #logoModeClair{
-        display: none;
-    }
-    .input:focus ~ .label, .input:valid ~ .label {
-        color: #ffffff;
-    }
-    .line{
-        background-color: #ffffff;
-    }
-    .label{
-        color: #8692A6;
-    }
-    .input{
-        color: #8692A6;
-    }
-}
-
-@media (prefers-color-scheme: light){
-    #id{
-        color: #3e4450;
-    }
-    #logoModeSombre{
-        display: none;
-    }
-    .input:focus ~ .label, .input:valid ~ .label {
-        color: #000000;
-    }
-    .line{
-        background-color: #000000;
-    }
-    .label{
-        color: #3e4450;
-    }
-    .input{
-        color: #3e4450;
-    }
-}
-
-
 @media screen and (max-width: 310px) {
     .login{
         font-size: small;
@@ -202,4 +159,52 @@
 .input:focus ~ .label, .input:valid ~ .label {
     font-size: 11px;
     top: 0;
+}
+
+@media (prefers-color-scheme: dark){
+    #welcome {
+        color: #8692A6;
+    }
+    #id{
+        color: #8692A6;
+    }
+    #logoModeClair{
+        display: none;
+    }
+    .input:focus ~ .label, .input:valid ~ .label {
+        color: #ffffff;
+    }
+    .line{
+        background-color: #ffffff;
+    }
+    .label{
+        color: #8692A6;
+    }
+    .input{
+        color: #8692A6;
+    }
+}
+
+@media (prefers-color-scheme: light){
+    #welcome{
+        color: #3e4450;
+    }
+    #id{
+        color: #3e4450;
+    }
+    #logoModeSombre{
+        display: none;
+    }
+    .input:focus ~ .label, .input:valid ~ .label {
+        color: #000000;
+    }
+    .line{
+        background-color: #000000;
+    }
+    .label{
+        color: #3e4450;
+    }
+    .input{
+        color: #3e4450;
+    }
 }

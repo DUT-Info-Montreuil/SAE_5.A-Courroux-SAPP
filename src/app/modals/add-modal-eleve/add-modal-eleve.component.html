@@ -1,25 +1,25 @@
 <div class="m-5">
-    <h5 class="mb-5 text-xl text-center font-bold tracking-tight text-gray-900 dark:text-white">Creez un élève et choisissez son groupe</h5>
+    <h5 class="mb-5 text-xl text-center font-bold tracking-tight text-white">Creez un élève et choisissez son groupe</h5>
         <div class="grid grid-cols-2 gap-4">
             <form [formGroup]="formAddEleve">
-                <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                <label for="lastname" class="block mb-2 text-sm font-medium text-white">Nom</label>
                 <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
+                <label for="name" class="mt-5 block mb-2 text-sm font-medium text-white">Prénom</label>
                 <input formControlName="name" required type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <label for="INE" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Numéro INE</label>
+                <label for="INE" class="mt-5 block mb-2 text-sm font-medium text-white">Numéro INE</label>
                 <input formControlName="INE" required type="number" id="INE" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <label for="username" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Identifiant</label>
+                <label for="username" class="mt-5 block mb-2 text-sm font-medium text-white">Identifiant</label>
                 <input formControlName="username" required type="text" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <label for="password" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
+                <label for="password" class="mt-5 block mb-2 text-sm font-medium text-white">Mot de passe</label>
                 <input formControlName="password" required type="text" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             </form>
             <div class="grid grid-cols-2 gap-4">
                 <div *ngFor="let groupe of groupesKeys; let i = index">
-                    <h5 class="text-xl text-center font-bold tracking-tight text-gray-900 dark:text-slate-400">{{groupe.name}}</h5>
+                    <h5 class="mb-2 text-xl text-center font-bold tracking-tight text-slate-400">{{groupe.name}}</h5>
                     
-                    <div *ngFor="let sousGroupe of groupesValues[i]; let j = index" class="w-500 flex bg-gray-900 items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
+                    <div *ngFor="let sousGroupe of groupesValues[i]; let j = index" class="mb-2 w-500 flex bg-gray-900 items-center ps-4 border border-gray-200 rounded dark:border-gray-700">
                         <input id="'bordered-radio-' + {{i}} + {{j}}" type="radio" name="bordered-radio" (click)="onClickGroupe(sousGroupe)"  class="w-4 h-4 text-blue-600 bg-gray-400 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="'bordered-radio-' + {{i}} + {{j}}" class="w-full mr-10 py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{sousGroupe.name}}</label>
+                        <label for="'bordered-radio-' + {{i}} + {{j}}" class="w-full mr-10 py-4 ms-2 text-sm font-medium text-gray-300">{{sousGroupe.name}}</label>
                     </div>
                 </div>
             </div>
