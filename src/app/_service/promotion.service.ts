@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
-import { Observable, retry } from 'rxjs';
+import { Observable, Subject, retry } from 'rxjs';
 import { Promotion } from '../_model/entity/promotion.model';
 
 @Injectable({
@@ -10,6 +10,13 @@ import { Promotion } from '../_model/entity/promotion.model';
 export class PromotionService {
 
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
+
+    private promoRefreshSource = new Subject<void>();
+    promoRefresh$ = this.promoRefreshSource.asObservable();
+
+    notifyPromoRefresh() {
+        this.promoRefreshSource.next();
+    }
 
     getPromotions(): Observable<Promotion[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotions`;
