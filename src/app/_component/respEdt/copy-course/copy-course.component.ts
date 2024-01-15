@@ -172,12 +172,11 @@ export class CopyCourseComponent{
 
       this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe({
         next: response => {
-          console.log("paste");
-          console.log(response);
+          this.toastr.success('Les cours ont été collés', 'Succès',{timeOut: 1500});
           this.refresh.emit();
         },
         error: error => {
-          console.log(error);
+          this.toastr.error(error.error.message);
         }
     })
     }
