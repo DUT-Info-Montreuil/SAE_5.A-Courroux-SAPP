@@ -16,13 +16,23 @@
             <div class="px-6 py-6 lg:px-8">
 
                 <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Copier des journées</h3>
-                <form class="space-y-6" (ngSubmit)="onSubmitCopy() ">
-                    <div *ngFor="let day of weekdays">
-                        <label>
-                        <input type="checkbox" [value]="day" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" (change)="updateSelection(day)"> {{ day.name }}
-                        </label>
+                <form (ngSubmit)="onSubmitCopy()" class="mt-6">
+                    <div class="flex flex-row w-full rounded-xl bg-white overflow-hidden">
+                        <ng-container *ngFor="let day of weekdays">
+                            <input type="checkbox" [value]="day" class="hidden" (change)="updateSelection(day)">
+                            <button type="button" (click)="updateSelection(day)" 
+                            class="flex-1 border-x p-3"
+                            [ngClass]="{
+                            ' border-gray-500 bg-gray-400 hover:bg-gray-500': !isSelectedDay(day),
+                            ' border-blue-500 bg-blue-400 hover:bg-blue-500': isSelectedDay(day),
+                            }" 
+                            >
+                                {{ day.name }}
+                            </button>
+                            
+                        </ng-container>
                     </div>
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
+                    <button type="submit" class="mt-8 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
                 </form>            
             </div>
         </div>
@@ -45,15 +55,31 @@
             </button>
             <div class="px-6 py-6 lg:px-8">
 
-                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Coller des journées</h3>
-                <form class="space-y-6" (ngSubmit)="onSubmitPaste() ">
+                <!-- <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Coller des journées</h3>
                     <div *ngFor="let day of weekdays">
                         <label>
                         <input type="checkbox" [value]="day" [checked]="day.selected" (change)="selectWeekday(day)" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"> {{ day.name }}
                         </label>
                     </div>
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
-                </form>            
+                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button> -->
+                <form (ngSubmit)="onSubmitPaste()" class="mt-6">
+                    <div class="flex flex-row w-full rounded-xl bg-white overflow-hidden">
+                        <ng-container *ngFor="let day of weekdays">
+                            <input type="checkbox" [value]="day" class="hidden" (change)="selectWeekday(day)">
+                            <button type="button" (click)="selectWeekday(day)" 
+                            class="flex-1 border-x p-3"
+                            [ngClass]="{
+                            ' border-gray-500 bg-gray-400 hover:bg-gray-500': !isPasteDay(day),
+                            ' border-blue-500 bg-blue-400 hover:bg-blue-500': isPasteDay(day),
+                            }" 
+                            >
+                                {{ day.name }}
+                            </button>
+                            
+                        </ng-container>
+                    </div>
+                    <button type="submit" class="mt-8 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
+                </form>           
             </div>
         </div>
     </div>
