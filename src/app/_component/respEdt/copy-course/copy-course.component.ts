@@ -52,7 +52,7 @@ export class CopyCourseComponent{
     sat = new Date();
     sun = new Date();
 
-    selectedStartDateToAttempt: Date = new Date();
+    selectedStartDateToAttempt: Date | null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -90,6 +90,10 @@ export class CopyCourseComponent{
       });
     }
 
+    // refreshWeekDays() {
+    //   this.weekdays.forEach((weekday) => weekday.selected=false);
+    // }
+
     onSubmitCopy() {
         // console.log("Submit");
         // console.log(this.selectedDays);
@@ -106,6 +110,7 @@ export class CopyCourseComponent{
         this.selectedDaysOutput.emit(copiedSelectedDays);
 
         this.toastr.success('Les cours ont été copiés', 'Succès',{timeOut: 1500});
+        
 
     }
 
@@ -117,11 +122,13 @@ export class CopyCourseComponent{
         this.paste();
         console.log(this.courses);
         this.closeModalPaste();
+        this.selectedStartDateToAttempt = null
       }  
   }
 
   updateSelection(day: { name: string, selected: boolean, date: Date }) {
-    if (this.selectedDays.length > 2) {
+    console.log(this.selectedDays)
+    if (this.selectedDays.length >= 2) {
       this.selectedDays.splice(0, 2);
 
       this.weekdays.forEach((weekday) => {
@@ -153,6 +160,18 @@ export class CopyCourseComponent{
     console.log('Jours sélectionnés : ', this.selectedDays);
   }
 
+  isSelectedDay(day: { name: string, selected: boolean, date: Date }): boolean {
+    if (this.selectedDays.length == 2) {
+      return this.selectedDays[0].date >= day.date && this.selectedDays[1].date <= day.date 
+          || this.selectedDays[0].date <= day.date && this.selectedDays[1].date >= day.date;
+    }
+    else if (this.selectedDays.length == 1) {
+      return this.selectedDays[0].date === day.date;
+    }
+    return false
+  }
+
+
 
     setWeekDays() {
         for (let i = 0; i < this.weekdays.length; i++) {
@@ -169,7 +188,7 @@ export class CopyCourseComponent{
     paste() {
       console.log("selectedDays paste", this.selectedDays);
       let sAndHdays = this.findSmallestAndHighestDate();
-
+      
       let dateAttempt = this.formatDate(this.selectedStartDateToAttempt);
       let SatFormatted = this.formatDate(this.sat);
       let SunFormatted = this.formatDate(this.sun);
@@ -200,6 +219,24 @@ export class CopyCourseComponent{
           highestDate = day.date;
         }
       });
+
+      if (this.selectedDays.length == 2){
+        const diff = this.getDifferenceInDays(new Date(this.selectedDays[0].date), new Date(this.selectedDays[1].date));
+        const date_end = this.addDays(this.selectedStartDateToAttempt!, diff);
+        if (date_end.getDay() == 6 || date_end.getDay() < this.selectedStartDateToAttempt!.getDay()) {
+          let friday: Date;
+          if(date_end.getDay() == 6){
+            friday = this.addDays(highestDate, -1);
+          }
+          else {
+            const diff = date_end.getDay() + 2
+            friday = this.addDays(highestDate, -diff);
+          
+          }
+          highestDate = friday
+        }
+
+      }
   
       console.log(smallestDate, highestDate);
       let sDate = this.formatDate(smallestDate);
@@ -209,7 +246,38 @@ export class CopyCourseComponent{
       return [String(sDate), String(hDate)];
     }
 
-    selectWeekday(weekday: any): void {
+    addDays(originalDate: Date, daysToAdd: number): Date {
+      // Créez une copie de la date originale pour éviter de modifier l'objet d'origine
+      const newDate = new Date(originalDate);
+    
+      // Ajoutez le nombre de jours à la date
+      newDate.setDate(newDate.getDate() + daysToAdd);
+    
+      return newDate;
+    }
+
+    getDifferenceInDays(date1: Date, date2: Date): number {
+      const timeDifference = new Date(this.selectedDays[0].date).getTime() - new Date(this.selectedDays[1].date).getTime();
+      // Convertissez la différence en jours
+      const daysDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
+      return Math.round(daysDifference);
+    }
+
+    isPasteDay(weekday: { name: string, selected: boolean, date: Date }): boolean{
+      // console.log(this.selectedDays[0].date).getTime())
+      if (this.selectedStartDateToAttempt){
+        if (this.selectedDays.length == 2) {
+            const diff = this.getDifferenceInDays(new Date(this.selectedDays[0].date), new Date(this.selectedDays[1].date));
+            const date_end = this.addDays(this.selectedStartDateToAttempt, diff);
+            return weekday.date >= this.selectedStartDateToAttempt && weekday.date <= date_end ;
+
+        }
+        return weekday.date == this.selectedStartDateToAttempt;
+      }
+      return false
+    }
+
+    selectWeekday(weekday: { name: string, selected: boolean, date: Date }): void {
       this.weekdays.forEach(day => {
         if (day !== weekday) {
           day.selected = false;
