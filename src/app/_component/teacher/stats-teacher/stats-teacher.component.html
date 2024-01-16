@@ -14,11 +14,14 @@
             </button>
             <div class="px-6 py-6 lg:px-8">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-white">Statistiques</h3>
-                <ul>
+                <ul *ngIf="stats.length > 0; else noCourse">
                     <li *ngFor="let stat of stats">
                         {{ stat.name }} : {{ stat.hours }}h{{ stat.minutes }}min
                     </li>
                 </ul>
+                <ng-template #noCourse>
+                    <p>Aucun cours dispensé</p>
+                </ng-template>
             </div>
         </div>
     </div>

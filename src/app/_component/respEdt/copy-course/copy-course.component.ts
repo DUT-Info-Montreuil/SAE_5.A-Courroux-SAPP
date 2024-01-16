@@ -84,6 +84,10 @@ export class CopyCourseComponent{
       }
       this.showModalPaste=false;
       this.closeModalP.emit();
+
+      this.weekdays.forEach((weekday) => {
+        weekday.selected = false;
+      });
     }
 
     onSubmitCopy() {
@@ -179,6 +183,8 @@ export class CopyCourseComponent{
           this.toastr.error(error.error.message);
         }
     })
+
+
     }
 
     findSmallestAndHighestDate() {
