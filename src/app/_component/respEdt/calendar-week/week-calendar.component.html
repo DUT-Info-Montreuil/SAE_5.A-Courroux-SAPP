@@ -104,7 +104,7 @@
 </ng-container> 
 
 <ng-container *ngIf="showModalMod" >
-    <course-edit [course]="courseForEdit" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)"></course-edit>
+    <course-edit [course]="courseForEdit" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></course-edit>
 </ng-container>
 
 <ng-container>

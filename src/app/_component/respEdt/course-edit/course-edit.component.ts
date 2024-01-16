@@ -26,12 +26,17 @@ export class CourseEditComponent implements OnInit{
 
     @Input() course: Course;
 
+    @Input() courses: Course[];
+
     @Output() courseEvent: EventEmitter<Course> = new EventEmitter<Course>();
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
+    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
 
     showModalDuplicate: boolean;
     selectedGroups: number[] = [];
+
+    groupe_available: Group[] = [];
 
 
 
@@ -47,6 +52,7 @@ export class CourseEditComponent implements OnInit{
         
         this.initializeForm();
         console.log("Groupes", this.groupes);
+        this.getGroupAvailableForDuplicate();
     }
 
     initializeForm() {
@@ -170,13 +176,16 @@ export class CourseEditComponent implements OnInit{
         this.closeModalDuplicate();
         console.log("courseToDup", this.course);
         console.log("SelectedGroups", this.selectedGroups);
-        this.courseService.duplicate(this.course.id, this.selectedGroups).subscribe(
-          (response) => {
+        this.courseService.duplicate(this.course.id, this.selectedGroups).subscribe({
+          next: response => {
             this.toastr.success("Duplication reussie");
+            this.refresh.emit();
+            this.closeModal.emit();
           },
-          (error) => {
+          error: error => {
             this.toastr.error(error.error.error, 'Erreur',{timeOut: 2000});
           }
+        }
       );
       }
 
@@ -189,5 +198,49 @@ export class CourseEditComponent implements OnInit{
             // Si le groupe est déjà dans la liste, le retirer
             this.selectedGroups.splice(index, 1);
         }
+    }
+
+    getGroupAvailableForDuplicate() {
+      const course_same_time = this.courses.filter(course => {
+        return this.course.start_time >= course.start_time && this.course.start_time <= course.end_time 
+              || this.course.end_time >= course.start_time && this.course.end_time <= course.end_time
+              || this.course.start_time <= course.start_time && this.course.end_time >= course.end_time
+      });
+      const group_unavailable: Group[] = []
+      course_same_time.forEach(course => {
+        let current_group = this.groupes.find(group => group.id === course.id_group)!;
+
+
+        // parent unavailable
+        if(!group_unavailable.find(group => group.id === current_group.id))  {
+          group_unavailable.push(current_group);
+          while (current_group.id_group_parent != null){
+            current_group = this.groupes.find(group => group.id === current_group.id_group_parent)!;
+            if(!group_unavailable.find(group => group.id === current_group.id))  {
+              group_unavailable.push(current_group);
+            }
+          }
+        }
+
+
+        // children unavailable
+        let group_children: Group[] = this.groupes.filter(group => group.id_group_parent === course.id_group);
+        while(group_children.length > 0) {
+          const children_current = this.groupes.find(group => group.id === group_children[0].id)!;          
+          if(!group_unavailable.find(group => group.id === children_current.id))  {
+            group_unavailable.push(children_current);
+          }
+
+          const other_children = this.groupes.filter(group => group.id_group_parent === children_current.id);
+          group_children = group_children.concat(other_children);
+          console.log("look", group_children[0])
+          group_children.shift();
+        }
+      }
+      );
+      console.log("Groupes indisponibles", group_unavailable)
+      this.groupe_available = this.groupes.filter(group => !group_unavailable.find(group_unavailable => group_unavailable.id === group.id));
+      console.log("Groupes disponibles", this.groupe_available)
+
     }
 }
