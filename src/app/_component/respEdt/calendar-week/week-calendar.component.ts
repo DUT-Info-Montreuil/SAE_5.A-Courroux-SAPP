@@ -140,7 +140,8 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     });
-    console.log(this.viewDate)
+    console.log(this.viewDate);
+
     this.userService.getIdentify().subscribe({
       next: user => {
         this.idUser = user.id;
@@ -149,6 +150,8 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     })
+
+    console.log("teachers", this.teachers);
 
   }
 

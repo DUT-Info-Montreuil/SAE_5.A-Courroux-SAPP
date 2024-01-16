@@ -142,10 +142,10 @@ export class CourseService {
         );
     }
 
-    getByTeacher(id_teacher: number): Observable<Course[]> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/teacher/${id_teacher}`;
+    getStatsTeacher(id_teacher: number): Observable<Course[]> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/stats/${id_teacher}`;
 
-        return this.http.get<Course[]>(url, this.utilsService.getJsonHeader())
+        return this.http.get<any[]>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );

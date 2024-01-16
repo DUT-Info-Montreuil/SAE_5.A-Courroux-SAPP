@@ -10,17 +10,16 @@ import { CourseService } from 'src/app/_service/course.service';
 export class StatsTeacherComponent {
 
   @Input() idTeacher: number;
-  @Input() showModalStats: boolean;
 
   @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
 
-  courses_of_teacher: Course[] = [];
+  stats: any[] = [];
 
   constructor(private courseService : CourseService) { }
 
   ngOnInit(): void {
-    this.courseService.getByTeacher(this.idTeacher).subscribe((courses: Course[]) => {
-      this.courses_of_teacher = courses;
+    this.courseService.getStatsTeacher(this.idTeacher).subscribe((stats: any[]) => {
+      this.stats = stats;
     });
   }
 
