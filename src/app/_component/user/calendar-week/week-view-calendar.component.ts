@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, HostListener } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
@@ -39,7 +39,7 @@ export function momentAdapterFactory() {
 
 })
 
-export class WeekViewCalendarComponent{
+export class WeekViewCalendarComponent implements OnInit {
   
   courses: Course[] = [];
   teachers: Teacher[] = [];
@@ -50,7 +50,8 @@ export class WeekViewCalendarComponent{
 
   courseForEdit: Course;
 
-  isWeekCalendar = true
+  isWeekCalendar = true;
+  viewPhone = false;
 
   args: any[] = [];
 
@@ -67,6 +68,8 @@ export class WeekViewCalendarComponent{
 
   events: CalendarEvent[] = [];
   eventsToPushToBd: CalendarEvent[] = [];
+
+  isDrawerOpen = false;
 
   refresh = new Subject<void>();
 
@@ -91,7 +94,23 @@ export class WeekViewCalendarComponent{
 
   }
 
+  toggleDrawer() {
+    this.isDrawerOpen = !this.isDrawerOpen;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateView();
+  }
+
+  private updateView(): void {
+    const largeurEcran = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.isWeekCalendar = largeurEcran > 768;
+    this.viewPhone = largeurEcran > 768;
+  }
+
   ngOnInit(): void {
+    this.updateView();
     forkJoin([
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
