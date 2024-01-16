@@ -5,9 +5,10 @@ import { WeekCalendarComponent } from './_component/respEdt/calendar-week/week-c
 import { FormsComponent } from './forms/forms.component';
 import { WeekViewCalendarComponent } from './_component/user/calendar-week/week-view-calendar.component';
 import { ElevesGroupesComponent } from './eleves-groupes/eleves-groupes.component';
+import { Calendar } from './_component/general/calendar/calendar.component';
 
 const routes: Routes = [
-  { path: '', component: WeekCalendarComponent},
+  { path: '', component: Calendar},
   { path: 'login', component: LoginComponent},
   { path: 'ajout', component: FormsComponent},
   { path: 'user', component: WeekViewCalendarComponent },

@@ -25,7 +25,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 
   ],
   exports: [
-    LoginComponent
+    LoginComponent,
+    WeekViewCalendarComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

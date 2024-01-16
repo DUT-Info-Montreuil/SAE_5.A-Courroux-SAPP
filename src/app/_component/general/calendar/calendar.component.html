@@ -1,0 +1,4 @@
+<ng-container *ngIf="!loading">
+    <app-calendar-week-view-user *ngIf="user.role == 'ROLE_STUDENT'"></app-calendar-week-view-user>
+    <app-calendar-week-view-resp-edt *ngIf="user.role == 'ROLE_RESP_EDT'"></app-calendar-week-view-resp-edt>
+</ng-container>

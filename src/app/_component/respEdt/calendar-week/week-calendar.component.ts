@@ -37,7 +37,7 @@ export function momentAdapterFactory() {
 
 
 @Component({
-  selector: 'app-calendar-week',
+  selector: 'app-calendar-week-view-resp-edt',
   templateUrl: './week-calendar.component.html',
   styleUrls: ['./week-calendar.component.scss'],
   encapsulation: ViewEncapsulation.None,

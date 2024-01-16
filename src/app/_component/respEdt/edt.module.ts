@@ -68,6 +68,9 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
 
 
   ],
+  exports: [
+    WeekCalendarComponent
+  ],
   
 })
 export class EdtModule { }
