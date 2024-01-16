@@ -16,7 +16,10 @@
 
             <div>
                 <button (click)="openModalCopy()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mt-5 mb-5">Copier</button>
-                <button (click)="openModalPaste()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r py-2 px-4 mt-5 mr-5 mb-5">Coller</button>
+                <button (click)="openModalPaste()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r py-2 px-4 mt-5 mr-5 mb-5" [disabled]="!pasteEnable"
+                [ngClass]="{ 'bg-gray-400': !pasteEnable, 'bg-gray-300 hover:bg-gray-400': pasteEnable }"
+                >Coller
+                </button>
                 <button (click)="cancelCourse()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mt-5 mb-5">Annuler</button>
                 <button (click)="publishCourse()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-5 mt-5 mb-5">Publier</button>
             </div>
@@ -113,7 +116,7 @@
 </ng-container>
 
 <ng-container>
-    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()"></copy-course>
+    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()" (setPaste)="setPasteEnable($event)"></copy-course>
 </ng-container>
 <!-- 
 <ng-container *ngIf="showModalStats">

@@ -70,7 +70,8 @@ export class WeekCalendarComponent{
   selectedDays: {name: string, selected: boolean, date: Date}[] = [];
 
   idUser: any;
-
+  
+  pasteEnable: boolean = false;
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -179,6 +180,7 @@ export class WeekCalendarComponent{
     this.showModalMod = true;
 
   }
+  
 
   changePromotion(event: any){
     let id_promo = event.target.value;
@@ -219,6 +221,9 @@ export class WeekCalendarComponent{
   closeModalStats() {
     this.showModalStats = false;
   }
+
+
+  
 
   getComment(date : Date){
     let week_number = this.getWeek(date);
@@ -597,6 +602,10 @@ export class WeekCalendarComponent{
 
   paste() {
     console.log("Courses to paste", this.coursesToPaste);
+  }
+
+  setPasteEnable(bool: boolean){
+    this.pasteEnable = bool
   }
 
   onChangeSelectedDays(selectedDays: any) {
