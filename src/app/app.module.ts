@@ -27,6 +27,7 @@ import { CsvEleveModalComponent } from './modals/csv-eleve-modal/csv-eleve-modal
 import { AddModalPromoComponent } from './modals/add-modal-promo/add-modal-promo.component';
 import { StatsTeacherComponent } from './_component/teacher/stats-teacher/stats-teacher.component';
 import { GeneralModule } from './_component/general/general.module';
+import { TeacherModule } from './_component/teacher/teacher.module';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -66,7 +67,8 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     HttpClientModule,
     UsersModule,
     EdtModule,
-    GeneralModule
+    GeneralModule,
+    TeacherModule
     
   ],
   providers: [

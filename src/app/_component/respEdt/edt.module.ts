@@ -39,7 +39,7 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     // FilterPipe,
     ModifModalFormComponent,
     DeleteModalComponent,
-    StatsTeacherComponent
+    // StatsTeacherComponent
     
   ],
   imports: [

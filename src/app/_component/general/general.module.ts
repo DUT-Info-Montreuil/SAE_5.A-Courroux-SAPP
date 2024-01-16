@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersModule } from '../user/user.module';
 import { EdtModule } from '../respEdt/edt.module';
+import { TeacherModule } from '../teacher/teacher.module';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { EdtModule } from '../respEdt/edt.module';
     RouterModule,
     CommonModule,
     UsersModule,
-    EdtModule
+    EdtModule,
+    TeacherModule
     // WeekCalendarComponent,
     // WeekViewCalendarComponent
   ],
