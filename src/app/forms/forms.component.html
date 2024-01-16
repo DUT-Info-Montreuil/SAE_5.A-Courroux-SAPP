@@ -2,16 +2,19 @@
     <div>
         <button (click)="redirectToEdt()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-10 mt-2 mb-2">Retour à l'emploi du temps</button>
         <label for="choix"  class="text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Choisissez vos options</label>
-        <select id="choix" [(ngModel)]="formSelectionne" (change)="changerSelection()" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <select id="choix"  (change)="changerSelection($event)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected="" disabled="" value="">Choisir...</option>
+
             <option value="formSalle">Salle</option>
             <option value="formProfesseur">Professeur</option>
             <option value="formRessource">Ressource</option>
             <option value="formGroupe">Groupe</option>
         </select>
         <button *ngIf="formSelectionne === 'formGroupe'" type="button" (click)="ouvrirModalAjoutPromo()" class="w-full mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ajouter une promotion</button>
-        <div *ngIf="formSelectionne != 'formSalle'">
+        <div *ngIf="formSelectionne == 'formGroupe'">
             <label for="promo" class="mt-5 text-xl text-center block mb-4 font-medium text-gray-900 dark:text-white">Promotion</label>
-            <select required id="niveau" (change)="changerPromo($event)" [(ngModel)]="idPromoSelectionnee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select required id="niveau" (change)="changerPromo($event)"  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option selected="" disabled="" value="">Choisir...</option>
                 <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
             </select>
         </div>
@@ -31,7 +34,7 @@
             </h2>
             <div id="accordion-collapse-body-1" [hidden]="!isSection1Open" aria-labelledby="accordion-collapse-heading-1" class="bg-stone-100 dark:bg-slate-800">
                 <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
-                    <div *ngIf="formSelectionne !== 'formSalle' && idPromoSelectionnee === null">
+                    <div *ngIf="formSelectionne == 'formGroupe' && idPromoSelectionnee === null">
                         <h5 class="text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Veuillez séléctionner une promo</h5>
                     </div>
 
@@ -49,7 +52,7 @@
                     </form>
 
                     <form [formGroup]="formAddProfesseur" (ngSubmit)="onSubmitAddProfesseur()"
-                    *ngIf="formSelectionne === 'formProfesseur' && idPromoSelectionnee">
+                    *ngIf="formSelectionne === 'formProfesseur'">
                         <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
                         <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
@@ -62,37 +65,43 @@
                     </form>
 
                     <form [formGroup]="formAddRessource" (ngSubmit)="onSubmitAddRessource()"
-                    *ngIf="formSelectionne === 'formRessource' && idPromoSelectionnee">
+                    *ngIf="formSelectionne === 'formRessource'">
                         <label for="nonamem" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
                         <input required formControlName="name" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="initial" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Initial</label>
                         <input required formControlName="initial" type="text" id="initial" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="choixPromo" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Promo</label>
                         <select required formControlName="id_promo" id="id_promo" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected="" disabled="" value="">Choisir...</option>
                             <option *ngFor="let promo of promos" [value]="promo.id">{{promo.group.name}}</option>
                         </select>
                         <label for="hs-color-input" class="block text-sm font-medium my-2 dark:text-white w-full">Color picker</label>
-                        <div class="flex flex-row">
-                            <input formControlName="color"  type="color" class="flex-1 block cursor-default h-12 rounded-3xl"  [(ngModel)]="color" title="Choose your color"/>
-                            <!-- <div class="flex-1 flex items-center justify-center w-full">
-                                <div class="titre h-full w-3/4 flex flex-col justify-between relative bg-[{{color}}]">
-                                    <div class="item-center text-center">
-                                    <div class="flex flex-row">
-                                        <div class="flex-1 text-start">A2.05</div>
-                                        <div class="flex-1 text-center">
-                                        Cours
+                        <div class="flex flex-row rounded-lg overflow-hidden">
+                            <div class="rounded-3xl w-1/12 overflow-hidden">
+                                <input formControlName="color"  type="color" class="w-full block cursor-default h-24"  [(ngModel)]="color" title="Choose your color"/>
+                            </div>
+                            <div class="w-11/12 flex flex-col items-center gap-2">
+                                <h1 class="text-2xl text-white">Visualisation</h1>
+                                <div class="w-3/4 flex items-center justify-center text-white rounded-lg" [style.background-color]="color">
+                                    <div class="titre h-full w-3/4 flex flex-col justify-between relative">
+                                        <div class="item-center text-center">
+                                        <div class="flex flex-row">
+                                            <div class="flex-1 text-start">A2.05</div>
+                                            <div class="flex-1 text-center">
+                                            Cours
+                                            </div>
+                                            <div class="flex-1 text-end">PB</div>
                                         </div>
-                                        <div class="flex-1 text-end">PB</div>
+                                        </div>
+                                        
+                                        <div class="flex flex-row items-center justify-center">
+                                        <img src="assets/images/clock.png" alt="Logo" class="w-[18px]" >
+                                        <h2>00:00 - 00:00 </h2>
+                                        </div>
+                                        
                                     </div>
-                                    </div>
-                                    
-                                    <div class="flex flex-row items-center justify-center">
-                                    <img src="assets/images/clock.png" alt="Logo" class="w-[18px]" >
-                                    <h2>00:00 - 00:00 </h2>
-                                    </div>
-                                    
                                 </div>
-                                </div> -->
+                            </div>
                         </div>
                         <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
                     </form>
@@ -157,8 +166,10 @@
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{prof.staff.user.lastname}}</th>
                                     <td class="px-6 py-4">{{prof.staff.user.name}}</td>
                                     <td class="px-6 py-4">{{prof.staff.initial}}</td>
-                                    <td class="flex justify-center items-center pt-2">
-                                        <button type="button" [ngClass]="{'bg-blue-500': prof.activated, 'bg-gray-300': !prof.activated}" (click)="toggleActivationTeacher(prof)" class="rounded-xl bg-blue-500 w-full h-8"></button>
+                                    <td class="pt-2">
+                                        <div class="flex justify-center items-center rounded-xl overflow-hidden">
+                                            <button type="button" [ngClass]="{'bg-blue-500': prof.activated, 'bg-gray-300': !prof.activated}" (click)="toggleActivationTeacher(prof)" class="rounded-xl bg-blue-500 w-full h-8"></button>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(prof)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(prof)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
@@ -179,7 +190,7 @@
                                 <tr *ngFor="let ressource of ressources | filter:searchText" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ressource.initial}}</th>
                                     <td class="px-6 py-4">{{ressource.name}}</td>
-                                    <td class="px-6 py-4">{{ressource.id_promo}}</td>
+                                    <td class="px-6 py-4">{{ressource.id_promo}} ({{getPromoById(ressource.id_promo).group.name}})</td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(ressource)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(ressource)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                                 </tr>

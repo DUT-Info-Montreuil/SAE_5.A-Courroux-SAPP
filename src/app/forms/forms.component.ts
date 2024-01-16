@@ -262,7 +262,8 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.showModal = false;
   }
 
-  changerSelection(){
+  changerSelection(event: any){
+    this.formSelectionne = event.target.value;
     this.selection = this.formSelectionne.substring(4);
   }
   
@@ -378,5 +379,9 @@ export class FormsComponent implements OnInit, OnDestroy{
         this.handleError(error, "professeur");
       }
     });
+  }
+
+  getPromoById(id: number): Promotion {
+    return this.promos.find(promo => promo.id === id)!;
   }
 }

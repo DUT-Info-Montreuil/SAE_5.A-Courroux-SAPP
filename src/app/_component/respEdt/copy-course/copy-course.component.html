@@ -32,7 +32,12 @@
                             
                         </ng-container>
                     </div>
-                    <button type="submit" class="mt-8 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
+                    <button type="submit" class="mt-8 w-full text-white  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center " [disabled]="!oneDaySelected()"
+                    [ngClass]="{
+                        'bg-blue-800': !oneDaySelected(),
+                        'bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800': oneDaySelected()
+                    }"
+                    >Confirmer</button>
                 </form>            
             </div>
         </div>
@@ -78,7 +83,12 @@
                             
                         </ng-container>
                     </div>
-                    <button type="submit" class="mt-8 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Confirmer</button>
+                    <button type="submit" class="mt-8 w-full text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" [disabled]="!selectedStartDateToAttempt"
+                    [ngClass]="{
+                        'bg-blue-800': !selectedStartDateToAttempt,
+                        'bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800': selectedStartDateToAttempt
+                    }"
+                    >Confirmer</button>
                 </form>           
             </div>
         </div>

@@ -130,6 +130,10 @@ export class CopyCourseComponent{
       }  
   }
 
+  oneDaySelected(): boolean {
+    return this.weekdays.filter(day => day.selected).length >= 1;
+  }
+
   updateSelection(day: { name: string, selected: boolean, date: Date }) {
     console.log(this.selectedDays)
     if (this.selectedDays.length >= 2) {
