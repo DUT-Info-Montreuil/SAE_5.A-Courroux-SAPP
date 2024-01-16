@@ -39,6 +39,8 @@ export class CopyCourseComponent{
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
     @Output() selectedDaysOutput: EventEmitter<any[]> = new EventEmitter<any[]>();
     @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+    @Output() setPaste: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
@@ -106,6 +108,8 @@ export class CopyCourseComponent{
         this.selectedDaysOutput.emit(copiedSelectedDays);
 
         this.toastr.success('Les cours ont été copiés', 'Succès',{timeOut: 1500});
+        this.setPaste.emit(true);
+
         
 
     }
