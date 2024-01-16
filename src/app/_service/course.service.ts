@@ -15,12 +15,14 @@ export class CourseService {
 
     getCourses(args: any[]= []): Observable<Course[]> {
 
+
         let params: String[] = []
 
         args.forEach(arg => {
             const key = Object.keys(arg)[0];
             params.push(`${key}=${arg[key]}`);
         });
+        
 
 
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses`;
@@ -111,7 +113,7 @@ export class CourseService {
     }
 
     pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string, sat_date: string, sun_date: string): Observable<Course> {
-        let url = `http://localhost:5000/courses/paste`;
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/paste`;
         
         const body = {
             start_time: start_time,
@@ -129,7 +131,7 @@ export class CourseService {
     }
 
     duplicate(courseId: number, groupsToDuplicateTo: number[]) {
-        let url = `http://localhost:8000/courses/duplicate`;
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
 
         const body = {
             courseId: courseId,
@@ -137,6 +139,15 @@ export class CourseService {
         };
         
         return this.http.post<Course>(url, body, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+
+    getStatsTeacher(id_teacher: number): Observable<Course[]> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/courses/stats/${id_teacher}`;
+
+        return this.http.get<any[]>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );

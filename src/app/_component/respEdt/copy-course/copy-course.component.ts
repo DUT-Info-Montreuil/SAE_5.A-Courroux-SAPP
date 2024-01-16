@@ -38,6 +38,8 @@ export class CopyCourseComponent{
     @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
     @Output() closeModalP: EventEmitter<void> = new EventEmitter<void>();
     @Output() selectedDaysOutput: EventEmitter<any[]> = new EventEmitter<any[]>();
+    @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+
 
     weekdays: { name: string, selected: boolean, date: Date }[] = [
         { name: 'Lundi', selected: false, date: new Date() },
@@ -91,10 +93,16 @@ export class CopyCourseComponent{
         // this.selectCoursesInInterval();
         console.log(this.courses);
         this.closeModalCopy();
+
         this.weekdays.forEach((weekday) => weekday.selected=false);
         console.log("SelectedDays", this.selectedDays);
+
         let copiedSelectedDays = JSON.parse(JSON.stringify(this.selectedDays));
+
         this.selectedDaysOutput.emit(copiedSelectedDays);
+
+        this.toastr.success('Les cours ont été copiés', 'Succès',{timeOut: 1500});
+
     }
 
     onSubmitPaste() {
@@ -162,15 +170,15 @@ export class CopyCourseComponent{
       let SatFormatted = this.formatDate(this.sat);
       let SunFormatted = this.formatDate(this.sun);
 
-      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe(
-        (response) => {
-          console.log("paste");
-          console.log(response);
+      this.courseService.pasteCourse(sAndHdays[0], sAndHdays[1], this.promotion.id, dateAttempt, SatFormatted, SunFormatted).subscribe({
+        next: response => {
+          this.toastr.success('Les cours ont été collés', 'Succès',{timeOut: 1500});
+          this.refresh.emit();
         },
-        (error) => {
-          console.log(error);
+        error: error => {
+          this.toastr.error(error.error.message);
         }
-      )
+    })
     }
 
     findSmallestAndHighestDate() {

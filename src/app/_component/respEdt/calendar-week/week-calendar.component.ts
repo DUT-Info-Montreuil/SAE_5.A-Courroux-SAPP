@@ -21,11 +21,13 @@ import { WeekCommentService } from 'src/app/_service/weekComment.service';
 import { WeekComment } from 'src/app/_model/entity/weekComment.model';
 import { Promotion } from 'src/app/_model/entity/promotion.model';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
+import { StatsTeacherComponent } from '../../teacher/stats-teacher/stats-teacher.component';
 import { th } from 'date-fns/locale';
 import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
 } from '@angular/core';
+import { UserService } from 'src/app/_service/user.service';
 
 
 export function momentAdapterFactory() {
@@ -67,6 +69,8 @@ export class WeekCalendarComponent{
 
   selectedDays: {name: string, selected: boolean, date: Date}[] = [];
 
+  idUser: any;
+
   // minEndTime!: string;
   // maxStartTime!: string;
 
@@ -76,6 +80,7 @@ export class WeekCalendarComponent{
   showModalAdd = false;
   showModalCopy = false;
   showModalPaste = false;
+  showModalStats = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -102,7 +107,8 @@ export class WeekCalendarComponent{
     private toastr: ToastrService,
     private roomService: RoomService,
     private weekCommentService: WeekCommentService,
-    private edtManagerService: EdtManagerService) {
+    private edtManagerService: EdtManagerService,
+    private userService: UserService,) {
   }
 
   ngOnInit(): void {
@@ -134,8 +140,18 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     });
-    console.log(this.viewDate)
+    console.log(this.viewDate);
 
+    this.userService.getIdentify().subscribe({
+      next: user => {
+        this.idUser = user.id;
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
+
+    console.log("teachers", this.teachers);
 
   }
 
@@ -194,6 +210,14 @@ export class WeekCalendarComponent{
   
   closeModalAdd() {
     this.showModalAdd = false;
+  }
+
+  openModalStats() {
+    this.showModalStats = true;
+  }
+
+  closeModalStats() {
+    this.showModalStats = false;
   }
 
   getComment(date : Date){

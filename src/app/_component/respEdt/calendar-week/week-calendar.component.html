@@ -11,6 +11,7 @@
                 <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"(click)="openModalAdd()">Ajouter</button>
                 <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToUtilitaires()">Ajout utilitaires</button>
                 <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToGestionGroupes()">Eleves groupes</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="openModalStats()">Stats</button>
             </div>
 
             <div>
@@ -107,5 +108,9 @@
 </ng-container>
 
 <ng-container>
-    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()"></copy-course>
+    <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()"></copy-course>
+</ng-container>
+
+<ng-container *ngIf="showModalStats">
+    <stats-teacher [idTeacher]="idUser" (closeModal)="closeModalStats()"></stats-teacher>
 </ng-container>

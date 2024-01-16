@@ -157,6 +157,10 @@ export class WeekViewCalendarComponent{
   }
 
   loadEvents(){
+
+    if (this.args.length > 2 && this.args.find(arg => Object.keys(arg)[0] == "method") == undefined){
+      this.args.push({method: "filter"});
+    }
     console.log("loadEvents");
     this.events = [];
 
@@ -200,6 +204,18 @@ export class WeekViewCalendarComponent{
 
   addEvent(course: Course): void {
 
+    let cssClass : string;
+    console.log(this.args.length > 2)
+    if (this.args.find(arg => Object.keys(arg)[0] == "group") != undefined){
+      cssClass = `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
+    }
+    else {
+      cssClass = ``
+    }
+    // else {
+    //   cssClass = `calendar-user-position-0 calendar-user-width-100`
+    // }
+
     this.events.push({
       id: course.id,
       title: course.initial_ressource,
@@ -211,12 +227,12 @@ export class WeekViewCalendarComponent{
         secondary: this.getResourceByInitial(course.initial_ressource)!.color,
 
       },        
-      draggable: true,
+      draggable: false,
       resizable: {
-        beforeStart: true,
-        afterEnd: true,
+        beforeStart: false,
+        afterEnd: false,
       },
-      cssClass: `calendar-user-position-${this.getPosition(course)} calendar-user-width-${this.getWidth(course)}`
+      cssClass: cssClass
 
     });
   }
@@ -443,6 +459,18 @@ export class WeekViewCalendarComponent{
     const arg = {teacher: event.target.value};
     this.addArguments(arg);
     this.loadEvents();
+  }
+
+  removeFilter(key: string, select: any){
+    this.args = this.args.filter(arg => Object.keys(arg)[0] != key);
+    
+    if (this.args.length <= 3){
+      this.args = this.args.filter(arg => Object.keys(arg)[0] != 'method');
+
+    }
+    this.loadEvents();
+    select.value = "";
+    console.table(this.args);
   }
 
 

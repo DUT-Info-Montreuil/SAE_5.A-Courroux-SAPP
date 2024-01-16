@@ -25,6 +25,7 @@ import { ModifModalGroupComponent } from './modals/modif-modal-group/modif-modal
 import { AddModalEleveComponent } from './modals/add-modal-eleve/add-modal-eleve.component';
 import { CsvEleveModalComponent } from './modals/csv-eleve-modal/csv-eleve-modal.component';
 import { AddModalPromoComponent } from './modals/add-modal-promo/add-modal-promo.component';
+import { StatsTeacherComponent } from './_component/teacher/stats-teacher/stats-teacher.component';
 
 registerLocaleData(localeFr, 'fr');
 
