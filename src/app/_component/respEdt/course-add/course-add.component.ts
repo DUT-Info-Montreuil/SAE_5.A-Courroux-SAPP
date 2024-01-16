@@ -53,10 +53,17 @@ export class CourseAddComponent implements OnInit{
             name_salle: ['', [
                 this.validateSelect
             ]],
+            evaluation: [false,[Validators.required]],
             date: ['', [Validators.required]],
             start: ['', [Validators.required]],
             end: ['', [Validators.required]],  
         });
+    }
+
+    toggleEvaluation() {
+        this.courseForm.patchValue({
+            evaluation: !this.courseForm.value.evaluation
+        })
     }
 
     validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
@@ -84,7 +91,10 @@ export class CourseAddComponent implements OnInit{
         if (this.courseForm.invalid) {
             return;
         }
+        console.log(this.courseForm.value)
+
         const course: Course = this.courseForm.value;
+        console.log(course)
         
         course.start_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.start);
         course.end_time = this.createDateObject(this.courseForm.value.date, this.courseForm.value.end);

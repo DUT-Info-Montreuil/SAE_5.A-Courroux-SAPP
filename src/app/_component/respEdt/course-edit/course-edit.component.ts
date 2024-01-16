@@ -82,11 +82,18 @@ export class CourseEditComponent implements OnInit{
             name_salle: [this.course.name_salle?this.course.name_salle:"", [
                 // this.validateSelect
             ]],
+            evaluation: [this.course.evaluation,[Validators.required]],
             date: [date, [Validators.required]],
             start: [start, [Validators.required]],
             end: [end, [Validators.required]],  
         });
     }
+
+    toggleEvaluation() {
+      this.courseForm.patchValue({
+          evaluation: !this.courseForm.value.evaluation
+      })
+  }
 
     validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
         const selectedValue = control.value;

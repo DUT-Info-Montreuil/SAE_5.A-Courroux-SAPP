@@ -84,7 +84,8 @@ export class CourseService {
             id_group: course.id_group,
             name_salle: course.name_salle,
             appelEffectue: course.appelEffectue,
-            is_published: course.is_published
+            is_published: course.is_published,
+            evaluation: course.evaluation
         }
         return courseParsed;
     }

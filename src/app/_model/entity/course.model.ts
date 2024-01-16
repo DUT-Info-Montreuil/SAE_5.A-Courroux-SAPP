@@ -10,6 +10,7 @@ export class Course implements Deserializable {
     name_salle?: string;
     appelEffectue: boolean;
     is_published: boolean;
+    evaluation: boolean;
 
     deserialize(input: any): this {
         if (input) {
