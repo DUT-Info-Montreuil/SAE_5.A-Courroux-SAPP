@@ -53,7 +53,7 @@ export class ChoiceCourseComponent implements OnInit{
 
 
     ngOnInit() {
-        // this.getGroupAvailableForDuplicate();
+        this.getGroupAvailableForDuplicate();
         // console.log('this.promo', this.promo)
         // console.log("this.comment", this.comment);
         // if (!this.comment){
