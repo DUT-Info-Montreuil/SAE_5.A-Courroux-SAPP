@@ -9,6 +9,7 @@
             <option value="formProfesseur">Professeur</option>
             <option value="formRessource">Ressource</option>
             <option value="formGroupe">Groupe</option>
+            <option value="formResponsable">Responsable</option>
         </select>
         <button *ngIf="formSelectionne === 'formGroupe'" type="button" (click)="ouvrirModalAjoutPromo()" class="w-full mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Ajouter une promotion</button>
         <div *ngIf="formSelectionne == 'formGroupe'">
@@ -53,6 +54,19 @@
 
                     <form [formGroup]="formAddProfesseur" (ngSubmit)="onSubmitAddProfesseur()"
                     *ngIf="formSelectionne === 'formProfesseur'">
+                        <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+                        <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
+                        <input formControlName="name" required type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label for="username" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Identifiant</label>
+                        <input formControlName="username" required type="text" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <label for="password" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
+                        <input formControlName="password" required type="text" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <button type="submit" class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Ajouter</button>
+                    </form>
+
+                    <form [formGroup]="formAddResponsable" (ngSubmit)="onSubmitAddResponsable()"
+                    *ngIf="formSelectionne === 'formResponsable'">
                         <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
                         <input formControlName="lastname" required type="text" id="lastname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <label for="name" class="mt-5 block mb-2 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
@@ -173,6 +187,26 @@
                                     </td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(prof)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
                                     <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(prof)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table *ngIf="formSelectionne === 'formResponsable'" class="w-full text-sm text-left rtl:text-right text-gray-700 dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Professeur</th>
+                                    <th scope="col" class="px-6 py-3">prenom</th>
+                                    <th scope="col" class="px-6 py-3">initial</th>
+                                    <th scope="col" class="px-6 py-3"><span class="sr-only">Edit</span>
+                                    </th><th scope="col" class="px-6 py-3"><span class="sr-only">Remove</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let resp of responsables | filter:searchText" class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{resp.staff.user.lastname}}</th>
+                                    <td class="px-6 py-4">{{resp.staff.user.name}}</td>
+                                    <td class="px-6 py-4">{{resp.staff.initial}}</td>
+                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalModif(resp)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a></td>
+                                    <td class="px-6 py-4 text-right"><a (click)="ouvrirModalDelete(resp)" class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a></td>
                                 </tr>
                             </tbody>
                         </table>

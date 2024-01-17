@@ -21,6 +21,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserGroupService } from '../_service/user_group.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
 import { AddModalPromoComponent } from '../modals/add-modal-promo/add-modal-promo.component';
+import { EdtManager } from '../_model/entity/edtManager.model';
+import { EdtManagerService } from '../_service/edtManager.service';
 
 
 @Component({
@@ -31,6 +33,7 @@ import { AddModalPromoComponent } from '../modals/add-modal-promo/add-modal-prom
 export class FormsComponent implements OnInit, OnDestroy{
 
   teacher:Teacher;
+  responsable : EdtManager;
   room:Room = new Room();
   ressource:Resource = new Resource();
   promo:Group;
@@ -40,6 +43,7 @@ export class FormsComponent implements OnInit, OnDestroy{
 
   searchText: any;
 
+  responsables : EdtManager[] = [];
   ressources : Resource[] = [];
   profs : Teacher[] = [];
   salles : Room[] = [];
@@ -73,6 +77,13 @@ export class FormsComponent implements OnInit, OnDestroy{
     password: new FormControl("", Validators.required)
   })
 
+  formAddResponsable = new FormGroup({
+    lastname: new FormControl("", Validators.required),
+    name: new FormControl("", Validators.required),
+    username: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required)
+  })
+
   formAddGroupe = new FormGroup({
     name: new FormControl("", Validators.required),
     id_group_parent: new FormControl<number|null>(null)
@@ -88,6 +99,7 @@ export class FormsComponent implements OnInit, OnDestroy{
   private ressourceRefreshSubscription!: Subscription;
   private groupeRefreshSubscription!: Subscription;
   private promoRefreshSubscription!: Subscription;
+  private respRefreshSubscription!: Subscription;
 
   constructor(
     private toastr: ToastrService,
@@ -96,6 +108,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     private roomService: RoomService,
     private ressourceService: ResourceService,
     private groupeService: GroupService,
+    private responsableService: EdtManagerService,
     private studentService: StudentService,
     private promotionService: PromotionService,
     ){
@@ -107,6 +120,10 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshRessources();
     this.refreshPromo();
     this.refreshGroupes();
+    this.refreshResps();
+    this.respRefreshSubscription = this.responsableService.respRefresh$.subscribe(() => {
+      this.refreshResps();
+    });
     this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
       this.refreshPromo();
     });
@@ -130,6 +147,8 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.profRefreshSubscription.unsubscribe();
     this.ressourceRefreshSubscription.unsubscribe();
     this.groupeRefreshSubscription.unsubscribe();
+    this.promoRefreshSubscription.unsubscribe();
+    this.respRefreshSubscription.unsubscribe();
   }
 
   ouvrirModalAjoutPromo() {
@@ -230,6 +249,18 @@ export class FormsComponent implements OnInit, OnDestroy{
     );
   }
 
+  refreshResps(): void {
+    this.responsableService.getEdtManagers().subscribe(
+      (liste: EdtManager[]) => {
+        this.responsables = liste;
+      },
+      (erreur) => {
+        console.error(erreur);
+        this.toastr.error("erreur");
+      }
+    );
+  }
+
   refreshProfs(): void {
     this.teacherService.getTeachers().subscribe(
       (liste: Teacher[]) => {
@@ -300,6 +331,31 @@ export class FormsComponent implements OnInit, OnDestroy{
         },
         error: error => {
           this.handleError(error, "professeur");
+        }
+      });
+      this.formAddProfesseur.reset();
+    } else {
+      this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
+    }
+  }
+
+  onSubmitAddResponsable() {
+    if (this.formAddResponsable.valid) {
+      let id = this.responsables[this.responsables.length - 1].id - 1;
+      let name = this.formAddResponsable.value.name!;
+      let lastname = this.formAddResponsable.value.lastname!;
+      let username = this.formAddResponsable.value.username!;
+      let password = this.formAddResponsable.value.password!;
+      this.responsable = new EdtManager(id, name, lastname, username, password);
+      console.log(this.responsable);
+      this.responsableService.addEdtManager(this.responsable).subscribe({
+        next: response => {
+          // Si la requête est réussie, affiche un toast de succès
+          this.toastr.success("Le résponsable a bien été ajouté !");
+          this.refreshResps();
+        },
+        error: error => {
+          this.handleError(error, "résponsable");
         }
       });
       this.formAddProfesseur.reset();

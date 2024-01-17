@@ -14,6 +14,8 @@ import { ResourceService } from 'src/app/_service/resource.service';
 import { Resource } from 'src/app/_model/entity/resource.model';
 import { StudentService } from 'src/app/_service/student.service';
 import { Student } from 'src/app/_model/entity/student.model';
+import { EdtManager } from 'src/app/_model/entity/edtManager.model';
+import { EdtManagerService } from 'src/app/_service/edtManager.service';
 
 @Component({
   selector: 'app-modif-modal-form',
@@ -23,6 +25,7 @@ import { Student } from 'src/app/_model/entity/student.model';
 export class ModifModalFormComponent implements OnInit{
 
   teacher:Teacher;
+  responsable : EdtManager;
   salle:Room = new Room();
   ressource:Resource = new Resource();
   eleve:Student;
@@ -45,6 +48,12 @@ export class ModifModalFormComponent implements OnInit{
     lastname: new FormControl("", Validators.required)
   })
 
+  formModifResponsable = new FormGroup({
+    id: new FormControl<number|null>(null),
+    name: new FormControl("", Validators.required),
+    lastname: new FormControl("", Validators.required)
+  })
+
   formModifStudent = new FormGroup({
     id: new FormControl<number|null>(null),
     name: new FormControl("", Validators.required),
@@ -60,12 +69,17 @@ export class ModifModalFormComponent implements OnInit{
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private teacherService: TeacherService,
+    private responsableService: EdtManagerService,
     private roomService: RoomService,
     private ressourceService: ResourceService,
     private studentService: StudentService,
     private toastr: ToastrService,
     private formsComponent: FormsComponent
     ){
+  }
+
+  responsablesChanged() {
+    this.responsableService.notifyRespRefresh();
   }
 
   sallesChanged() {
@@ -104,12 +118,24 @@ export class ModifModalFormComponent implements OnInit{
         this.elementName = this.data.element.user.name + " " + this.data.element.user.lastname;
         this.setEleveValues();
         break;
+      case "formResponsable":
+        this.elementName = this.data.element.staff.user.name + " " + this.data.element.staff.user.lastname;
+        this.setResponsableValues();
+        break;
     }
     
   }
 
   getElementId(): number{
     return this.data.element.id;
+  }
+
+  setResponsableValues(){
+    this.formModifResponsable.patchValue({
+      id: this.getElementId(),
+      name: this.data.element.staff.user.name,
+      lastname: this.data.element.staff.user.lastname
+    });
   }
 
   setProfValues(){
@@ -168,11 +194,30 @@ export class ModifModalFormComponent implements OnInit{
       let username = this.data.element.staff.user.username;
       let password = this.data.element.staff.user.password;
       this.teacher = new Teacher(id, name, lastname, username, password);
-      console.log(this.teacher);
       this.teacherService.updateTeacher(this.teacher).subscribe({
         next: response => {
           this.toastr.success("le professeur a bien été modifié !");
           this.profsChanged();
+        },
+        error: error=> {this.toastr.error("erreur");}
+      });
+    } else {
+      this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
+    }
+  }
+
+  onSubmitModifResponsable(){
+    if (this.formModifResponsable.valid){
+      let id = this.data.element.id;
+      let name = this.formModifResponsable.value.name!;
+      let lastname = this.formModifResponsable.value.lastname!;
+      let username = this.data.element.staff.user.username;
+      let password = this.data.element.staff.user.password;
+      this.responsable = new EdtManager(id, name, lastname, username, password);
+      this.responsableService.updateEdtManager(this.responsable).subscribe({
+        next: response => {
+          this.toastr.success("le responsable a bien été modifié !");
+          this.responsablesChanged();
         },
         error: error=> {this.toastr.error("erreur");}
       });
@@ -205,7 +250,6 @@ export class ModifModalFormComponent implements OnInit{
       let username = this.data.element.username;
       let password = this.data.element.password;
       this.eleve = new Student(id, INE, name, lastname, username, password);
-      console.log(this.eleve);
       this.studentService.updateStudent(this.eleve).subscribe({
         next: response => {
           this.toastr.success("le professeur a bien été modifié !");

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UtilsService } from './utils.service';
-import { Observable, retry } from 'rxjs';
+import { Observable, Subject, retry } from 'rxjs';
 import { EdtManager } from '../_model/entity/edtManager.model';
 import { Promotion } from '../_model/entity/promotion.model';
 
@@ -11,6 +11,13 @@ import { Promotion } from '../_model/entity/promotion.model';
 export class EdtManagerService {
 
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
+
+    private respRefreshSource = new Subject<void>();
+    respRefresh$ = this.respRefreshSource.asObservable();
+
+    notifyRespRefresh(){
+        this.respRefreshSource.next();
+    }
 
     getEdtManagers(): Observable<EdtManager[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/responsables`;
@@ -43,6 +50,13 @@ export class EdtManagerService {
     getPromoEdtManager(): Observable<Promotion[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/responsable/promos`;
         return this.http.get<Promotion[]>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+    deleteEdtManager(id: number): Observable<EdtManager> {
+        let url = `${this.utilsService.getEndPoint().apiUrl}/responsable/${id}`;
+        return this.http.delete<EdtManager>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
         );
