@@ -59,12 +59,14 @@ export class UserGroupService {
         );
     }
 
-    migratePromotion(idEtudiants: number[], idNvPromo: number): Observable<any> {
+    migratePromotion(idEtudiants: number[], idAncPromo:number, idNvPromo: number, idResp:number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/migrate`;
 
         const body = {
             idEtudiants: idEtudiants,
-            idNvPromo: idNvPromo
+            idAncPromo: idAncPromo,
+            idNvPromo: idNvPromo,
+            idResp: idResp
         };
 
         return this.http.post<any>(url, body, this.utilsService.getJsonHeader())

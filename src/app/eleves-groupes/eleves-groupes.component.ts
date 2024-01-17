@@ -16,6 +16,7 @@ import { StudentService } from '../_service/student.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
 import { id } from 'date-fns/locale';
 import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-modal.component';
+import { UserService } from '../_service/user.service';
 
 @Component({
   selector: 'app-eleves-groupes',
@@ -25,6 +26,7 @@ import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-moda
 export class ElevesGroupesComponent implements OnInit, OnDestroy{
 
   public idPromoSelectionnee: number | null = null;
+  public idRespEdt: number | null = null;
 
   promos : Promotion[] = [];
   groupes = new Map<Group, Group[]>();
@@ -43,6 +45,7 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     private promotionService: PromotionService,
     private groupService: GroupService,
     private userGroupService: UserGroupService,
+    private userService: UserService,
     private studentService: StudentService,
     private toastr: ToastrService,
   ){}
@@ -59,6 +62,15 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
         this.setElevesGroupe();
       });
     });
+    this.userService.getIdentify().subscribe({
+      next :(user: any) => {
+        this.idRespEdt = user.id;
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error('Une erreur est survenue au chargement de l\'utilisateur');
+        console.log(error);
+      }
+    })
   }
 
   ngOnDestroy(): void {
@@ -209,7 +221,7 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
           console.log("StudentToMigrate", studentToMigrate);
           console.log("idPromoToMigrateTo", this.idPromoToMigrateTo);
   
-          this.userGroupService.migratePromotion(studentToMigrate, this.idPromoToMigrateTo!).subscribe(
+          this.userGroupService.migratePromotion(studentToMigrate, this.idPromoSelectionnee!, this.idPromoToMigrateTo!, this.idRespEdt!).subscribe(
               (response) => {
                   console.log("migrer",response);
               },
