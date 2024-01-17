@@ -41,7 +41,6 @@ export class CourseAddComponent implements OnInit{
     ngOnInit() {
         this.courseForm = this.formBuilder.group({
             id_enseignant: ['', [
-                this.validateSelect
             ]],
             initial_ressource: ['', [
                 Validators.required,
@@ -52,7 +51,6 @@ export class CourseAddComponent implements OnInit{
                 this.validateSelect
             ]],
             name_salle: ['', [
-                this.validateSelect
             ]],
             evaluation: [false,[Validators.required]],
             date: ['', [Validators.required]],
