@@ -184,7 +184,7 @@
     <stats-teacher [idTeacher]="idUser" (closeModal)="closeModalStats()"></stats-teacher>
 </ng-container> -->
 <ng-container *ngIf="showModalChoice">
-    <choice-course [course]="courseForEdit" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModalEmitter)="closeModalChoice()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></choice-course>
+    <choice-course [course]="courseForEdit!" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModalEmitter)="closeModalChoice()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></choice-course>
 
     <!-- <choice-course *ngIf="showModalChoice" (closeModalEmitter)="closeModalChoice()"></choice-course> -->
 </ng-container>

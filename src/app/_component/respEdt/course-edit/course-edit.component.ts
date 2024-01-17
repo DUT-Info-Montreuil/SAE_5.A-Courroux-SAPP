@@ -53,6 +53,7 @@ export class CourseEditComponent implements OnInit{
     }
 
     initializeForm() {
+        console.log(this.course)
         let start_time = new Date(this.course.start_time);
         let end_time = new Date(this.course.end_time);
 
@@ -61,6 +62,8 @@ export class CourseEditComponent implements OnInit{
         const start = start_time.toTimeString().split(' ')[0];
 
         const end = end_time.toTimeString().split(' ')[0];
+        console.log(this.course)
+
    
 
 

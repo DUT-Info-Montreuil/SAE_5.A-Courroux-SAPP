@@ -64,7 +64,7 @@ export class WeekCalendarComponent{
 
   showModalComment = false;
 
-  courseForEdit: Course;
+  courseForEdit: Course | null;
   coursesToPaste: Course[] = [];
 
   isWeekCalendar = true;
@@ -193,12 +193,12 @@ export class WeekCalendarComponent{
     return getWeek(sunday, { weekStartsOn: 0 });
   }
 
-  openModalMod(eventId: number) {
-    this.courseForEdit = this.getCourseByEventId(eventId)!;
+  // openModalMod(eventId: number) {
+  //   this.courseForEdit = this.getCourseByEventId(eventId)!;
 
-    this.showModalMod = true;
+  //   this.showModalMod = true;
 
-  }
+  // }
   
 
   changePromotion(event: any){
@@ -219,11 +219,7 @@ export class WeekCalendarComponent{
     this.comments = this.comments.filter(comment_find => comment_find.id != comment.id);
   }
   
-  closeModalMod() {
-    this.showModalMod = false;
-    this.eventSelectionne.event.start = Date.parse(this.eventSelectionne.event.start);
-    this.eventSelectionne.event.end = Date.parse(this.eventSelectionne.event.end);
-  }
+ 
 
   openModalAdd() {
     this.showModalAdd = true;
@@ -390,6 +386,7 @@ export class WeekCalendarComponent{
     console.log('left :::', left)
 
     console.log("end")
+    console.log("this.events ::: ", this.events)
     return Math.ceil(left)
 
     
@@ -445,6 +442,7 @@ export class WeekCalendarComponent{
 
   eventClicked(event: any) {
     // console.log("safe");
+    // console.log("this.events start",this.events)
     this.eventSelectionne = event;
     // this.maxStartTime = new Date(this.eventSelectionne.event.start - 15 * 60 * 1000).toISOString().slice(0, 16);
     // this.minEndTime = new Date(this.eventSelectionne.event.end + 15 * 60 * 1000).toISOString().slice(0, 16);
@@ -453,12 +451,15 @@ export class WeekCalendarComponent{
   
     Promise.all([this.loadEventStart(this.eventSelectionne), this.loadEventEnd(this.eventSelectionne)])
       .then(([loadedEventStart, loadedEventEnd]) => {
+        console.log("this.eventselect", this.eventSelectionne)
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
         this.courseForEdit = this.getCourseByEventId(this.eventSelectionne.event.id)!;
         this.showModalChoice = true
         // this.openModalMod(this.eventSelectionne.event.id);
       });
+      console.log("this.events",this.events)
+
   }
   
   loadEventStart(event: any): Promise<Date> {
@@ -466,8 +467,10 @@ export class WeekCalendarComponent{
       setTimeout(() => {
         const loadedEventStart = event.event.start;
         resolve(loadedEventStart);
+
       }, 100);
     });
+
   }
   
   loadEventEnd(event: any): Promise<Date> {
@@ -479,13 +482,11 @@ export class WeekCalendarComponent{
     });
   }
 
-  onSubmitMod(){
-    this.closeModalMod();
-  }
   
 
 
   eventTimesChanged(event: any) {
+    console.log("this.events",this.events)
     console.log("here")
     let course_find = this.courses.find(course => course.id == event.event.id);
     if (!course_find){
@@ -538,22 +539,23 @@ export class WeekCalendarComponent{
   }
 
   updateDateStart(date: Date) {
-    this.eventSelectionne.event.start = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+    // this.eventSelectionne.event.start = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+    this.eventSelectionne.event.start = date;
   }
 
   updateDateEnd(date: Date) {
-    this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+    // this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
+    this.eventSelectionne.event.end = date;
   }
 
   supprimerCours(event: any){
     this.events.splice(this.getIndex(event), 1);
     this.refresh.next();
-    this.closeModalMod();
+    // this.closeModalMod();
     // console.log(this.events);
   }
 
   getCourseByEventId(eventId: number) {
-
     return this.courses.find(course => course.id == eventId);
   }
 
@@ -565,6 +567,7 @@ export class WeekCalendarComponent{
   }
 
   getTimeString(date: Date) {
+    
     return this.datePipe.transform(date, 'HH:mm');
   }
 
@@ -634,6 +637,8 @@ export class WeekCalendarComponent{
   }
   closeModalChoice(){
     this.showModalChoice = false;
+    this.courseForEdit = null
+    console.log(this.events)
   }
 
   disablePreventDefault(event: any){

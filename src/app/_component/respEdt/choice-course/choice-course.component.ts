@@ -53,7 +53,7 @@ export class ChoiceCourseComponent implements OnInit{
 
 
     ngOnInit() {
-        this.getGroupAvailableForDuplicate();
+        // this.getGroupAvailableForDuplicate();
         // console.log('this.promo', this.promo)
         // console.log("this.comment", this.comment);
         // if (!this.comment){
@@ -75,7 +75,7 @@ export class ChoiceCourseComponent implements OnInit{
         this.zone.run(() => {
 
             this.choice = choice;
-            this.cdr.detectChanges();
+            // this.cdr.detectChanges();
         })
 
     }
@@ -133,6 +133,8 @@ export class ChoiceCourseComponent implements OnInit{
       console.log("Groupes indisponibles", group_unavailable)
       this.groupe_available = this.groupes.filter(group => !group_unavailable.find(group_unavailable => group_unavailable.id === group.id));
       console.log("Groupes disponibles", this.groupe_available)
+
+
 
     }
      
