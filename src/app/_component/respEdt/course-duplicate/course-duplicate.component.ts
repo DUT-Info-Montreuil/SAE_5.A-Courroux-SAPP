@@ -94,8 +94,8 @@ export class CourseDuplicateComponent implements OnInit{
 
     getGroupAvailableForDuplicate() {
       const course_same_time = this.courses.filter(course => {
-        return this.course.start_time >= course.start_time && this.course.start_time <= course.end_time 
-              || this.course.end_time >= course.start_time && this.course.end_time <= course.end_time
+        return this.course.start_time >= course.start_time && this.course.start_time < course.end_time 
+              || this.course.end_time > course.start_time && this.course.end_time <= course.end_time
               || this.course.start_time <= course.start_time && this.course.end_time >= course.end_time
       });
       const group_unavailable: Group[] = []
