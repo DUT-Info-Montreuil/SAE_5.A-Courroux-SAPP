@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { concatMap, tap, catchError } from 'rxjs';
+import { concatMap, tap, catchError, Observable, map, throwError } from 'rxjs';
+import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { GroupService } from 'src/app/_service/group.service';
 import { ResourceService } from 'src/app/_service/resource.service';
@@ -27,6 +28,7 @@ export class DeleteModalComponent implements OnInit{
     private ressourceService: ResourceService,
     private studentService: StudentService,
     private groupService: GroupService,
+    private affiliationService: AffiliationRespEdtService,
     private responsableService: EdtManagerService,
     private userGroupService: UserGroupService,
     private toastr: ToastrService,
@@ -81,13 +83,34 @@ export class DeleteModalComponent implements OnInit{
     this.ressourceService.notifyRessourceRefresh();
   }
 
+  supprimerAffiliationRespEdt(): Observable<any> {
+    return this.affiliationService.deleteAffiliation(this.data.element.id).pipe(
+        map(response => {
+          console.log(response);
+          return response;
+        }),
+        catchError(error => {
+          console.log(error);
+          this.toastr.error("Erreur lors de la suppression de l'affiliation.");
+          return error;
+        })
+    );
+}
+
   supprimerResponsable(){
-    this.responsableService.deleteEdtManager(this.data.element.id).subscribe({
+    this.supprimerAffiliationRespEdt().subscribe({
       next: response => {
-        this.toastr.success("le responsable a bien été supprimé!");
-        this.responsablesChanged();
-      },
-      error: error=> {this.toastr.error("erreur");}
+        this.responsableService.deleteEdtManager(this.data.element.id).subscribe({
+          next: response => {
+            this.toastr.success("le responsable a bien été supprimé!");
+            this.responsablesChanged();
+          },
+          error: error=> {
+            this.toastr.error("Impossible de supprimer le résponsable tant qu'il est affecté à d'autres entité");
+            console.log(error);
+          }
+        });
+      }
     });
     this.elementASupp = "";
   }
