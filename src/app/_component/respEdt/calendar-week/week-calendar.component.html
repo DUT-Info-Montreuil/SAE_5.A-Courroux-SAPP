@@ -1,4 +1,4 @@
-    <div *ngIf="checkAccount.checked" class="absolute w-full h-screen" (click)="checkAccount.checked = !checkAccount.checked"></div>
+<!-- <div *ngIf="checkAccount.checked" class="absolute w-full h-screen" (click)="checkAccount.checked = !checkAccount.checked"></div> -->
 
 <div id="calendar-container">
     <div id="cal-buttons">
@@ -10,13 +10,14 @@
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-5 mb-5">Aujourd'hui</button>
                 <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]" (click)="loadEvents()"
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-5 mt-5 mb-5">Prochain</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"(click)="openModalAdd()">Ajouter</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToUtilitaires()">Ajout utilitaires</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToGestionGroupes()">Eleves groupes</button>
+                
                 <!-- <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="openModalStats()">Stats</button> -->
             </div>
 
-            <div class="flex flex-row items-center pe-5">
+            <div *ngIf="viewPhone" class="flex flex-row items-center pe-5">
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"(click)="openModalAdd()">Ajouter</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToUtilitaires()">Ajout utilitaires</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5 mr-5"(click)="redirectToGestionGroupes()">Eleves groupes</button>
                 <button (click)="openModalCopy()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mt-5 mb-5">Copier</button>
                 <button (click)="openModalPaste()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r py-2 px-4 mt-5 mr-5 mb-5" [disabled]="!pasteEnable"
                 [ngClass]="{ 'bg-gray-400': !pasteEnable, 'bg-gray-300 hover:bg-gray-400': pasteEnable }"
@@ -39,17 +40,57 @@
                         <button class="w-full bg-[#082841] hover:bg-[#3a5b74] rounded-b-lg text-white p-3 font-bold " (click)="redirectToLogout($event)">Déconnexion</button>
                     </div>
                 </button>
-                
-
             </div>
+
+            <div *ngIf="!viewPhone">
+                
+      
+                <!-- drawer component -->
+                <div id="drawer-example" [class]="'fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform ' + (isDrawerOpen ? '' : '-translate-x-full') + ' bg-sky-50 w-80 dark:bg-slate-950'" tabindex="-1" aria-labelledby="drawer-label">
+                    <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Utilitaires</h5>
+                    <button (click)="toggleDrawer()" type="button" data-drawer-hide="drawer-example" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close menu</span>
+                    </button><br>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"(click)="openModalAdd()">Ajouter</button>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5"(click)="redirectToUtilitaires()">Ajout utilitaires</button><br>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mt-5"(click)="redirectToGestionGroupes()">Eleves groupes</button><br>
+                    <button (click)="openModalCopy()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mt-5 mb-5">Copier</button>
+                    <button (click)="openModalPaste()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold rounded-r py-2 px-4 mt-5 mr-5" [disabled]="!pasteEnable"
+                        [ngClass]="{ 'bg-gray-400': !pasteEnable, 'bg-gray-300 hover:bg-gray-400': pasteEnable }"
+                    >Coller
+                    </button><br>
+                    <button (click)="cancelCourse()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mb-5">Annuler</button>
+                    <button (click)="publishCourse()"class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-5 mb-5">Publier</button><br>
+
+                    <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Filtres</h5>
+                    <div class="mb-5">
+                        <select class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded w-52" (change)="changePromotion($event)" >
+                            <option *ngFor="let promo of promoManaged" [value]="promo.id">{{promo.group.name}}</option>
+                        </select>
+                    </div>
+        
+                    <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Compte</h5><br>
+                    <button *ngIf="!viewPhone" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" (click)="redirectToLogout($event)">Déconnexion</button>
+                    </div>
+      
+              </div>
         </div>
     </div>
 
     <ng-container *ngIf="!loading">
-        <div class="ml-5">
+        <div *ngIf="viewPhone" class="ml-5">
             <select class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded w-52" (change)="changePromotion($event)" >
                 <option *ngFor="let promo of promoManaged" [value]="promo.id">{{promo.group.name}}</option>
             </select>
+        </div>
+        <!-- drawer init and toggle -->
+        <div *ngIf="!viewPhone" class="text-left">
+            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5" type="button" data-drawer-target="drawer-example" data-drawer-show="drawer-example" aria-controls="drawer-example" (click)="toggleDrawer()">
+            Utilitaires
+            </button>
         </div>
     <div class="w-full text-center items-center justify-center relative">
         <div class="text-center items-center justify-center ms-16 flex flex-col relative">

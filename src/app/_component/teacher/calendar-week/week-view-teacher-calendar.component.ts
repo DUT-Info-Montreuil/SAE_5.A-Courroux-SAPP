@@ -113,8 +113,8 @@ export class WeekViewTeacherCalendarComponent implements OnInit {
 
   private updateView(): void {
     const largeurEcran = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    this.isWeekCalendar = largeurEcran > 768;
-    this.viewPhone = largeurEcran > 768;
+    this.isWeekCalendar = largeurEcran > 690;
+    this.viewPhone = largeurEcran > 690;
   }
 
   ngOnInit(): void {

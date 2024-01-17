@@ -15,7 +15,9 @@
                 
             </div>
 
-            <div class="flex flex-row items-center pe-5">
+            
+
+            <div *ngIf="viewPhone" class="flex flex-row items-center pe-5">
               <button class="relative" (click)="checkAccount.checked = !checkAccount.checked">
                   <input type="checkbox" class="hidden" #checkAccount >
                   <div class="flex flex-row items-center text-white gap-1">
@@ -31,10 +33,7 @@
                       <button class="w-full bg-[#082841] hover:bg-[#3a5b74] rounded-b-lg text-white p-3 font-bold " (click)="redirectToLogout($event)">Déconnexion</button>
                   </div>
               </button>
-              
-
-          </div>
-
+            </div>
             
         </div>
 
@@ -70,22 +69,22 @@
             <button *ngIf="selectRoom.value" class="absolute right-0 h-full bg-[#051D32] hover:bg-[#33516d] rounded-s-sm" (click)="removeFilter('room',selectRoom)">
               <svg width="25" height="25" viewBox="0 0 15 15" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="white" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
             </button>
-          </div>  
+          </div>
+
+          
         </div>
 
         <div *ngIf="!viewPhone">
           <!-- drawer init and toggle -->
           <div class="text-left">
             <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded ml-5 mb-5" type="button" data-drawer-target="drawer-example" data-drawer-show="drawer-example" aria-controls="drawer-example" (click)="toggleDrawer()">
-            Filtres
+            Utilitaires
             </button>
           </div>
 
           <!-- drawer component -->
           <div id="drawer-example" [class]="'fixed top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform ' + (isDrawerOpen ? '' : '-translate-x-full') + ' bg-sky-50 w-80 dark:bg-slate-950'" tabindex="-1" aria-labelledby="drawer-label">
-            <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-            </svg>Filtres</h5>
+            <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Filtres</h5>
             <button (click)="toggleDrawer()" type="button" data-drawer-hide="drawer-example" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
               <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -123,6 +122,9 @@
                 <svg width="25" height="25" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
               </button>
             </div>  
+
+            <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">Compte</h5><br>
+            <button class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" (click)="redirectToLogout($event)">Déconnexion</button>
           </div>
 
         </div>

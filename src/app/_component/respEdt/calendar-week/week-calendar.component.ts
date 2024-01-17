@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit, Input } from '@angular/core';
+import { HostListener, ChangeDetectorRef, Component, NgZone, OnInit, Input } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
@@ -68,6 +68,7 @@ export class WeekCalendarComponent{
   coursesToPaste: Course[] = [];
 
   isWeekCalendar = true;
+  viewPhone = false;
 
   selectedDays: {name: string, selected: boolean, date: Date}[] = [];
 
@@ -78,6 +79,8 @@ export class WeekCalendarComponent{
   // maxStartTime!: string;
 
   public eventSelectionne: any = null;
+
+  isDrawerOpen = false;
 
   showModalMod = false;
   showModalAdd = false;
@@ -100,9 +103,6 @@ export class WeekCalendarComponent{
 
   constructor(
     private datePipe: DatePipe,
-    // private edtService: EdtService,
-    // private cdr: ChangeDetectorRef,
-    // private zone: NgZone,
     private teacherService: TeacherService,
     private courseService: CourseService,
     private resourceService: ResourceService,
@@ -115,8 +115,24 @@ export class WeekCalendarComponent{
     private userService: UserService,) {
   }
 
+  toggleDrawer() {
+    this.isDrawerOpen = !this.isDrawerOpen;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateView();
+  }
+
+  private updateView(): void {
+    const largeurEcran = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    this.isWeekCalendar = largeurEcran > 768;
+    this.viewPhone = largeurEcran > 1361;
+  }
+
   ngOnInit(): void {
     // this.setViewDate();
+    this.updateView();
     console.log(this.viewDate)
     forkJoin([
       this.teacherService.getTeachers(), 
