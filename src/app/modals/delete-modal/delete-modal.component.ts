@@ -2,13 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { concatMap, tap, catchError } from 'rxjs';
+import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { GroupService } from 'src/app/_service/group.service';
 import { ResourceService } from 'src/app/_service/resource.service';
 import { RoomService } from 'src/app/_service/room.service';
 import { StudentService } from 'src/app/_service/student.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
 import { UserGroupService } from 'src/app/_service/user_group.service';
-import { EdtService } from 'src/app/services/edt.service';
 
 @Component({
   selector: 'app-delete-modal',
@@ -27,6 +27,7 @@ export class DeleteModalComponent implements OnInit{
     private ressourceService: ResourceService,
     private studentService: StudentService,
     private groupService: GroupService,
+    private responsableService: EdtManagerService,
     private userGroupService: UserGroupService,
     private toastr: ToastrService,
   ){}
@@ -41,7 +42,7 @@ export class DeleteModalComponent implements OnInit{
       case "formSalle":
         this.elementASupp = this.data.element.nom;
         break;
-      case "formProfesseur":
+      case "formProfesseur" || "formResponsable":
         this.elementASupp = this.data.element.staff.user.name + " " + this.data.element.staff.user.lastname;
         break;
       case "formRessource":
@@ -54,6 +55,10 @@ export class DeleteModalComponent implements OnInit{
         this.elementASupp = this.data.element.name;
         break;
     }
+  }
+
+  responsablesChanged() {
+    this.responsableService.notifyRespRefresh();
   }
 
   groupesChanged(){
@@ -74,6 +79,17 @@ export class DeleteModalComponent implements OnInit{
 
   ressourcesChanged(){
     this.ressourceService.notifyRessourceRefresh();
+  }
+
+  supprimerResponsable(){
+    this.responsableService.deleteEdtManager(this.data.element.id).subscribe({
+      next: response => {
+        this.toastr.success("le responsable a bien été supprimé!");
+        this.responsablesChanged();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
+    this.elementASupp = "";
   }
 
   supprimerSalle(){
