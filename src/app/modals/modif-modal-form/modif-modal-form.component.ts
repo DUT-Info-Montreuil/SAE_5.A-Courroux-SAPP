@@ -103,7 +103,7 @@ export class ModifModalFormComponent implements OnInit{
     this.formSelectionne = this.data.formSelectionne;
     switch (this.formSelectionne) {
       case "formSalle":
-        this.elementName = this.data.element.nom;
+        this.elementName = this.data.element.name;
         this.setSalleValues();
         break;
       case "formProfesseur":
@@ -174,6 +174,7 @@ export class ModifModalFormComponent implements OnInit{
   onSubmitModifSalle(){
     if (this.formModifSalle.valid){
       this.salle = Object.assign(this.salle, this.formModifSalle.value);
+      console.log(this.salle);
       this.roomService.updateSalle(this.salle).subscribe({
         next: response => {
           this.toastr.success("la salle a bien été modifiée !");
@@ -193,7 +194,7 @@ export class ModifModalFormComponent implements OnInit{
       let lastname = this.formModifProfesseur.value.lastname!;
       let username = this.data.element.staff.user.username;
       let password = this.data.element.staff.user.password;
-      this.teacher = new Teacher(id, name, lastname, username, password);
+      this.teacher = new Teacher(id, name, lastname, username, password, this.data.prof_activated);
       this.teacherService.updateTeacher(this.teacher).subscribe({
         next: response => {
           this.toastr.success("le professeur a bien été modifié !");

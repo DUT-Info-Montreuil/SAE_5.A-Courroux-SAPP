@@ -8,7 +8,8 @@ export class Teacher {
     staff: Staff;
     activated: boolean
 
-    constructor(id: number, name: string, lastname: string, username: string, password: string){
+    constructor(id: number, name: string, lastname: string, username: string, password: string, activated: boolean){
+        this.activated = activated;
         this.id = id;
         // this.name = name;
         // this.lastname = lastname;

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, catchError, map, of } from 'rxjs';
 import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
 import { TeacherService } from '../_service/teacher.service';
 import { Teacher } from '../_model/entity/teacher.model';
@@ -23,6 +23,7 @@ import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-elev
 import { AddModalPromoComponent } from '../modals/add-modal-promo/add-modal-promo.component';
 import { EdtManager } from '../_model/entity/edtManager.model';
 import { EdtManagerService } from '../_service/edtManager.service';
+import { AffiliationRespEdtService } from '../_service/affiliationRespEdt.service';
 
 
 @Component({
@@ -31,6 +32,10 @@ import { EdtManagerService } from '../_service/edtManager.service';
   styleUrls: ['./forms.component.scss']
 })
 export class FormsComponent implements OnInit, OnDestroy{
+
+  promoManagers = new Map<number,number[]>();
+  promoManagersKeys : number[] = [];
+  promoManagersValues : number[][] = [];
 
   teacher:Teacher;
   responsable : EdtManager;
@@ -109,6 +114,7 @@ export class FormsComponent implements OnInit, OnDestroy{
     private ressourceService: ResourceService,
     private groupeService: GroupService,
     private responsableService: EdtManagerService,
+    private affiliationService: AffiliationRespEdtService,
     private studentService: StudentService,
     private promotionService: PromotionService,
     ){
@@ -118,14 +124,26 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshSalle();
     this.refreshProfs();
     this.refreshRessources();
-    this.refreshPromo();
+    this.refreshPromo().subscribe({
+      next: () => {
+        this.promos.forEach((promo) => {
+          this.getRespsByPromo(promo.id);
+        });
+      }
+    });
     this.refreshGroupes();
     this.refreshResps();
     this.respRefreshSubscription = this.responsableService.respRefresh$.subscribe(() => {
       this.refreshResps();
     });
     this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
-      this.refreshPromo();
+      this.refreshPromo().subscribe({
+        next: () => {
+          this.promos.forEach((promo) => {
+            this.getRespsByPromo(promo.id);
+          });
+        }
+      });
     });
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
@@ -156,11 +174,18 @@ export class FormsComponent implements OnInit, OnDestroy{
   }
 
   ouvrirModalModif(element: any){
+    let activated;
+    if (element instanceof Teacher){
+      activated = element.activated
+    } else {
+      activated = true
+    }
     this.dialog.open(ModifModalFormComponent, {
       data: {
         promos : this.promos,
         formSelectionne : this.formSelectionne,
-        element : element
+        element : element,
+        prof_activated : activated
       }
     });
   }
@@ -190,6 +215,45 @@ export class FormsComponent implements OnInit, OnDestroy{
     window.location.href = "/";
   }
 
+  getRespsByPromo(idPromo : number) {
+    this.affiliationService.getRespEdtByPromo(idPromo).subscribe({
+      next: (liste) => {
+        this.promoManagers.set(idPromo, liste);
+        this.promoManagersKeys.push(idPromo);
+        this.promoManagersValues.push(liste);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  // setMap(){
+  //   let managers : EdtManager[] = [];
+  //   this.promos.forEach((promo) => {
+  //     console.log("promo", promo);
+  //     managers = [];
+  //     this.affiliationService.getRespEdtByPromo(promo.id).subscribe({
+  //       next: (liste) => {
+  //         console.log("liste", liste);
+  //         liste.forEach((id) =>{
+  //           console.log("id", id);
+  //           this.responsableService.getEdtManager(id).subscribe({
+  //             next: (edtManager) => {
+  //               console.log("edtManager", edtManager);
+  //               managers.push(edtManager);
+  //             },
+  //             error: (error) => {
+  //               console.log(error);
+  //             }
+  //           });
+  //         });
+  //       }
+  //     });
+  //     this.promoManagers.set(promo, managers);
+  //   });
+  // }
+
   getTreeGroup(idGroupe: number){
     this.groupeService.getTreeGroup(idGroupe).subscribe(
       (element) => {
@@ -204,6 +268,10 @@ export class FormsComponent implements OnInit, OnDestroy{
         this.toastr.error("erreur");
       }
     )
+  }
+
+  getResponsable(id : number) : EdtManager{
+    return this.responsables.find((resp) => resp.id == id)!;
   }
 
   refreshGroupes(): void {
@@ -225,15 +293,28 @@ export class FormsComponent implements OnInit, OnDestroy{
     )
   }
 
-  refreshPromo(): void {
-    this.promotionService.getPromotions().subscribe(
-      (liste: Promotion[]) => {
+  // refreshPromo(): void {
+  //   this.promotionService.getPromotions().subscribe(
+  //     (liste: Promotion[]) => {
+  //       this.promos = liste;
+  //     },
+  //     (erreur) => {
+  //       console.error(erreur);
+  //       this.toastr.error("erreur");
+  //     }
+  //   );
+  // }
+
+  refreshPromo(): Observable<any>{
+    return this.promotionService.getPromotions().pipe(
+      map((liste: Promotion[]) => {
         this.promos = liste;
-      },
-      (erreur) => {
-        console.error(erreur);
+      }),
+      catchError((error: any) => {
+        console.error(error);
         this.toastr.error("erreur");
-      }
+        return of(null);
+      })
     );
   }
 
@@ -321,7 +402,7 @@ export class FormsComponent implements OnInit, OnDestroy{
       let lastname = this.formAddProfesseur.value.lastname!;
       let username = this.formAddProfesseur.value.username!;
       let password = this.formAddProfesseur.value.password!;
-      this.teacher = new Teacher(id, name, lastname, username, password);
+      this.teacher = new Teacher(id, name, lastname, username, password, true);
   
       this.teacherService.addTeacher(this.teacher).subscribe({
         next: response => {
