@@ -18,6 +18,9 @@ import { CommentAddComponent } from './comment-add/comment-add.component';
 import { CopyCourseComponent } from './copy-course/copy-course.component';
 import { StatsTeacherComponent } from '../teacher/stats-teacher/stats-teacher.component';
 import { ChoiceCourseComponent } from './choice-course/choice-course.component';
+import { CourseDeleteComponent } from './course-delete/course-delete.component';
+import { CourseDuplicateComponent } from './course-duplicate/course-duplicate.component';
+import { CourseDuplicateShowComponent } from './course-duplicate-show/course-duplicate-show.component';
 
 registerLocaleData(localeFr, 'fr');
 
@@ -40,7 +43,10 @@ class CustomDateFormater extends CalendarNativeDateFormatter {
     // FilterPipe,
     ModifModalFormComponent,
     DeleteModalComponent,
-    ChoiceCourseComponent
+    ChoiceCourseComponent,
+    CourseDeleteComponent,
+    CourseDuplicateComponent,
+    CourseDuplicateShowComponent
     // StatsTeacherComponent
     
   ],

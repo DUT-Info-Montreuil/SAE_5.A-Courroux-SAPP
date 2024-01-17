@@ -84,7 +84,7 @@ export class WeekCalendarComponent{
   showModalCopy = false;
   showModalPaste = false;
   showModalStats = false;
-  showModalChoice = true;
+  showModalChoice = false;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -439,7 +439,9 @@ export class WeekCalendarComponent{
       .then(([loadedEventStart, loadedEventEnd]) => {
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
-        this.openModalMod(this.eventSelectionne.event.id);
+        this.courseForEdit = this.getCourseByEventId(this.eventSelectionne.event.id)!;
+        this.showModalChoice = true
+        // this.openModalMod(this.eventSelectionne.event.id);
       });
   }
   

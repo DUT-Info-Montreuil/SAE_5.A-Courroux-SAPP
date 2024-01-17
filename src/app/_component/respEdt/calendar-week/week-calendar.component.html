@@ -131,9 +131,9 @@
     <course-add [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
-<ng-container *ngIf="showModalMod" >
+<!-- <ng-container *ngIf="showModalMod" >
     <course-edit [course]="courseForEdit" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></course-edit>
-</ng-container>
+</ng-container> -->
 
 <ng-container>
     <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()" (setPaste)="setPasteEnable($event)"></copy-course>
@@ -142,6 +142,8 @@
 <ng-container *ngIf="showModalStats">
     <stats-teacher [idTeacher]="idUser" (closeModal)="closeModalStats()"></stats-teacher>
 </ng-container> -->
-<ng-container>
-    <choice-course *ngIf="!showModalChoice" (closeModalEmitter)="closeModalChoice()"></choice-course>
+<ng-container *ngIf="showModalChoice">
+    <choice-course [course]="courseForEdit" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModalEmitter)="closeModalChoice()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></choice-course>
+
+    <!-- <choice-course *ngIf="showModalChoice" (closeModalEmitter)="closeModalChoice()"></choice-course> -->
 </ng-container>
