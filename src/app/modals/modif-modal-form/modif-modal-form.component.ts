@@ -1,5 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
@@ -16,6 +17,7 @@ import { StudentService } from 'src/app/_service/student.service';
 import { Student } from 'src/app/_model/entity/student.model';
 import { EdtManager } from 'src/app/_model/entity/edtManager.model';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
+import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
 
 @Component({
   selector: 'app-modif-modal-form',
@@ -29,6 +31,9 @@ export class ModifModalFormComponent implements OnInit{
   salle:Room = new Room();
   ressource:Resource = new Resource();
   eleve:Student;
+
+  searchText: any;
+
 
   promos = this.formsComponent.promos;
   elementName: any = null;
@@ -74,7 +79,9 @@ export class ModifModalFormComponent implements OnInit{
     private ressourceService: ResourceService,
     private studentService: StudentService,
     private toastr: ToastrService,
-    private formsComponent: FormsComponent
+    private formsComponent: FormsComponent,
+    private affiliationService: AffiliationRespEdtService,
+    private location: Location
     ){
   }
 
@@ -261,5 +268,17 @@ export class ModifModalFormComponent implements OnInit{
     } else {
       this.toastr.error('Veuillez remplir correctement tous les champs du formulaire.');
     }
+  }
+
+  addAffiliation(resp: EdtManager){
+    console.log("here")
+    console.log(this.data.element)
+    this.affiliationService.affiliateRespEdtToPromo(resp.id,this.data.element.promo.id).subscribe({
+      next: response => {
+        this.toastr.success("le responsable a bien été ajouté !");
+        location.reload();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
   }
 }

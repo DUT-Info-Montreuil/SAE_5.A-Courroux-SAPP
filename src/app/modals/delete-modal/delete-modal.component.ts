@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { concatMap, tap, catchError, Observable, map, throwError } from 'rxjs';
@@ -32,6 +33,7 @@ export class DeleteModalComponent implements OnInit{
     private responsableService: EdtManagerService,
     private userGroupService: UserGroupService,
     private toastr: ToastrService,
+    private location: Location
   ){}
 
   ngOnInit(): void {
@@ -55,6 +57,10 @@ export class DeleteModalComponent implements OnInit{
         break;
       case "formGroupe":
         this.elementASupp = this.data.element.name;
+        break;
+      case "formPromo":
+        this.elementASupp = ' cette affiliation';
+        console.log(this.data.formSelectionne);
         break;
     }
   }
@@ -172,5 +178,15 @@ export class DeleteModalComponent implements OnInit{
       error: error=> {this.toastr.error("erreur");}
     });
     this.elementASupp = "";
+  }
+
+  supprimerAffiliationPromoResp(){
+    this.affiliationService.deleteAffiliationPromoResp(this.data.element.id_resp, this.data.element.id_promo).subscribe({
+      next: response => {
+        this.toastr.success("l'affiliation a bien été supprimée!");
+        location.reload();
+      },
+      error: error=> {this.toastr.error("erreur");}
+    });
   }
 }
