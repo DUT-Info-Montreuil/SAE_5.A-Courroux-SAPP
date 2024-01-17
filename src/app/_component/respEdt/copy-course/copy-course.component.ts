@@ -280,7 +280,8 @@ export class CopyCourseComponent{
             return weekday.date >= this.selectedStartDateToAttempt && weekday.date <= date_end ;
 
         }
-        return weekday.date == this.selectedStartDateToAttempt;
+        
+        return new Date(weekday.date).getTime() === new Date(this.selectedStartDateToAttempt).getTime()
       }
       return false
     }
