@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { EdtManager } from 'src/app/_model/entity/edtManager.model';
 import { Group } from 'src/app/_model/entity/group.model';
 import { Promotion } from 'src/app/_model/entity/promotion.model';
 import { Teacher } from 'src/app/_model/entity/teacher.model';
+import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
+import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { PromotionService } from 'src/app/_service/promotion.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
 
@@ -25,16 +28,18 @@ export class AddModalPromoComponent {
 
   aProfIsSelected = false;
   profSelected : Teacher | undefined;
-  profs : Teacher[] = [];
+  profs : EdtManager[] = [];
 
   constructor(
     private teacherService: TeacherService,
+    private AffiliationRespEdtService: AffiliationRespEdtService,
+    private responsableService: EdtManagerService,
     private promoService: PromotionService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.teacherService.getTeachers().subscribe({
+    this.responsableService.getEdtManagers().subscribe({
       next: response => {
         this.profs = response;
       },
@@ -68,13 +73,24 @@ export class AddModalPromoComponent {
       next: response => {
         this.clear();
         this.toastr.success('promotion ajoutée');
-        this.promoService.notifyPromoRefresh();
+        console.log(response.id);
+        console.log(promotion.id_resp!);
+        this.AffiliationRespEdtService.affiliateRespEdtToPromo(promotion.id_resp!, response.id).subscribe({
+          next: response => {
+            this.toastr.success('promotion affiliée');
+            this.promoService.notifyPromoRefresh();
+          },
+          error: error => {
+            console.log(error);
+          }
+        });
       },
       error: error => {
         this.toastr.error('erreur lors de l ajout de la promotion');
         console.log(error);
       }
-    })
+    });
+    
   }
 
   clear(){

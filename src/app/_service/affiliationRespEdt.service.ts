@@ -16,8 +16,8 @@ export class AffiliationRespEdtService {
         let url = `${this.utilsService.getEndPoint().apiUrl}/affiliateRespEdt`;
 
         const requestBody = {
-            idResp: idResp,
-            idPromo: idPromo
+            id_resp: idResp,
+            id_promo: idPromo
         };
 
         return this.http.post<any>(url, requestBody, this.utilsService.getJsonHeader())
@@ -31,6 +31,13 @@ export class AffiliationRespEdtService {
         return this.http.get<Promotion[]>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
+        );
+    }
+
+    getRespEdtByPromo(idPromo : number) : Observable<number[]>{
+        let url = `${this.utilsService.getEndPoint().apiUrl}/affiliateRespEdt/getRespByPromo/${idPromo}`;
+        return this.http.get<number[]>(url, this.utilsService.getJsonHeader())
+        .pipe(
         );
     }
 
