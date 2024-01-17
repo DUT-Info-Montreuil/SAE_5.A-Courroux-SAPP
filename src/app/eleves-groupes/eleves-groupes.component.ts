@@ -224,11 +224,15 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
           this.userGroupService.migratePromotion(studentToMigrate, this.idPromoSelectionnee!, this.idPromoToMigrateTo!, this.idRespEdt!).subscribe(
               (response) => {
                   console.log("migrer",response);
+                  this.setElevesGroupe();
+                  this.toastr.success('La migration a été effectuée avec succès');
               },
               (error) => {
                   console.error(error);
+                  this.toastr.error('Une erreur est survenue lors de la migration');
               }
           );
+
       },
       (error) => {
           console.error(error);
