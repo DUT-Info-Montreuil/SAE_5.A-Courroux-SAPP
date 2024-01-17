@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, HostListener, Input } from '@angular/core';
 import { CalendarEvent, CalendarView, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
@@ -24,6 +24,7 @@ import {
   ChangeDetectionStrategy,
   ViewEncapsulation,
 } from '@angular/core';
+import { User } from 'src/app/_model/entity/user.model';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -40,7 +41,8 @@ export function momentAdapterFactory() {
 })
 
 export class WeekViewCalendarComponent implements OnInit {
-  
+  @Input() user: User;
+
   courses: Course[] = [];
   teachers: Teacher[] = [];
   salles: any[] = [];
@@ -490,6 +492,15 @@ export class WeekViewCalendarComponent implements OnInit {
     this.loadEvents();
     select.value = "";
     console.table(this.args);
+  }
+
+  disablePreventDefault(event: any){
+    event.preventDefault();
+  }
+  redirectToLogout(event: any){
+    console.log("logout")
+    this.disablePreventDefault(event);
+    window.location.href = "/logout";
   }
 
 

@@ -46,23 +46,26 @@ export class AuthService {
 
   logoutUser() {
     // remove user from local storage to log user out
-    this.logout().subscribe({
-      next: () => {
-        this.storageService.signOut()
-        this.userSubject.next(null)
-        window.location.href = '/login'
-      },
-      error: () => {
-        this.storageService.signOut()
-        this.userSubject.next(null)
-        window.location.href = '/login'
-      },
-      complete: () => {
-        this.storageService.signOut()
-        this.userSubject.next(null)
-        window.location.href = '/login'
-      }
-    })
+    // this.logout().subscribe({
+    //   next: () => {
+    //     this.storageService.signOut()
+    //     this.userSubject.next(null)
+    //     window.location.href = '/login'
+    //   },
+    //   error: () => {
+    //     this.storageService.signOut()
+    //     this.userSubject.next(null)
+    //     window.location.href = '/login'
+    //   },
+    //   complete: () => {
+    //     this.storageService.signOut()
+    //     this.userSubject.next(null)
+    //     window.location.href = '/login'
+    //   }
+    // })
+    this.storageService.signOut()
+    // this.userSubject.next(null)
+    window.location.href = '/login'
   }
 
 

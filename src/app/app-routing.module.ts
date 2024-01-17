@@ -6,10 +6,12 @@ import { FormsComponent } from './forms/forms.component';
 import { WeekViewCalendarComponent } from './_component/user/calendar-week/week-view-calendar.component';
 import { ElevesGroupesComponent } from './eleves-groupes/eleves-groupes.component';
 import { Calendar } from './_component/general/calendar/calendar.component';
+import { LogoutComponent } from './_component/user/logout/logout.component';
 
 const routes: Routes = [
   { path: '', component: Calendar},
   { path: 'login', component: LoginComponent},
+  { path: 'logout', component: LogoutComponent},
   { path: 'ajout', component: FormsComponent},
   { path: 'user', component: WeekViewCalendarComponent },
   { path: 'groupes', component: ElevesGroupesComponent },

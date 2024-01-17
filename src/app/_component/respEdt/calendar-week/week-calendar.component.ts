@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, Input } from '@angular/core';
 import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
@@ -28,6 +28,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { UserService } from 'src/app/_service/user.service';
+import { User } from 'src/app/_model/entity/user.model';
 
 
 export function momentAdapterFactory() {
@@ -45,6 +46,7 @@ export function momentAdapterFactory() {
 
 export class WeekCalendarComponent{
   
+  @Input() user: User;
   courses: Course[] = [];
   teachers: Teacher[] = [];
   salles: any[] = [];
@@ -82,6 +84,7 @@ export class WeekCalendarComponent{
   showModalCopy = false;
   showModalPaste = false;
   showModalStats = false;
+  showModalChoice = true;
 
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
@@ -610,5 +613,17 @@ export class WeekCalendarComponent{
 
   onChangeSelectedDays(selectedDays: any) {
     this.selectedDays = selectedDays;
+  }
+  closeModalChoice(){
+    this.showModalChoice = false;
+  }
+
+  disablePreventDefault(event: any){
+    event.preventDefault();
+  }
+  redirectToLogout(event: any){
+    console.log("logout")
+    this.disablePreventDefault(event);
+    window.location.href = "/logout";
   }
 }
