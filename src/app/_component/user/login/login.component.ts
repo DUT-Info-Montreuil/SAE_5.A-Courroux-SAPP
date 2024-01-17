@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -15,6 +15,8 @@ export class LoginComponent {
 
   loginForm!: FormGroup
 
+  loading: boolean = false;
+
 
   nbRdm: number = Math.floor(Math.random() * 7);
   imageName = "assets/images/Frame" + this.nbRdm + ".png"; 
@@ -25,7 +27,6 @@ export class LoginComponent {
     identifier: new FormControl("", Validators.required),
     password: new FormControl("", Validators.required)
   })
-  
 
   constructor(private toastr: ToastrService,
     private router: Router,
@@ -34,6 +35,7 @@ export class LoginComponent {
     private storageService: StorageService) { }
 
   ngOnInit() {
+    this.loading = true
     this.loginForm = this.formBuilder.group({
       username: ['', [
         Validators.required,
@@ -44,7 +46,10 @@ export class LoginComponent {
         // Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&-.]).{12,}$")
       ]]
     })
+    this.loading = false
+
   }
+
 
   // onSubmit() {
   //   if (this.formLogin.valid){

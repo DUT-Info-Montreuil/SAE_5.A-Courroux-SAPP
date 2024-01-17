@@ -5,14 +5,15 @@
         <p id="welcome" class="mt-5 ">Bienvenue sur l’ENT 👋</p>
         <p id="id" class="mt-5">identifiez vous !</p>
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
-        method="post" id="form">
-            <div class='textinput'>
-                <input type='text' formControlName="username" name="username"  class='input' id="username" required>
+        method="post" id="form" autocomplete="off webauthn"> 
+
+            <div class='textinput relative'>
+                <input type='text' formControlName="username" name="username" class='input' id="username" required autocomplete="off webauthn">
                 <label class='label'>Entrez votre identifiant</label>
                 <span class='line'></span>
             </div>
             <div class='textinput'>
-                <input type='password' formControlName="password" name="password"  class='input' required>
+                <input type='password' formControlName="password" name="password"  class='input' required autocomplete="off webauthn">
                 <label class='label'>Entrez votre mot de passe</label>
                 <span class='line'></span>
             </div>
