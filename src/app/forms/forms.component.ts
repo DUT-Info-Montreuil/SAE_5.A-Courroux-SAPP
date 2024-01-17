@@ -33,9 +33,10 @@ import { AffiliationRespEdtService } from '../_service/affiliationRespEdt.servic
 })
 export class FormsComponent implements OnInit, OnDestroy{
 
-  promoManagers = new Map<number,number[]>();
-  promoManagersKeys : number[] = [];
-  promoManagersValues : number[][] = [];
+  // promoManagers = new Map<number,number[]>();
+  // promoManagersKeys : number[] = [];
+  // promoManagersValues : number[][] = [];
+  promoManagers : PromotionResponsable[] = [];
 
   teacher:Teacher;
   responsable : EdtManager;
@@ -124,26 +125,38 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshSalle();
     this.refreshProfs();
     this.refreshRessources();
-    this.refreshPromo().subscribe({
-      next: () => {
-        this.promos.forEach((promo) => {
-          this.getRespsByPromo(promo.id);
-        });
-      }
-    });
+    // this.refreshPromo().subscribe({
+    //   next: () => {
+    //     this.promos.forEach((promo) => {
+    //       this.getRespsByPromo(promo.id);
+    //     });
+    //   }
+    // });
     this.refreshGroupes();
     this.refreshResps();
     this.respRefreshSubscription = this.responsableService.respRefresh$.subscribe(() => {
       this.refreshResps();
     });
-    this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
-      this.refreshPromo().subscribe({
-        next: () => {
-          this.promos.forEach((promo) => {
-            this.getRespsByPromo(promo.id);
-          });
-        }
-      });
+    // this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
+    //   this.refreshPromo().subscribe({
+    //     next: () => {
+    //       this.promos.forEach((promo) => {
+    //         console.log("promo", promo)
+    //         this.getRespsByPromo(promo.id);
+    //       });
+    //     }
+    //   });
+    // });
+    this.promotionService.getPromotions().subscribe({
+      next: (liste: Promotion[]) => {
+        this.promos = liste;
+        this.promos.forEach((promo) => {
+          this.getRespsByPromo(promo);
+        });
+      },
+      error: (error) => {
+        console.log(error);
+      }
     });
     this.groupeRefreshSubscription = this.groupeService.groupeRefresh$.subscribe(() => {
       this.refreshGroupes();
@@ -199,6 +212,18 @@ export class FormsComponent implements OnInit, OnDestroy{
     });
   }
 
+  getResponsableNotInPromo(promo: Promotion): EdtManager[] {
+    let resps: EdtManager[] = [];
+
+    const promoManager  = this.promoManagers.find((promoManager) => promoManager.promo.id == promo.id)!;
+    this.responsables.forEach((resp) => {
+      if (!promoManager.resp.find((respPromo) => respPromo.id == resp.id)){
+        resps.push(resp);
+      }
+    });
+    return resps;
+  }
+
   changerPromo(event: any) {
     this.idPromoSelectionnee = event.target.value;
     this.refreshGroupes();
@@ -215,12 +240,14 @@ export class FormsComponent implements OnInit, OnDestroy{
     window.location.href = "/";
   }
 
-  getRespsByPromo(idPromo : number) {
-    this.affiliationService.getRespEdtByPromo(idPromo).subscribe({
+  getRespsByPromo(promo : Promotion) {
+    this.affiliationService.getRespEdtByPromo(promo.id).subscribe({
       next: (liste) => {
-        this.promoManagers.set(idPromo, liste);
-        this.promoManagersKeys.push(idPromo);
-        this.promoManagersValues.push(liste);
+        this.promoManagers.push({promo: promo, resp: liste});
+        console.log("this.promoManagers", this.promoManagers);
+        // this.promoManagers.set(idPromo, liste);
+        // this.promoManagersKeys.push(idPromo);
+        // this.promoManagersValues.push(liste);
       },
       error: (error) => {
         console.log(error);
@@ -521,4 +548,9 @@ export class FormsComponent implements OnInit, OnDestroy{
   getPromoById(id: number): Promotion {
     return this.promos.find(promo => promo.id === id)!;
   }
+}
+
+interface PromotionResponsable {
+  promo: Promotion;
+  resp: EdtManager[];
 }

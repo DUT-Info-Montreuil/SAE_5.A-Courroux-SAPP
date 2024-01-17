@@ -34,15 +34,23 @@ export class AffiliationRespEdtService {
         );
     }
 
-    getRespEdtByPromo(idPromo : number) : Observable<number[]>{
+    getRespEdtByPromo(idPromo : number) : Observable<EdtManager[]>{
         let url = `${this.utilsService.getEndPoint().apiUrl}/affiliateRespEdt/getRespByPromo/${idPromo}`;
-        return this.http.get<number[]>(url, this.utilsService.getJsonHeader())
+        return this.http.get<EdtManager[]>(url, this.utilsService.getJsonHeader())
         .pipe(
         );
     }
 
     deleteAffiliation(idResp : number) : Observable<any>{
         let url = `${this.utilsService.getEndPoint().apiUrl}/affiliateRespEdt/delete/${idResp}`;
+        return this.http.delete<any>(url, this.utilsService.getJsonHeader())
+        .pipe(
+            retry(1)
+        );
+    }
+
+    deleteAffiliationPromoResp(idResp : number, idPromo: number) : Observable<any>{
+        let url = `${this.utilsService.getEndPoint().apiUrl}/affiliateRespEdt/delete/${idResp}/${idPromo}`;
         return this.http.delete<any>(url, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
