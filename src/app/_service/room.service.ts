@@ -34,7 +34,7 @@ export class RoomService {
         );
     }
     updateSalle(room: Room): Observable<Room> {
-        let url = `${this.utilsService.getEndPoint().apiUrl}/salle/${room.name}`;
+        let url = `${this.utilsService.getEndPoint().apiUrl}/salle/${room.nom}`;
         return this.http.put<Room>(url, room, this.utilsService.getJsonHeader())
         .pipe(
             retry(1)
