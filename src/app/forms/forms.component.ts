@@ -2,29 +2,24 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
-import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
+import { ModifModalFormComponent } from '../../modals/modif-modal-form/modif-modal-form.component';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
-import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
-import { TeacherService } from '../_service/teacher.service';
-import { Teacher } from '../_model/entity/teacher.model';
-import { RoomService } from '../_service/room.service';
-import { Room } from '../_model/entity/room.model';
-import { ResourceService } from '../_service/resource.service';
-import { Resource } from '../_model/entity/resource.model';
-import { GroupService } from '../_service/group.service';
-import { Student } from '../_model/entity/student.model';
-import { Group } from '../_model/entity/group.model';
-import { StudentService } from '../_service/student.service';
-import { Promotion } from '../_model/entity/promotion.model';
-import { PromotionService } from '../_service/promotion.service';
+import { DeleteModalComponent } from '../../modals/delete-modal/delete-modal.component';
+import { TeacherService } from '../../_service/teacher.service';
+import { Teacher } from '../../_model/entity/teacher.model';
+import { RoomService } from '../../_service/room.service';
+import { Room } from '../../_model/entity/room.model';
+import { ResourceService } from '../../_service/resource.service';
+import { Resource } from '../../_model/entity/resource.model';
+import { GroupService } from '../../_service/group.service';
+import { Group } from '../../_model/entity/group.model';
+import { Promotion } from '../../_model/entity/promotion.model';
+import { PromotionService } from '../../_service/promotion.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserGroupService } from '../_service/user_group.service';
-import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
-import { AddModalPromoComponent } from '../modals/add-modal-promo/add-modal-promo.component';
-import { EdtManager } from '../_model/entity/edtManager.model';
-import { EdtManagerService } from '../_service/edtManager.service';
-import { AffiliationRespEdtService } from '../_service/affiliationRespEdt.service';
-
+import { AddModalPromoComponent } from '../../modals/add-modal-promo/add-modal-promo.component';
+import { EdtManager } from '../../_model/entity/edtManager.model';
+import { EdtManagerService } from '../../_service/edtManager.service';
+import { AffiliationRespEdtService } from '../../_service/affiliationRespEdt.service';
 
 @Component({
   selector: 'app-forms',
@@ -33,9 +28,6 @@ import { AffiliationRespEdtService } from '../_service/affiliationRespEdt.servic
 })
 export class FormsComponent implements OnInit, OnDestroy{
 
-  // promoManagers = new Map<number,number[]>();
-  // promoManagersKeys : number[] = [];
-  // promoManagersValues : number[][] = [];
   promoManagers : PromotionResponsable[] = [];
 
   teacher:Teacher;
@@ -56,7 +48,6 @@ export class FormsComponent implements OnInit, OnDestroy{
   promos : Promotion[] = [];
   groups : Group[] = [];
   sousGroupes : Group[] = [];
-
 
   isSection1Open = false;
   isSection2Open = false;
@@ -116,7 +107,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     private groupeService: GroupService,
     private responsableService: EdtManagerService,
     private affiliationService: AffiliationRespEdtService,
-    private studentService: StudentService,
     private promotionService: PromotionService,
     ){
   }
@@ -125,28 +115,11 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.refreshSalle();
     this.refreshProfs();
     this.refreshRessources();
-    // this.refreshPromo().subscribe({
-    //   next: () => {
-    //     this.promos.forEach((promo) => {
-    //       this.getRespsByPromo(promo.id);
-    //     });
-    //   }
-    // });
     this.refreshGroupes();
     this.refreshResps();
     this.respRefreshSubscription = this.responsableService.respRefresh$.subscribe(() => {
       this.refreshResps();
     });
-    // this.promoRefreshSubscription = this.promotionService.promoRefresh$.subscribe(() => {
-    //   this.refreshPromo().subscribe({
-    //     next: () => {
-    //       this.promos.forEach((promo) => {
-    //         console.log("promo", promo)
-    //         this.getRespsByPromo(promo.id);
-    //       });
-    //     }
-    //   });
-    // });
     this.promotionService.getPromotions().subscribe({
       next: (liste: Promotion[]) => {
         this.promos = liste;
@@ -244,10 +217,6 @@ export class FormsComponent implements OnInit, OnDestroy{
     this.affiliationService.getRespEdtByPromo(promo.id).subscribe({
       next: (liste) => {
         this.promoManagers.push({promo: promo, resp: liste});
-        console.log("this.promoManagers", this.promoManagers);
-        // this.promoManagers.set(idPromo, liste);
-        // this.promoManagersKeys.push(idPromo);
-        // this.promoManagersValues.push(liste);
       },
       error: (error) => {
         console.log(error);
@@ -255,36 +224,9 @@ export class FormsComponent implements OnInit, OnDestroy{
     });
   }
 
-  // setMap(){
-  //   let managers : EdtManager[] = [];
-  //   this.promos.forEach((promo) => {
-  //     console.log("promo", promo);
-  //     managers = [];
-  //     this.affiliationService.getRespEdtByPromo(promo.id).subscribe({
-  //       next: (liste) => {
-  //         console.log("liste", liste);
-  //         liste.forEach((id) =>{
-  //           console.log("id", id);
-  //           this.responsableService.getEdtManager(id).subscribe({
-  //             next: (edtManager) => {
-  //               console.log("edtManager", edtManager);
-  //               managers.push(edtManager);
-  //             },
-  //             error: (error) => {
-  //               console.log(error);
-  //             }
-  //           });
-  //         });
-  //       }
-  //     });
-  //     this.promoManagers.set(promo, managers);
-  //   });
-  // }
-
   getTreeGroup(idGroupe: number){
     this.groupeService.getTreeGroup(idGroupe).subscribe(
       (element) => {
-        console.log(element);
         this.sousGroupes = element.children;
         if (element.children.length == 0) {
           this.toastr.warning("Aucun sous-groupe");
@@ -319,18 +261,6 @@ export class FormsComponent implements OnInit, OnDestroy{
       }
     )
   }
-
-  // refreshPromo(): void {
-  //   this.promotionService.getPromotions().subscribe(
-  //     (liste: Promotion[]) => {
-  //       this.promos = liste;
-  //     },
-  //     (erreur) => {
-  //       console.error(erreur);
-  //       this.toastr.error("erreur");
-  //     }
-  //   );
-  // }
 
   refreshPromo(): Observable<any>{
     return this.promotionService.getPromotions().pipe(
@@ -455,10 +385,8 @@ export class FormsComponent implements OnInit, OnDestroy{
       let username = this.formAddResponsable.value.username!;
       let password = this.formAddResponsable.value.password!;
       this.responsable = new EdtManager(id, name, lastname, username, password);
-      console.log(this.responsable);
       this.responsableService.addEdtManager(this.responsable).subscribe({
         next: response => {
-          // Si la requête est réussie, affiche un toast de succès
           this.toastr.success("Le résponsable a bien été ajouté !");
           this.refreshResps();
         },

@@ -1,11 +1,9 @@
-import { HostListener, ChangeDetectorRef, Component, NgZone, OnInit, Input } from '@angular/core';
-import { CalendarEvent, CalendarView, DAYS_OF_WEEK, DateAdapter } from 'angular-calendar';
+import { HostListener, Component, OnInit, Input } from '@angular/core';
+import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
-import { Observable, Subject, find, forkJoin } from 'rxjs';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, forkJoin } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { EdtService } from '../../../services/edt.service';
 import { TeacherService } from '../../../_service/teacher.service';
 import { Teacher } from '../../../_model/entity/teacher.model';
 import { CourseService } from '../../../_service/course.service';
@@ -14,28 +12,20 @@ import { ResourceService } from '../../../_service/resource.service';
 import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
 import { GroupService } from '../../../_service/group.service';
-import { addDays, format, getISOWeek, getWeek, startOfWeek } from 'date-fns';
+import { addDays, format, getWeek, startOfWeek } from 'date-fns';
 import { ToastrService } from 'ngx-toastr';
 import { RoomService } from 'src/app/_service/room.service';
 import { WeekCommentService } from 'src/app/_service/weekComment.service';
 import { WeekComment } from 'src/app/_model/entity/weekComment.model';
 import { Promotion } from 'src/app/_model/entity/promotion.model';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
-import { StatsTeacherComponent } from '../../teacher/stats-teacher/stats-teacher.component';
-import { th } from 'date-fns/locale';
-import {
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ViewEncapsulation} from '@angular/core';
 import { UserService } from 'src/app/_service/user.service';
 import { User } from 'src/app/_model/entity/user.model';
-
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
 };
-
-
 
 @Component({
   selector: 'app-calendar-week-view-resp-edt',
@@ -44,7 +34,7 @@ export function momentAdapterFactory() {
   encapsulation: ViewEncapsulation.None,
 })
 
-export class WeekCalendarComponent{
+export class WeekCalendarComponent implements OnInit {
   
   @Input() user: User;
   courses: Course[] = [];
@@ -75,8 +65,6 @@ export class WeekCalendarComponent{
   idUser: any;
   
   pasteEnable: boolean = false;
-  // minEndTime!: string;
-  // maxStartTime!: string;
 
   public eventSelectionne: any = null;
 
@@ -107,7 +95,6 @@ export class WeekCalendarComponent{
     private courseService: CourseService,
     private resourceService: ResourceService,
     private groupService: GroupService,
-    private formBuilder: FormBuilder,
     private toastr: ToastrService,
     private roomService: RoomService,
     private weekCommentService: WeekCommentService,
@@ -133,7 +120,6 @@ export class WeekCalendarComponent{
   ngOnInit(): void {
     // this.setViewDate();
     this.updateView();
-    console.log(this.viewDate)
     forkJoin([
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
@@ -152,7 +138,6 @@ export class WeekCalendarComponent{
         if (this.promoManaged.length > 0){
           this.promoSelected = this.promoManaged[0];
         }
-        // console.log(this.comments)
         this.loadEvents();
         this.loading = false;
       },
@@ -160,8 +145,6 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     });
-    console.log(this.viewDate);
-
     this.userService.getIdentify().subscribe({
       next: user => {
         this.idUser = user.id;
@@ -170,9 +153,6 @@ export class WeekCalendarComponent{
         console.log(error);
       }
     })
-
-    console.log("teachers", this.teachers);
-
   }
 
   setViewDate(){
@@ -186,20 +166,9 @@ export class WeekCalendarComponent{
     const dayOfWeek = date.getDay(); // Obtient le jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
     const diff = date.getDate() - dayOfWeek; // Calcul de la différence pour obtenir le dimanche de la semaine
     const sunday = new Date(date); // Crée une nouvelle instance de Date basée sur la date d'origine
-    // console.log(this.viewDate)
     sunday.setDate(diff);
-    // console.log(this.viewDate)
-
     return getWeek(sunday, { weekStartsOn: 0 });
   }
-
-  // openModalMod(eventId: number) {
-  //   this.courseForEdit = this.getCourseByEventId(eventId)!;
-
-  //   this.showModalMod = true;
-
-  // }
-  
 
   changePromotion(event: any){
     let id_promo = event.target.value;
@@ -269,18 +238,14 @@ export class WeekCalendarComponent{
   }
 
   loadEvents(){
-    console.log("selectedDays", this.selectedDays);
     this.showModalComment = false;
-    console.log("loadEvents");
     this.events = [];
 
     let day = this.viewDate.getDay();
     // let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
     let diff = this.viewDate.getDate() - day + 1;
-    console.log(diff);
     let date_temp = new Date(this.viewDate);
     let monday = new Date(date_temp.setDate(diff));
-    console.log(monday);
     let friday = new Date(date_temp.setDate(diff + 4));
 
     const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}, {group: this.promoSelected.group.id}];
@@ -289,23 +254,17 @@ export class WeekCalendarComponent{
       next : courses => {
         this.courses = courses;
         this.events = [];
-        console.log(this.courses);
         for (let course of courses) {
           this.addEvent(course);
         }
         this.refresh.next();
-
         this.ressourcesShow = this.ressources.filter(ressource => ressource.id_promo == this.promoSelected.id);
         this.getGroupTree();
-
-        console.log(this.events);
-
       },
       error: error => {
         console.log(error);
       }
-    }
-    )
+    });
   }
 
   redirectToUtilitaires(){
@@ -321,10 +280,8 @@ export class WeekCalendarComponent{
     this.addEvent(course);
     this.refresh.next();
   }
-    
 
   addEvent(course: Course): void {
-
     this.events.push({
       id: course.id,
       title: course.initial_ressource,
@@ -333,74 +290,53 @@ export class WeekCalendarComponent{
       color: {
         primary: "#FFFFFF",
         secondary: this.getRessourcesByInitial(course.initial_ressource)!.color,
-        // secondary: "#D1E8FF",
       },        
       draggable: true,
       resizable: {
         beforeStart: true,
         afterEnd: true,
       },
-      // cssClass: `test`,
-      cssClass: `calendar-position-${this.getPosition(course)} calendar-width-${this.getWidth(course)}`,
-
-      
+      cssClass: `calendar-position-${this.getPosition(course)} calendar-width-${this.getWidth(course)}`
     });
   }
 
   getWidth(course: Course): number {
     let group = this.groupes.find(group => group.id == course.id_group);
-    let width = 100
+    let width = 100;
     while (group && group.id_group_parent != null){
       const groupsInParent = this.groupes.filter(group_curr => group_curr.id_group_parent == group!.id_group_parent);
       width = width / groupsInParent.length;
       group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
     }
-    console.log("width ::: ", width)
     return Math.ceil(width)
   }
 
   getPosition(course: Course): number {
     let group = this.groupes.find(group => group.id == course.id_group);
-    let pourcents: any[] = []
+    let pourcents: any[] = [];
     while (group && group.id_group_parent != null){
       const groupsInParent = this.groupes.filter(group_curr => group_curr.id_group_parent == group!.id_group_parent);
       const index = groupsInParent.indexOf(group!);
-      pourcents.push({index: index, length: groupsInParent.length})
+      pourcents.push({index: index, length: groupsInParent.length});
       group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
     }
-    let left = 0
-    console.log("begin")
-    console.table(pourcents)
+    let left = 0;
     if (pourcents.length > 0){
-      const last = pourcents.pop()
-      let parentPourcent = 100 / last.length
-      left = last.index * parentPourcent
+      const last = pourcents.pop();
+      let parentPourcent = 100 / last.length;
+      left = last.index * parentPourcent;
       
       for (let item of pourcents.reverse()){
-        console.log(item)
-        parentPourcent = parentPourcent / item.length
-        left = left + item.index * parentPourcent
+        parentPourcent = parentPourcent / item.length;
+        left = left + item.index * parentPourcent;
       }
     }
-    console.table(pourcents)
-    console.log('left :::', left)
-
-    console.log("end")
-    console.log("this.events ::: ", this.events)
-    return Math.ceil(left)
-
-    
-
-    // return position
+    return Math.ceil(left);
   }
-    
-
-
 
   removeCourse(course_remove: Course): void {
     this.courses = this.courses.filter((course) => course.id !== course_remove.id);
     this.events = this.events.filter((event) => event.id !== course_remove.id);
-    // this.refresh.next();
   }
 
   toggleWeekCalendar(){
@@ -408,20 +344,14 @@ export class WeekCalendarComponent{
   }
 
   changeViewDay(event : any){
-
     this.viewDate = new Date(event.day.date);
     this.toggleWeekCalendar()
-    
-    // this.loadEvents();
   }
 
   getGroupTree(){
     this.group_show = [];
     const group_ids: number[] = [];
     group_ids.push(this.promoSelected.group.id);
-    console.log("this.promoSelected.group.id", this.promoSelected.group.id)
-    console.log("this.group_ids", group_ids)
-    console.table(group_ids)
     while (group_ids.length > 0){
       const group_id = group_ids.pop();
       const group_find = this.groupes.find(group => group.id == group_id);
@@ -435,31 +365,18 @@ export class WeekCalendarComponent{
         }
       }
     }
-    console.log("this.group_show", this.group_show)
   }
 
-
-
   eventClicked(event: any) {
-    // console.log("safe");
-    // console.log("this.events start",this.events)
     this.eventSelectionne = event;
-    // this.maxStartTime = new Date(this.eventSelectionne.event.start - 15 * 60 * 1000).toISOString().slice(0, 16);
-    // this.minEndTime = new Date(this.eventSelectionne.event.end + 15 * 60 * 1000).toISOString().slice(0, 16);
-    // console.log(this.maxStartTime);
-    // console.log(this.minEndTime);
-  
     Promise.all([this.loadEventStart(this.eventSelectionne), this.loadEventEnd(this.eventSelectionne)])
       .then(([loadedEventStart, loadedEventEnd]) => {
-        console.log("this.eventselect", this.eventSelectionne)
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
         this.courseForEdit = this.getCourseByEventId(this.eventSelectionne.event.id)!;
-        this.showModalChoice = true
-        // this.openModalMod(this.eventSelectionne.event.id);
-      });
-      console.log("this.events",this.events)
-
+        this.showModalChoice = true;
+      }
+    );
   }
   
   loadEventStart(event: any): Promise<Date> {
@@ -467,10 +384,8 @@ export class WeekCalendarComponent{
       setTimeout(() => {
         const loadedEventStart = event.event.start;
         resolve(loadedEventStart);
-
       }, 100);
     });
-
   }
   
   loadEventEnd(event: any): Promise<Date> {
@@ -482,12 +397,7 @@ export class WeekCalendarComponent{
     });
   }
 
-  
-
-
   eventTimesChanged(event: any) {
-    console.log("this.events",this.events)
-    console.log("here")
     let course_find = this.courses.find(course => course.id == event.event.id);
     if (!course_find){
       return;
@@ -495,7 +405,6 @@ export class WeekCalendarComponent{
 
     let start_time_initial = course_find.start_time;
     let end_time_initial = course_find.end_time;
-    
     
     course_find.start_time = event.newStart;
     course_find.end_time = event.newEnd;
@@ -510,7 +419,6 @@ export class WeekCalendarComponent{
         this.courses.filter((course) => course.id !== course_find!.id);
         this.events = this.events.filter((event) => event.id !== course_find!.id);
         this.addCourse(course);
-
       },
       error: response => {
         console.log(response);
@@ -520,10 +428,7 @@ export class WeekCalendarComponent{
         this.events.push(event_backup!);
         this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
       }
-    })
-
-
-
+    });
   }
 
   endTimeChanged(newEvent: any, ancienneDate: string) {
@@ -539,20 +444,16 @@ export class WeekCalendarComponent{
   }
 
   updateDateStart(date: Date) {
-    // this.eventSelectionne.event.start = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
     this.eventSelectionne.event.start = date;
   }
 
   updateDateEnd(date: Date) {
-    // this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
     this.eventSelectionne.event.end = date;
   }
 
   supprimerCours(event: any){
     this.events.splice(this.getIndex(event), 1);
     this.refresh.next();
-    // this.closeModalMod();
-    // console.log(this.events);
   }
 
   getCourseByEventId(eventId: number) {
@@ -567,7 +468,6 @@ export class WeekCalendarComponent{
   }
 
   getTimeString(date: Date) {
-    
     return this.datePipe.transform(date, 'HH:mm');
   }
 
@@ -577,19 +477,18 @@ export class WeekCalendarComponent{
     return teacher? teacher.staff.initial : "";
   }
 
-  
-
   publishCourse(){
     this.courseService.publishCourses().subscribe({
       next:() => {
         this.toastr.success('Les cours ont été publiés', 'Succès',{timeOut: 1500,});
-        this.loadEvents()
+        this.loadEvents();
       },
       error: error => {
         this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
-    })
+    });
   }
+
   cancelCourse(){
     this.courseService.cancelCourses().subscribe({
       next:() => {
@@ -599,10 +498,8 @@ export class WeekCalendarComponent{
       error: error => {
         this.toastr.error(error, 'Erreur',{timeOut: 2000});
       }
-    })
+    });
   }
-
-
 
   generateWeekDays(): Date[] {
     let displayedDates: Date[] = [];
@@ -619,33 +516,27 @@ export class WeekCalendarComponent{
   }
 
   receiveArray(arrayData: Course[]): void {
-    console.log('Received Array:', arrayData);
-
     this.coursesToPaste = arrayData;
   }
 
-  paste() {
-    console.log("Courses to paste", this.coursesToPaste);
-  }
-
   setPasteEnable(bool: boolean){
-    this.pasteEnable = bool
+    this.pasteEnable = bool;
   }
 
   onChangeSelectedDays(selectedDays: any) {
     this.selectedDays = selectedDays;
   }
+
   closeModalChoice(){
     this.showModalChoice = false;
-    this.courseForEdit = null
-    console.log(this.events)
+    this.courseForEdit = null;
   }
 
   disablePreventDefault(event: any){
     event.preventDefault();
   }
+
   redirectToLogout(event: any){
-    console.log("logout")
     this.disablePreventDefault(event);
     window.location.href = "/logout";
   }

@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
-import { Course } from 'src/app/_model/entity/course.model';
 import { CourseService } from 'src/app/_service/course.service';
 
 @Component({
@@ -7,6 +6,7 @@ import { CourseService } from 'src/app/_service/course.service';
   templateUrl: './stats-teacher.component.html',
   styleUrls: ['./stats-teacher.component.scss']
 })
+
 export class StatsTeacherComponent {
 
   @Input() idTeacher: number;
@@ -22,8 +22,6 @@ export class StatsTeacherComponent {
       this.stats = stats;
     });
   }
-
-
 
   closeModalStats() {
     this.closeModal.emit();

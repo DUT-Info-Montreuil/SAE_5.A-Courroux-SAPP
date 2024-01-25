@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { WeekViewCalendarComponent, momentAdapterFactory } from './calendar-week/week-view-calendar.component';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
@@ -24,7 +23,6 @@ import { LogoutComponent } from './logout/logout.component';
     FormsModule,
     BrowserAnimationsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory })
-
   ],
   exports: [
     LoginComponent,

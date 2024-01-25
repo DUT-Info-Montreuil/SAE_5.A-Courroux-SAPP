@@ -1,16 +1,14 @@
 import { Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { EdtService } from 'src/app/services/edt.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
 import { Teacher } from 'src/app/_model/entity/teacher.model';
 import { __values } from 'tslib';
 import { RoomService } from 'src/app/_service/room.service';
 import { Room } from 'src/app/_model/entity/room.model';
-import { FormsComponent } from 'src/app/forms/forms.component';
+import { FormsComponent } from 'src/app/_component/forms/forms.component';
 import { ResourceService } from 'src/app/_service/resource.service';
 import { Resource } from 'src/app/_model/entity/resource.model';
 import { StudentService } from 'src/app/_service/student.service';
@@ -80,8 +78,7 @@ export class ModifModalFormComponent implements OnInit{
     private studentService: StudentService,
     private toastr: ToastrService,
     private formsComponent: FormsComponent,
-    private affiliationService: AffiliationRespEdtService,
-    private location: Location
+    private affiliationService: AffiliationRespEdtService
     ){
   }
 
@@ -181,7 +178,6 @@ export class ModifModalFormComponent implements OnInit{
   onSubmitModifSalle(){
     if (this.formModifSalle.valid){
       this.salle = Object.assign(this.salle, this.formModifSalle.value);
-      console.log(this.salle);
       this.roomService.updateSalle(this.salle).subscribe({
         next: response => {
           this.toastr.success("la salle a bien été modifiée !");
@@ -271,8 +267,6 @@ export class ModifModalFormComponent implements OnInit{
   }
 
   addAffiliation(resp: EdtManager){
-    console.log("here")
-    console.log(this.data.element)
     this.affiliationService.affiliateRespEdtToPromo(resp.id,this.data.element.promo.id).subscribe({
       next: response => {
         this.toastr.success("le responsable a bien été ajouté !");

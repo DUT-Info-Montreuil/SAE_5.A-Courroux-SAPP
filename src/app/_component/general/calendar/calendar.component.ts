@@ -23,8 +23,6 @@ export class Calendar{
             next: (user: User) => {
                 this.user = user
                 this.loading = false
-                console.log("here")
-
             },
             error: (err: any) => {
                 console.log(err);

@@ -22,11 +22,11 @@ import { StatsTeacherComponent } from './stats-teacher/stats-teacher.component';
     FormsModule,
     BrowserAnimationsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: momentAdapterFactory })
-
   ],
   exports: [
     WeekViewTeacherCalendarComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
+
 export class TeacherModule { }

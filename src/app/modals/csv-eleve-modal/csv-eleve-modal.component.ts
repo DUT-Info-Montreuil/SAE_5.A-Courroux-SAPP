@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, finalize } from 'rxjs';
-import { Group } from 'src/app/_model/entity/group.model';
+import { Observable } from 'rxjs';
 import { Student } from 'src/app/_model/entity/student.model';
 import { StudentService } from 'src/app/_service/student.service';
 import { UserGroupService } from 'src/app/_service/user_group.service';

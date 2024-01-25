@@ -1,13 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnInit, Output } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { Teacher } from '../../../_model/entity/teacher.model';
-import { Course } from '../../../_model/entity/course.model';
-import { Resource } from '../../../_model/entity/resource.model';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Group } from '../../../_model/entity/group.model';
-
-import { Room } from 'src/app/_model/entity/room.model';
-import { CourseService } from 'src/app/_service/course.service';
-import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -16,43 +8,27 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./course-duplicate-show.component.scss']
 })
 
-export class CourseDuplicateShowComponent implements OnInit{
+export class CourseDuplicateShowComponent {
+  @Input() group : GroupAvailable;
+  @Input() group_available: GroupAvailable[];
 
-    @Input() group : GroupAvailable;
+  @Output() updateGroup: EventEmitter<GroupAvailable> = new EventEmitter<GroupAvailable>();
 
-    @Input() group_available: GroupAvailable[];
+  constructor() {}
 
-    @Output() updateGroup: EventEmitter<GroupAvailable> = new EventEmitter<GroupAvailable>();
-    // @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
-    // @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
-    // @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
+  getGroupAvailable(group: Group){
+    return this.group_available.find(g => g.group.id == group.id);
+  }
 
+  clickOnGroupAvailable(group: GroupAvailable){
+    group.available = !group.available;
+    group.selected = !group.selected;
+    this.updateGroup.emit(group);
+  }
 
-
-
-
-
-    constructor() {}
-
-
-    ngOnInit() {
-
-    }
-
-    getGroupAvailable(group: Group){
-      return this.group_available.find(g => g.group.id == group.id);
-    }
-    clickOnGroupAvailable(group: GroupAvailable){
-      group.available = !group.available;
-      group.selected = !group.selected;
-      console.log("here")
-      this.updateGroup.emit(group);
-    }
-
-    updateGroupAvailable(group: GroupAvailable){
-      this.updateGroup.emit(group);
-    }
-
+  updateGroupAvailable(group: GroupAvailable){
+    this.updateGroup.emit(group);
+  }
 }
 
 interface GroupAvailable {

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { concatMap, tap, catchError, Observable, map, throwError } from 'rxjs';
+import { catchError, Observable, map } from 'rxjs';
 import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { GroupService } from 'src/app/_service/group.service';
@@ -17,6 +17,7 @@ import { UserGroupService } from 'src/app/_service/user_group.service';
   templateUrl: './delete-modal.component.html',
   styleUrls: ['./delete-modal.component.scss']
 })
+
 export class DeleteModalComponent implements OnInit{
   elementASupp: string;
 
@@ -31,9 +32,7 @@ export class DeleteModalComponent implements OnInit{
     private groupService: GroupService,
     private affiliationService: AffiliationRespEdtService,
     private responsableService: EdtManagerService,
-    private userGroupService: UserGroupService,
-    private toastr: ToastrService,
-    private location: Location
+    private toastr: ToastrService
   ){}
 
   ngOnInit(): void {
@@ -60,7 +59,6 @@ export class DeleteModalComponent implements OnInit{
         break;
       case "formPromo":
         this.elementASupp = ' cette affiliation';
-        console.log(this.data.formSelectionne);
         break;
     }
   }
@@ -92,7 +90,6 @@ export class DeleteModalComponent implements OnInit{
   supprimerAffiliationRespEdt(): Observable<any> {
     return this.affiliationService.deleteAffiliation(this.data.element.id).pipe(
         map(response => {
-          console.log(response);
           return response;
         }),
         catchError(error => {

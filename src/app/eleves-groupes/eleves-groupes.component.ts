@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { GroupService } from '../_service/group.service';
 import { Group } from '../_model/entity/group.model';
-import { BehaviorSubject, Observable, Subscription, catchError, map, of } from 'rxjs';
+import { Observable, Subscription, catchError, map, of } from 'rxjs';
 import { UserGroupService } from '../_service/user_group.service';
 import { ModifModalGroupComponent } from '../modals/modif-modal-group/modif-modal-group.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,6 @@ import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.compon
 import { Student } from '../_model/entity/student.model';
 import { StudentService } from '../_service/student.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
-import { id } from 'date-fns/locale';
 import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-modal.component';
 import { UserService } from '../_service/user.service';
 
@@ -211,19 +210,14 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
     this.toggleModalMigrate();
     this.studentService.getStudentsPerGroup(this.idPromoSelectionnee!).subscribe(
       (response) => {
-          console.log(response);
           response.forEach((st: any) => {
             st.forEach((element: any) => {
               studentToMigrate.push(element.id_student);
             });
           });
   
-          console.log("StudentToMigrate", studentToMigrate);
-          console.log("idPromoToMigrateTo", this.idPromoToMigrateTo);
-  
           this.userGroupService.migratePromotion(studentToMigrate, this.idPromoSelectionnee!, this.idPromoToMigrateTo!, this.idRespEdt!).subscribe(
               (response) => {
-                  console.log("migrer",response);
               },
               (error) => {
                   console.error(error);
@@ -233,6 +227,6 @@ export class ElevesGroupesComponent implements OnInit, OnDestroy{
       (error) => {
           console.error(error);
       }
-  );
-}
+    );
+  }
 }

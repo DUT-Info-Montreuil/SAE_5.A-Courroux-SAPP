@@ -73,8 +73,6 @@ export class AddModalPromoComponent {
       next: response => {
         this.clear();
         this.toastr.success('promotion ajoutée');
-        console.log(response.id);
-        console.log(promotion.id_resp!);
         this.AffiliationRespEdtService.affiliateRespEdtToPromo(promotion.id_resp!, response.id).subscribe({
           next: response => {
             this.toastr.success('promotion affiliée');

@@ -1,4 +1,3 @@
-import { Deserializable } from "../fonctional/deserializable.model"
 import { User } from "./user.model";
 
 export class Student{
@@ -11,13 +10,4 @@ export class Student{
         this.INE = INE;
         this.user = new User(name, lastname, username, password);
     }
-    
-//     deserialize(input: any): this {
-//         if (input) {
-//             Object.assign(this, input)
-//             this.user = new User().deserialize(input.user)
-
-//         }
-//         return this
-//     }
 }
