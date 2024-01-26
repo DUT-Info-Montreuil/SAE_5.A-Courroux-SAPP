@@ -9,8 +9,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { WeekCalendarComponent, momentAdapterFactory } from './calendar-week/week-calendar.component';
-import { ModifModalFormComponent } from 'src/app/modals/modif-modal-form/modif-modal-form.component';
-import { DeleteModalComponent } from 'src/app/modals/delete-modal/delete-modal.component';
+import { DeleteModalComponent } from 'src/app/_component/respEdt/modals/delete-modal/delete-modal.component';
 import { CourseAddComponent } from './course-add/course-add.component';
 import { CourseEditComponent } from './course-edit/course-edit.component';
 import { AuthInterceptor } from 'src/app/_security/auth.interceptor';
@@ -21,6 +20,7 @@ import { ChoiceCourseComponent } from './choice-course/choice-course.component';
 import { CourseDeleteComponent } from './course-delete/course-delete.component';
 import { CourseDuplicateComponent } from './course-duplicate/course-duplicate.component';
 import { CourseDuplicateShowComponent } from './course-duplicate-show/course-duplicate-show.component';
+import { ModifModalFormComponent } from './modals/modif-modal-form/modif-modal-form.component';
 
 registerLocaleData(localeFr, 'fr');
 

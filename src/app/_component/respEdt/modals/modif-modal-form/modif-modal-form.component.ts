@@ -8,7 +8,6 @@ import { Teacher } from 'src/app/_model/entity/teacher.model';
 import { __values } from 'tslib';
 import { RoomService } from 'src/app/_service/room.service';
 import { Room } from 'src/app/_model/entity/room.model';
-import { FormsComponent } from 'src/app/_component/forms/forms.component';
 import { ResourceService } from 'src/app/_service/resource.service';
 import { Resource } from 'src/app/_model/entity/resource.model';
 import { StudentService } from 'src/app/_service/student.service';
@@ -16,6 +15,7 @@ import { Student } from 'src/app/_model/entity/student.model';
 import { EdtManager } from 'src/app/_model/entity/edtManager.model';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
+import { FormsComponent } from '../../forms/forms.component';
 
 @Component({
   selector: 'app-modif-modal-form',

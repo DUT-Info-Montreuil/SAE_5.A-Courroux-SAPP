@@ -1,21 +1,21 @@
 import { Component, OnDestroy, OnInit  } from '@angular/core';
-import { Promotion } from '../_model/entity/promotion.model';
-import { PromotionService } from '../_service/promotion.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
-import { GroupService } from '../_service/group.service';
-import { Group } from '../_model/entity/group.model';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
-import { UserGroupService } from '../_service/user_group.service';
-import { ModifModalGroupComponent } from '../modals/modif-modal-group/modif-modal-group.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
-import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
-import { Student } from '../_model/entity/student.model';
-import { StudentService } from '../_service/student.service';
+import { Group } from 'src/app/_model/entity/group.model';
+import { Promotion } from 'src/app/_model/entity/promotion.model';
+import { Student } from 'src/app/_model/entity/student.model';
+import { GroupService } from 'src/app/_service/group.service';
+import { PromotionService } from 'src/app/_service/promotion.service';
+import { StudentService } from 'src/app/_service/student.service';
+import { UserService } from 'src/app/_service/user.service';
+import { UserGroupService } from 'src/app/_service/user_group.service';
 import { AddModalEleveComponent } from '../modals/add-modal-eleve/add-modal-eleve.component';
 import { CsvEleveModalComponent } from '../modals/csv-eleve-modal/csv-eleve-modal.component';
-import { UserService } from '../_service/user.service';
+import { DeleteModalComponent } from '../modals/delete-modal/delete-modal.component';
+import { ModifModalFormComponent } from '../modals/modif-modal-form/modif-modal-form.component';
+import { ModifModalGroupComponent } from '../modals/modif-modal-group/modif-modal-group.component';
 
 @Component({
   selector: 'app-eleves-groupes',

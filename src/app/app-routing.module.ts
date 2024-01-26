@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './_component/user/login/login.component';
 import { WeekCalendarComponent } from './_component/respEdt/calendar-week/week-calendar.component';
-import { FormsComponent } from './forms/forms.component';
+import { FormsComponent } from './_component/respEdt/forms/forms.component';
 import { WeekViewCalendarComponent } from './_component/user/calendar-week/week-view-calendar.component';
-import { ElevesGroupesComponent } from './eleves-groupes/eleves-groupes.component';
 import { Calendar } from './_component/general/calendar/calendar.component';
 import { LogoutComponent } from './_component/user/logout/logout.component';
+import { ElevesGroupesComponent } from './_component/respEdt/eleves-groupes/eleves-groupes.component';
 
 const routes: Routes = [
   { path: '', component: Calendar},
