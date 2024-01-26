@@ -13,6 +13,13 @@ export class CourseService {
 
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
 
+
+    /*
+        @function getCourses
+        @param args: array of filters
+        @return Observable<Course[]>
+        @desc: get courses from API with filters
+    */
     getCourses(args: any[]= []): Observable<Course[]> {
 
 
@@ -40,6 +47,14 @@ export class CourseService {
         );
       }
 
+      /*
+        @function getCoursesWithDate
+        @param date_min: string
+        @param date_max: string
+        @return Observable<Course[]>
+        @desc: get courses from API with filters
+        */
+
 
       getCoursesWithDate(date_min:string, date_max:string): Observable<Course[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses?date_min=${date_min}&date_max=${date_max}`;
@@ -48,6 +63,13 @@ export class CourseService {
             retry(1)
         );
       }
+
+     /*
+        @function addCourse
+        @param course: Course
+        @return Observable<Course>
+        @desc: add a course to API
+    */
     addCourse(course: Course): Observable<Course> {
         const courseData = this.parseCourse(course);
 
@@ -57,6 +79,13 @@ export class CourseService {
             retry(1)
         );
       }
+
+    /*
+        @function updateCourse
+        @param course: Course
+        @return Observable<Course>
+        @desc: update a course to API
+    */
     updateCourse(course: Course): Observable<Course> {
         const courseData = this.parseCourse(course);
 
@@ -66,6 +95,13 @@ export class CourseService {
             retry(1)
         );
       }
+
+      /*
+        @function getCourse
+        @param id: number
+        @return Observable<Course>
+        @desc: get a course from API
+    */
     getCourse(id: number): Observable<Course> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/course/${id}`;
         return this.http.get<Course>(url, this.utilsService.getJsonHeader())
@@ -74,6 +110,13 @@ export class CourseService {
         );
     }
 
+
+    /*
+        @function parseCourse
+        @param course: Course
+        @return any
+        @desc: parse a course to send to API
+    */
     parseCourse(course: Course): any {
         let courseParsed = {
             id: course.id,
@@ -90,6 +133,11 @@ export class CourseService {
         return courseParsed;
     }
 
+
+    /*
+        @function getCourse
+        @desc: publish all course from API
+    */
     publishCourses(){
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/publish`;
         return this.http.put(url, {}, this.utilsService.getJsonHeader())
@@ -97,6 +145,11 @@ export class CourseService {
             retry(1)
         );
     }
+
+    /*
+        @function getCourse
+        @desc: cancel publish for all course from API
+    */
     cancelCourses(){
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/cancel`;
         return this.http.delete(url, this.utilsService.getJsonHeader())
@@ -105,6 +158,12 @@ export class CourseService {
         );
     }
 
+    /*
+        @function deleteCourse
+        @param course: Course
+        @return Observable<Course>
+        @desc: delete a course from API
+    */
     deleteCourse(course: Course): Observable<Course> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/course/${course.id}`;
         return this.http.delete<Course>(url, this.utilsService.getJsonHeader())
@@ -112,6 +171,18 @@ export class CourseService {
             retry(1)
         );
     }
+
+    /*
+        @function pasteCourse
+        @param start_time: string
+        @param end_time: string
+        @param id_group: number
+        @param start_time_attempt: string
+        @param sat_date: string
+        @param sun_date: string
+        @return Observable<Course>
+        @desc: paste a course from API
+    */
 
     pasteCourse(start_time: string, end_time: string, id_group: number, start_time_attempt: string, sat_date: string, sun_date: string): Observable<Course> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/paste`;
@@ -131,6 +202,14 @@ export class CourseService {
             );
     }
 
+    /*
+        @function duplicate
+        @param courseId: number
+        @param groupsToDuplicateTo: number[]
+        @return Observable<Course>
+        @desc: duplicate a course from API
+    */
+
     duplicate(courseId: number, groupsToDuplicateTo: number[]) {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/duplicate`;
 
@@ -144,6 +223,13 @@ export class CourseService {
             retry(1)
         );
     }
+
+    /* 
+        @function getStatsTeacher
+        @param id_teacher: number
+        @return Observable<Course[]>
+        @desc: get stats for a teacher from API
+    */
 
     getStatsTeacher(id_teacher: number): Observable<Course[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/courses/stats/${id_teacher}`;
