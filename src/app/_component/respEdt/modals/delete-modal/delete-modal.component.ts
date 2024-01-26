@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, Observable, map } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { AffiliationRespEdtService } from 'src/app/_service/affiliationRespEdt.service';
 import { EdtManagerService } from 'src/app/_service/edtManager.service';
 import { GroupService } from 'src/app/_service/group.service';
@@ -10,7 +9,6 @@ import { ResourceService } from 'src/app/_service/resource.service';
 import { RoomService } from 'src/app/_service/room.service';
 import { StudentService } from 'src/app/_service/student.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
-import { UserGroupService } from 'src/app/_service/user_group.service';
 
 @Component({
   selector: 'app-delete-modal',

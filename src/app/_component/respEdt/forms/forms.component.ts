@@ -1,9 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription, catchError, map, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { AddModalPromoComponent } from 'src/app/_component/respEdt/modals/add-modal-promo/add-modal-promo.component';
+import { DeleteModalComponent } from 'src/app/_component/respEdt/modals/delete-modal/delete-modal.component';
 import { ModifModalFormComponent } from 'src/app/_component/respEdt/modals/modif-modal-form/modif-modal-form.component';
 import { EdtManager } from 'src/app/_model/entity/edtManager.model';
 import { Group } from 'src/app/_model/entity/group.model';
@@ -18,8 +20,6 @@ import { PromotionService } from 'src/app/_service/promotion.service';
 import { ResourceService } from 'src/app/_service/resource.service';
 import { RoomService } from 'src/app/_service/room.service';
 import { TeacherService } from 'src/app/_service/teacher.service';
-import { AddModalPromoComponent } from 'src/app/_component/respEdt/modals/add-modal-promo/add-modal-promo.component';
-import { DeleteModalComponent } from 'src/app/_component/respEdt/modals/delete-modal/delete-modal.component';
 
 @Component({
   selector: 'app-forms',

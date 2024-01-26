@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './_component/user/login/login.component';
-import { WeekCalendarComponent } from './_component/respEdt/calendar-week/week-calendar.component';
 import { FormsComponent } from './_component/respEdt/forms/forms.component';
 import { WeekViewCalendarComponent } from './_component/user/calendar-week/week-view-calendar.component';
 import { Calendar } from './_component/general/calendar/calendar.component';

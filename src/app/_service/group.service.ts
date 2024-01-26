@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UtilsService } from './utils.service';
-import { Observable, Subject, map, retry } from 'rxjs';
+import { Observable, Subject, retry } from 'rxjs';
 import { Group } from '../_model/entity/group.model';
+import { UtilsService } from './utils.service';
 
 @Injectable({
     providedIn: 'root'

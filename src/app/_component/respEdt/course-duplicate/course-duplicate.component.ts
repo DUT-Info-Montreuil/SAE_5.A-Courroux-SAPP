@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Teacher } from '../../../_model/entity/teacher.model';
+import { FormGroup } from '@angular/forms';
 import { Course } from '../../../_model/entity/course.model';
-import { Resource } from '../../../_model/entity/resource.model';
 import { Group } from '../../../_model/entity/group.model';
+import { Resource } from '../../../_model/entity/resource.model';
+import { Teacher } from '../../../_model/entity/teacher.model';
 
+import { ToastrService } from 'ngx-toastr';
 import { Room } from 'src/app/_model/entity/room.model';
 import { CourseService } from 'src/app/_service/course.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'course-duplicate',

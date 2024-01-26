@@ -291,7 +291,6 @@ export class WeekViewTeacherCalendarComponent implements OnInit {
   }
 
   eventTimesChanged(event: any) {
-    console.log("here")
     let course_find = this.courses.find(course => course.id == event.event.id);
     if (!course_find){
       return;

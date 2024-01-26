@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UtilsService } from './utils.service';
+import { format } from 'date-fns';
 import { Observable, retry } from 'rxjs';
 import { Course } from '../_model/entity/course.model';
-import { format } from 'date-fns';
+import { UtilsService } from './utils.service';
 
 
 @Injectable({

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UtilsService } from './utils.service';
-import { Observable, Subject, retry } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { WeekComment } from '../_model/entity/weekComment.model';
+import { UtilsService } from './utils.service';
 
 
 @Injectable({

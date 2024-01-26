@@ -42,7 +42,6 @@ export class StorageService {
   }
 
   isTokensValid(): boolean {
-    console.log('this.getToken() :: ', this.getToken());
     if(this.getToken() == undefined || this.getToken() == null) { return false; }
     return this.isTokenExpired(this.getToken());
   }
