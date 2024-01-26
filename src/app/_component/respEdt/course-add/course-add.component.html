@@ -23,10 +23,6 @@
                             <option *ngFor="let cours of resources" [value]="cours.initial">{{ cours.name }}</option>
                         </select>
                     </div>
-                    <!-- <div *ngIf="articleForm.get('initial_resource')!.hasError('required') && articleForm.get('initial_resource')!.touched" class="text-danger block ms-1">
-                        <i class="bi bi-exclamation-octagon me-1"></i>
-                        Sélectionnez une ressource.
-                    </div>    -->
 
 
                     <div>
@@ -35,7 +31,6 @@
                             <option selected="" value="">Aucune</option>
                             <option *ngFor="let salle of salles" [value]="salle.nom" >{{ salle.nom }}</option>
                         </select>
-                        <!-- <input type="text" name="salle" id="salle" formControlName="salle" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="id_enseignant" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Professeur</label>
@@ -43,7 +38,6 @@
                             <option selected="" value="">Aucun(e)</option>
                             <option *ngFor="let professeur of teachers" [value]="professeur.id" >{{ professeur.staff.user.username }}</option>
                         </select>
-                        <!-- <input type="text" name="professeur" id="professeur" formControlName="professeur" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" > -->
                     </div>
                     <div>
                         <label for="id_group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Groupe</label>
@@ -52,14 +46,6 @@
                             <option *ngFor="let groupe of groupes" [value]="groupe.id" >{{ groupe.name }}</option>
                         </select>
                     </div>
-                    <!-- <div>
-                        <label for="debut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Commence à</label>
-                        <input type="datetime-local"name="debut" id="debut" formControlName="debut" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                    </div>
-                    <div>
-                        <label for="fin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fini à</label>
-                        <input type="datetime-local" name="fin" id="fin" formControlName="fin" required  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" >
-                    </div> -->
                     <div class="relative">
                         <input type="checkbox" name="evaluation" formControlName="evaluation" class="hidden" #EvaluationCheckbox> 
                         <button type="button" (click)="toggleEvaluation()"

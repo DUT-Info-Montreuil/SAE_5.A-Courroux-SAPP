@@ -26,20 +26,23 @@ export class CourseDeleteComponent implements OnInit{
     @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
 
 
-
-
-
-
-
     constructor(
                 private courseService: CourseService,
                 private toastr: ToastrService) {}
 
 
+    /*
+        @function ngOnInit
+        @desc: on init
+    */
       ngOnInit(): void {
           
       }
 
+    /*
+        @function deleteCourse
+        @desc: delete course and emit event to parent
+    */
       deleteCourse(){
         this.courseService.deleteCourse(this.course).subscribe({
             next: course => {
@@ -48,9 +51,7 @@ export class CourseDeleteComponent implements OnInit{
                 this.toastr.success('Le cours a été supprimé', 'Cours supprimé',{timeOut: 1500});
             },
             error: response => {
-                console.log(response)
                 this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
-                console.log(this.course)
 
             }
         })
