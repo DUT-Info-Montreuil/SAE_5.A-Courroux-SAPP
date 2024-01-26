@@ -17,13 +17,21 @@ export class StatsTeacherComponent {
 
   constructor(private courseService : CourseService) { }
 
+  /*
+    @function ngOnInit
+    @desc Initializes the component and retrieves statistics for the teacher from the course service
+  */
   ngOnInit(): void {
-    this.courseService.getStatsTeacher(this.idTeacher).subscribe((stats: any[]) => {
-      this.stats = stats;
-    });
+      this.courseService.getStatsTeacher(this.idTeacher).subscribe((stats: any[]) => {
+        this.stats = stats;
+      });
   }
-
+  
+  /*
+    @function closeModalStats
+    @desc Emits an event to close the statistics modal
+  */
   closeModalStats() {
-    this.closeModal.emit();
+      this.closeModal.emit();
   }
 }
