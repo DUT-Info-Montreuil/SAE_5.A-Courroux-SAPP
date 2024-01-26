@@ -97,6 +97,12 @@ export class WeekCalendarComponent{
 
   refresh = new Subject<void>();
 
+  /*
+      @function getIndex
+      @param event: any
+      @return number
+      @desc: get index of event
+  */
   getIndex(event: any){
     return this.events.indexOf(event.event);
   }
@@ -115,25 +121,40 @@ export class WeekCalendarComponent{
     private userService: UserService,) {
   }
 
+  /*
+      @function toggleDrawer
+      @desc: toggle drawer
+  */
   toggleDrawer() {
     this.isDrawerOpen = !this.isDrawerOpen;
   }
 
+  /*
+      @function onResize
+      @param event: Event
+      @desc: on resize
+  */
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.updateView();
   }
 
+  /*
+      @function updateView
+      @desc: update view
+  */
   private updateView(): void {
     const largeurEcran = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     this.isWeekCalendar = largeurEcran > 768;
     this.viewPhone = largeurEcran > 1361;
   }
 
+  /*
+      @function ngOnInit
+      @desc: on init
+  */
   ngOnInit(): void {
-    // this.setViewDate();
     this.updateView();
-    console.log(this.viewDate)
     forkJoin([
       this.teacherService.getTeachers(), 
       this.roomService.getSalles(), 
@@ -152,29 +173,27 @@ export class WeekCalendarComponent{
         if (this.promoManaged.length > 0){
           this.promoSelected = this.promoManaged[0];
         }
-        // console.log(this.comments)
         this.loadEvents();
         this.loading = false;
       },
       error :error => {
-        console.log(error);
       }
     });
-    console.log(this.viewDate);
 
     this.userService.getIdentify().subscribe({
       next: user => {
         this.idUser = user.id;
       },
       error: error => {
-        console.log(error);
       }
     })
-
-    console.log("teachers", this.teachers);
-
   }
 
+
+  /*
+      @function setViewDate
+      @desc: set view date
+  */
   setViewDate(){
     let day = this.viewDate.getDay();
     let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
@@ -182,31 +201,37 @@ export class WeekCalendarComponent{
     if (this.viewDate.getDay() == 0){this.viewDate.setDate(this.viewDate.setDate(1));}
   }
 
-  getWeek(date: Date) {
-    const dayOfWeek = date.getDay(); // Obtient le jour de la semaine (0 = dimanche, 1 = lundi, ..., 6 = samedi)
-    const diff = date.getDate() - dayOfWeek; // Calcul de la différence pour obtenir le dimanche de la semaine
-    const sunday = new Date(date); // Crée une nouvelle instance de Date basée sur la date d'origine
-    // console.log(this.viewDate)
-    sunday.setDate(diff);
-    // console.log(this.viewDate)
 
+  /*
+      @function getWeek
+      @param date: Date
+      @return Date[]
+      @desc: get week
+  */
+  getWeek(date: Date) {
+    const dayOfWeek = date.getDay();
+    const diff = date.getDate() - dayOfWeek;
+    const sunday = new Date(date);
+    sunday.setDate(diff);
     return getWeek(sunday, { weekStartsOn: 0 });
   }
 
-  // openModalMod(eventId: number) {
-  //   this.courseForEdit = this.getCourseByEventId(eventId)!;
-
-  //   this.showModalMod = true;
-
-  // }
-  
-
+  /*
+      @function changePromotion
+      @param event: any
+      @desc: change promotion
+  */
   changePromotion(event: any){
     let id_promo = event.target.value;
     this.promoSelected = this.promoManaged.find(promo => promo.id == id_promo)!;
     this.loadEvents();
   }
 
+  /*
+      @function addOrUpdateComment
+      @param comment: WeekComment
+      @desc: add or update comment
+  */
   addOrUpdateComment(comment: WeekComment){
     let index = this.comments.findIndex(comment_find => comment_find.id == comment.id);
     if (index == -1){
@@ -215,72 +240,115 @@ export class WeekCalendarComponent{
       this.comments[index] = comment;
     }
   }
+
+  /*
+      @function deleteComment
+      @param comment: WeekComment
+      @desc: delete comment
+  */
   deleteComment(comment: WeekComment){
     this.comments = this.comments.filter(comment_find => comment_find.id != comment.id);
   }
   
  
-
+  /*
+      @function openModalAdd
+      @desc: open modal add
+  */
   openModalAdd() {
     this.showModalAdd = true;
   }
   
+  /*
+      @function closeModalAdd
+      @desc: close modal add
+  */
   closeModalAdd() {
     this.showModalAdd = false;
   }
 
+  /*
+      @function openModalStats
+      @desc: open modal stats
+  */
   openModalStats() {
     this.showModalStats = true;
   }
 
+  /*
+      @function closeModalStats
+      @desc: close modal stats
+  */
   closeModalStats() {
     this.showModalStats = false;
   }
 
 
   
-
+  /*
+      @function getComment
+      @param date: Date
+      @return WeekComment
+  */
   getComment(date : Date){
     let week_number = this.getWeek(date);
     let year = date.getFullYear().toString();
     return this.comments.find(comment => comment.week_number == week_number && comment.year == year && comment.id_promo == this.promoSelected.id);
   }
 
+  /*
+      @function toggleModalComment
+      @desc: toggle modal comment
+  */
   toggleModalComment(){
     this.showModalComment = !this.showModalComment;
   }
 
-
+  /*
+      @function openModalCopy
+      @desc: open modal copy
+  */
   openModalCopy() {
     this.showModalCopy = true;
   }
 
+  /*
+      @function closeModalCopy
+      @desc: close modal copy
+  */
   closeModalCopy() {
     this.showModalCopy = false;
   }
 
+  /*
+      @function openModalPaste
+      @desc: open modal paste
+  */
   openModalPaste() {
     this.showModalPaste = true;
   }
 
+  /*
+      @function closeModalPaste
+      @desc: close modal paste
+  */
   closeModalPaste() {
     this.showModalPaste = false;
     this.refresh.next();
   }
 
+  /*
+      @function loadEvents
+      @desc: load events
+  */
   loadEvents(){
-    console.log("selectedDays", this.selectedDays);
     this.showModalComment = false;
-    console.log("loadEvents");
     this.events = [];
 
     let day = this.viewDate.getDay();
-    // let diff = this.viewDate.getDate() - day + (day == 0 ? -6:1);
     let diff = this.viewDate.getDate() - day + 1;
-    console.log(diff);
     let date_temp = new Date(this.viewDate);
     let monday = new Date(date_temp.setDate(diff));
-    console.log(monday);
     let friday = new Date(date_temp.setDate(diff + 4));
 
     const args = [{date_min: format(monday, 'yyyy-MM-dd')}, {date_max: format(friday, 'yyyy-MM-dd')}, {group: this.promoSelected.group.id}];
@@ -289,7 +357,6 @@ export class WeekCalendarComponent{
       next : courses => {
         this.courses = courses;
         this.events = [];
-        console.log(this.courses);
         for (let course of courses) {
           this.addEvent(course);
         }
@@ -297,25 +364,34 @@ export class WeekCalendarComponent{
 
         this.ressourcesShow = this.ressources.filter(ressource => ressource.id_promo == this.promoSelected.id);
         this.getGroupTree();
-
-        console.log(this.events);
-
       },
       error: error => {
-        console.log(error);
       }
     }
     )
   }
 
+  /*
+      @function redirectToUtilitaires
+      @desc: redirect to page utilitaires
+  */
   redirectToUtilitaires(){
     window.location.href = "/ajout";
   }
 
+  /*
+      @function redirectToGestionGroupes
+      @desc: redirect to page gestion groupes
+  */
   redirectToGestionGroupes(){
     window.location.href = "/groupes";
   }
 
+  /*
+      @function addCourse
+      @param course: Course
+      @desc: add course
+  */
   addCourse(course: Course) {
     this.courses.push(course);
     this.addEvent(course);
@@ -323,6 +399,11 @@ export class WeekCalendarComponent{
   }
     
 
+  /*
+      @function addEvent
+      @param course: Course
+      @desc: add event
+  */
   addEvent(course: Course): void {
 
     this.events.push({
@@ -333,20 +414,23 @@ export class WeekCalendarComponent{
       color: {
         primary: "#FFFFFF",
         secondary: this.getRessourcesByInitial(course.initial_ressource)!.color,
-        // secondary: "#D1E8FF",
       },        
       draggable: true,
       resizable: {
         beforeStart: true,
         afterEnd: true,
       },
-      // cssClass: `test`,
       cssClass: `calendar-position-${this.getPosition(course)} calendar-width-${this.getWidth(course)}`,
-
       
     });
   }
 
+  /*
+      @function getWidth
+      @param course: Course
+      @return number
+      @desc: get width
+  */
   getWidth(course: Course): number {
     let group = this.groupes.find(group => group.id == course.id_group);
     let width = 100
@@ -355,10 +439,15 @@ export class WeekCalendarComponent{
       width = width / groupsInParent.length;
       group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
     }
-    console.log("width ::: ", width)
     return Math.ceil(width)
   }
 
+  /*
+      @function getPosition
+      @param course: Course
+      @return number
+      @desc: get position
+  */
   getPosition(course: Course): number {
     let group = this.groupes.find(group => group.id == course.id_group);
     let pourcents: any[] = []
@@ -369,59 +458,60 @@ export class WeekCalendarComponent{
       group = this.groupes.find(group_curr => group_curr.id == group!.id_group_parent);
     }
     let left = 0
-    console.log("begin")
-    console.table(pourcents)
     if (pourcents.length > 0){
       const last = pourcents.pop()
       let parentPourcent = 100 / last.length
       left = last.index * parentPourcent
       
       for (let item of pourcents.reverse()){
-        console.log(item)
         parentPourcent = parentPourcent / item.length
         left = left + item.index * parentPourcent
       }
     }
-    console.table(pourcents)
-    console.log('left :::', left)
-
-    console.log("end")
-    console.log("this.events ::: ", this.events)
     return Math.ceil(left)
 
-    
-
-    // return position
   }
     
 
 
-
+  /*
+      @function removeCourse
+      @param course_remove: Course
+      @desc: remove course
+  */
   removeCourse(course_remove: Course): void {
     this.courses = this.courses.filter((course) => course.id !== course_remove.id);
     this.events = this.events.filter((event) => event.id !== course_remove.id);
-    // this.refresh.next();
   }
 
+  /*
+      @function toggleWeekCalendar
+      @desc: toggle week calendar
+  */
   toggleWeekCalendar(){
     this.isWeekCalendar = !this.isWeekCalendar;
   }
 
+  /*
+      @function changeViewDay
+      @param event: any
+      @desc: change view day
+  */
   changeViewDay(event : any){
 
     this.viewDate = new Date(event.day.date);
     this.toggleWeekCalendar()
-    
-    // this.loadEvents();
   }
 
+
+  /*
+      @function getGroupTree
+      @desc: get group tree and set group show
+  */
   getGroupTree(){
     this.group_show = [];
     const group_ids: number[] = [];
     group_ids.push(this.promoSelected.group.id);
-    console.log("this.promoSelected.group.id", this.promoSelected.group.id)
-    console.log("this.group_ids", group_ids)
-    console.table(group_ids)
     while (group_ids.length > 0){
       const group_id = group_ids.pop();
       const group_find = this.groupes.find(group => group.id == group_id);
@@ -435,33 +525,33 @@ export class WeekCalendarComponent{
         }
       }
     }
-    console.log("this.group_show", this.group_show)
   }
 
 
 
+  /*
+      @function eventClicked
+      @param event: any
+      @desc: event clicked and open modal choice
+  */
   eventClicked(event: any) {
-    // console.log("safe");
-    // console.log("this.events start",this.events)
     this.eventSelectionne = event;
-    // this.maxStartTime = new Date(this.eventSelectionne.event.start - 15 * 60 * 1000).toISOString().slice(0, 16);
-    // this.minEndTime = new Date(this.eventSelectionne.event.end + 15 * 60 * 1000).toISOString().slice(0, 16);
-    // console.log(this.maxStartTime);
-    // console.log(this.minEndTime);
   
     Promise.all([this.loadEventStart(this.eventSelectionne), this.loadEventEnd(this.eventSelectionne)])
       .then(([loadedEventStart, loadedEventEnd]) => {
-        console.log("this.eventselect", this.eventSelectionne)
         this.updateDateStart(loadedEventStart);
         this.updateDateEnd(loadedEventEnd);
         this.courseForEdit = this.getCourseByEventId(this.eventSelectionne.event.id)!;
         this.showModalChoice = true
-        // this.openModalMod(this.eventSelectionne.event.id);
       });
-      console.log("this.events",this.events)
-
   }
   
+  /*
+      @function loadEventStart
+      @param event: any
+      @return Promise<Date>
+      @desc: load event start
+  */
   loadEventStart(event: any): Promise<Date> {
     return new Promise<Date>((resolve, reject) => {
       setTimeout(() => {
@@ -473,6 +563,12 @@ export class WeekCalendarComponent{
 
   }
   
+  /*
+      @function loadEventEnd
+      @param event: any
+      @return Promise<Date>
+      @desc: load event end
+  */
   loadEventEnd(event: any): Promise<Date> {
     return new Promise<Date>((resolve, reject) => {
       setTimeout(() => {
@@ -484,10 +580,12 @@ export class WeekCalendarComponent{
 
   
 
-
+  /*
+      @function eventTimesChanged
+      @param event: any
+      @desc: event times changed and update course
+  */
   eventTimesChanged(event: any) {
-    console.log("this.events",this.events)
-    console.log("here")
     let course_find = this.courses.find(course => course.id == event.event.id);
     if (!course_find){
       return;
@@ -513,7 +611,6 @@ export class WeekCalendarComponent{
 
       },
       error: response => {
-        console.log(response);
         course_find!.start_time = start_time_initial;
         course_find!.end_time = end_time_initial;
         this.events = this.events.filter((event) => event.id !== course_find!.id);
@@ -526,51 +623,107 @@ export class WeekCalendarComponent{
 
   }
 
+  /*
+      @function endTimeChanged
+      @param newEvent: any
+      @param ancienneDate: string
+      @desc: end time changed
+  */
   endTimeChanged(newEvent: any, ancienneDate: string) {
     newEvent.event.end = Date.parse(ancienneDate);
     this.refresh.next();
     this.updateDateEnd(newEvent.event.end);
   }
 
+  /*
+      @function startTimeChanged
+      @param newEvent: any
+      @param ancienneDate: string
+      @desc: start time changed 
+  */
   startTimeChanged(newEvent: any, ancienneDate: string) {
     newEvent.event.start = Date.parse(ancienneDate);
     this.refresh.next();
     this.updateDateStart(newEvent.event.start);
   }
 
+  /*
+      @function updateDateStart
+      @param date: Date
+      @desc: update date start
+  */
   updateDateStart(date: Date) {
-    // this.eventSelectionne.event.start = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
     this.eventSelectionne.event.start = date;
   }
 
+  /*
+      @function updateDateEnd
+      @param date: Date
+      @desc: update date end 
+  */
   updateDateEnd(date: Date) {
-    // this.eventSelectionne.event.end = this.datePipe.transform(date, 'yyyy-MM-ddTHH:mm');
     this.eventSelectionne.event.end = date;
   }
 
+  /*
+      @function supprimerCours
+      @param event: any
+      @desc: delete course from event
+  */
   supprimerCours(event: any){
     this.events.splice(this.getIndex(event), 1);
     this.refresh.next();
-    // this.closeModalMod();
-    // console.log(this.events);
   }
 
+  /*
+      @function getCourseByEventId
+      @param eventId: number
+      @return Course
+      @desc: get course by event id 
+  */
   getCourseByEventId(eventId: number) {
     return this.courses.find(course => course.id == eventId);
   }
 
+  /*
+      @function getRessourcesNameByInitial
+      @param initial_resource: string
+      @return string
+      @desc: get ressources name by initial resource
+  */
   getRessourcesNameByInitial(initial_resource: string) {
     return this.ressources.find(resource => resource.initial == initial_resource)?.name;
   }
+
+  /*
+      @function getRessourcesByInitial
+      @param initial_resource: string
+      @return Resource
+      @desc: get ressources by initial resource
+  */
   getRessourcesByInitial(initial_resource: string) {
     return this.ressources.find(resource => resource.initial == initial_resource);
   }
 
+
+  /*
+      @function getTimeString
+      @param date: Date
+      @return string
+      @desc: get time string from date
+  */
   getTimeString(date: Date) {
     
     return this.datePipe.transform(date, 'HH:mm');
   }
 
+
+  /*
+      @function getInitialTeacher
+      @param id: number
+      @return string
+      @desc: get initial teacher
+  */  
   getInitialTeacher(id: number) {
     let id_teacher =  this.courses.find(course => course.id == id)?.id_enseignant;
     let teacher = this.teachers.find(teacher => teacher.id == id_teacher);
@@ -578,7 +731,10 @@ export class WeekCalendarComponent{
   }
 
   
-
+  /*
+      @function publishCourse
+      @desc: publish course
+  */
   publishCourse(){
     this.courseService.publishCourses().subscribe({
       next:() => {
@@ -590,6 +746,11 @@ export class WeekCalendarComponent{
       }
     })
   }
+
+  /*
+      @function cancelCourse
+      @desc: cancel course
+  */
   cancelCourse(){
     this.courseService.cancelCourses().subscribe({
       next:() => {
@@ -603,7 +764,11 @@ export class WeekCalendarComponent{
   }
 
 
-
+  /*
+      @function generateWeekDays
+      @return Date[]
+      @desc: generate week days
+  */ 
   generateWeekDays(): Date[] {
     let displayedDates: Date[] = [];
     const start: Date = startOfWeek(this.viewDate, { weekStartsOn: DAYS_OF_WEEK.MONDAY });
@@ -613,37 +778,70 @@ export class WeekCalendarComponent{
     return displayedDates;
   }
 
+  /*
+      @function weekChanged
+      @desc: week changed
+  */
   weekChanged() {
     this.loadEvents();
     this.generateWeekDays();
   }
 
+  /*
+      @function receiveArray
+      @param arrayData: Course[]
+      @desc: receive array and set courses to paste
+  */
   receiveArray(arrayData: Course[]): void {
-    console.log('Received Array:', arrayData);
-
     this.coursesToPaste = arrayData;
   }
 
   paste() {
-    console.log("Courses to paste", this.coursesToPaste);
+    // console.log("Courses to paste", this.coursesToPaste);
   }
 
+  /*
+      @function setPasteEnable
+      @param bool: boolean
+      @desc: set paste enable to bool
+  */
   setPasteEnable(bool: boolean){
     this.pasteEnable = bool
   }
 
+  /*
+      @function onChangeSelectedDays
+      @param selectedDays: any
+      @desc: on change selected days set selected days
+  */
   onChangeSelectedDays(selectedDays: any) {
     this.selectedDays = selectedDays;
   }
+
+  /*
+      @function closeModalChoice
+      @desc: close modal choice
+  */
   closeModalChoice(){
     this.showModalChoice = false;
     this.courseForEdit = null
     console.log(this.events)
   }
 
+  /*
+      @function disablePreventDefault
+      @param event: any
+      @desc: disable prevent default event
+  */
   disablePreventDefault(event: any){
     event.preventDefault();
   }
+
+  /*
+      @function redirectToLogout
+      @param event: any
+      @desc: redirect to logout
+  */
   redirectToLogout(event: any){
     console.log("logout")
     this.disablePreventDefault(event);

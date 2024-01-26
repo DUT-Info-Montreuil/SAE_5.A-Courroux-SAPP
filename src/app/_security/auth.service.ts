@@ -20,55 +20,26 @@ export class AuthService {
     private utilsService: UtilsService,
     private storageService: StorageService) {
 
-    // this.userSubject = new BehaviorSubject(this.storageService.getUsername())
-    // this.user = this.userSubject.asObservable()
   }
 
-//   public get userValue() {
-//     return this.userSubject.value
-//   }
 
-//   public saveUser(): void {
-//     console.log('this.storageService.getUsername()', this.storageService.getUsername())
-//     this.userSubject = new BehaviorSubject(this.storageService.getUsername())
-//   }
-
-  /*login(username: string, password: string): Observable<any> {
-    const url = `${this.utilsService.getEndPoint().apiUrl}/auth`
-    return this.http.post<any>(url, { username, password })
-      .pipe(map(user => {
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          localStorage.setItem('user', JSON.stringify(user))
-          this.userSubject.next(user)
-          return user
-      }))
-  }*/
-
+  /*
+      @function logoutUser
+      @desc: logout user
+  */
   logoutUser() {
-    // remove user from local storage to log user out
-    // this.logout().subscribe({
-    //   next: () => {
-    //     this.storageService.signOut()
-    //     this.userSubject.next(null)
-    //     window.location.href = '/login'
-    //   },
-    //   error: () => {
-    //     this.storageService.signOut()
-    //     this.userSubject.next(null)
-    //     window.location.href = '/login'
-    //   },
-    //   complete: () => {
-    //     this.storageService.signOut()
-    //     this.userSubject.next(null)
-    //     window.location.href = '/login'
-    //   }
-    // })
+
     this.storageService.signOut()
-    // this.userSubject.next(null)
     window.location.href = '/login'
   }
 
-
+  /*
+      @function login
+      @param username: string
+      @param password: string
+      @return Observable<any>
+      @desc: login user
+  */
   login(username: string, password: string): Observable<any> {
     const url = `${this.utilsService.getEndPoint().apiUrl}/auth/login`
     return this.http.post(url, { username, password }, this.utilsService.getJsonHeader())
@@ -77,7 +48,11 @@ export class AuthService {
       )
   }
 
-
+  /*
+      @function logout
+      @return Observable<any>
+      @desc: logout user
+  */
   logout(): Observable<any> {
     const url = `${this.utilsService.getEndPoint().apiUrl}/logout`
     return this.http.get(url, this.utilsService.getJsonHeader())
