@@ -1,6 +1,7 @@
 import { Deserializable } from "../fonctional/deserializable.model"
 import { Staff } from "./staff.model";
 
+// The EdtManager class represents the front-end entity corresponding to an timetable manager.
 export class EdtManager {
     id: number;
     staff: Staff;
@@ -9,6 +10,7 @@ export class EdtManager {
     username: string;
     password?: string
 
+    // Constructor to initialize the EdtManager instance with basic details
     constructor(id: number, name: string, lastname: string, username: string, password: string){
         this.id = id;
         this.name = name;
