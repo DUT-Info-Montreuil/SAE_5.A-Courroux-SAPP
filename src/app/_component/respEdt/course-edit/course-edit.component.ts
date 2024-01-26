@@ -44,16 +44,21 @@ export class CourseEditComponent implements OnInit{
                 private courseService: CourseService,
                 private toastr: ToastrService) {}
 
-
+    /*
+        @function ngOnInit
+        @desc: on init form
+    */
     ngOnInit() {
 
         
         this.initializeForm();
-        console.log("Groupes", this.groupes);
     }
 
+    /*
+        @function initializeForm
+        @desc: initialize form with course data
+    */
     initializeForm() {
-        console.log(this.course)
         let start_time = new Date(this.course.start_time);
         let end_time = new Date(this.course.end_time);
 
@@ -62,14 +67,9 @@ export class CourseEditComponent implements OnInit{
         const start = start_time.toTimeString().split(' ')[0];
 
         const end = end_time.toTimeString().split(' ')[0];
-        console.log(this.course)
-
-   
-
 
         this.courseForm = this.formBuilder.group({
             id_enseignant: [this.course.id_enseignant?this.course.id_enseignant:"", [
-                // this.validateSelect
             ]],
             initial_ressource: [this.course.initial_ressource, [
                 Validators.required,
@@ -80,7 +80,6 @@ export class CourseEditComponent implements OnInit{
                 this.validateSelect
             ]],
             name_salle: [this.course.name_salle?this.course.name_salle:"", [
-                // this.validateSelect
             ]],
             evaluation: [this.course.evaluation,[Validators.required]],
             date: [date, [Validators.required]],
@@ -89,12 +88,22 @@ export class CourseEditComponent implements OnInit{
         });
     }
 
+    /*
+        @function toggleEvaluation
+        @desc: toggle evaluation value in form
+    */
     toggleEvaluation() {
       this.courseForm.patchValue({
           evaluation: !this.courseForm.value.evaluation
       })
   }
 
+    /*
+        @function validateSelect
+        @param control: AbstractControl
+        @param object: any[]
+        @desc: validate select value in form obligatory
+    */
     validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
         const selectedValue = control.value;
 
@@ -105,6 +114,12 @@ export class CourseEditComponent implements OnInit{
       }
 
 
+        /*
+            @function createDateObject
+            @param dateString: string
+            @param timeString: string
+            @desc: create date object from string date and time
+        */
     createDateObject(dateString: string, timeString: string): Date {
         const [year, month, day] = dateString.split('-').map(Number);
       
@@ -115,9 +130,12 @@ export class CourseEditComponent implements OnInit{
         return dateObject;
       }
 
+        /*
+            @function onSubmit
+            @desc: submit form and send course
+        */
       onSubmit(){
 
-        console.log("courseForm", this.courseForm.value)
         if (this.courseForm.invalid) {
             return;
         }
@@ -131,28 +149,21 @@ export class CourseEditComponent implements OnInit{
 
         this.courseService.updateCourse(course_edit).subscribe({
             next: course => {
-                console.log("closemodalemit")
                 this.closeModal.emit()
                 this.removeEvent.emit(course_edit);
                 this.courseEvent.emit(course);
                 this.toastr.success('Le cours a été modifié', 'Cours modifié',{timeOut: 1500});
-                // this.courseService.addCourseList(course);
-                // this.initializeForm();
+
             },
             error: response => {
-                console.log(response)
 
                 this.toastr.error(response.error.error, 'Erreur',{timeOut: 2000});
-                console.log(this.course)
 
             }
         })
 
       }
-      // closeModalEdit() {
-      //   console.log("close modal");
-      //   this.closeModal.emit();
-      // }
+
 
      
 
