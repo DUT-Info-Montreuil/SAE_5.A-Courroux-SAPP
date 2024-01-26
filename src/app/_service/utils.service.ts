@@ -11,6 +11,12 @@ export class UtilsService {
   constructor(
     private http: HttpClient) {}
   
+  
+  /*
+      @function getEndPoint
+      @return EndPoint
+      @desc: get the endpoint according to environment
+  */
   getEndPoint(): EndPoint {
     if (environment.production) {
       console.log("environements production :: ", {
