@@ -38,21 +38,26 @@ export class CommentAddComponent implements OnInit{
                 private commentService: WeekCommentService,
                 private toastr: ToastrService) {}
 
-
+    
+    /*
+        @function ngOnInit
+        @desc: on init form
+    */
     ngOnInit() {
-        console.log('this.promo', this.promo)
-        console.log("this.comment", this.comment);
         if (!this.comment){
             this.comment = new WeekComment();
         }
 
         this.commentForm = this.formBuilder.group({
             content: [this.comment.content, [
-                // Validators.required,
             ]],
         });
     }
-
+    
+    /*
+        @function onSubmit
+        @desc: on submit form send comment
+    */
       onSubmit(){
 
         if (this.commentForm.invalid) {
@@ -71,18 +76,18 @@ export class CommentAddComponent implements OnInit{
                     this.remove.emit(comment);
                 }
                 this.closeModalAdd();
-                // this.toastr.success('Comm ajouté', 'Succès',{timeOut: 1500});
-                // this.courseService.addCourseList(course);
             },
             error: response => {
-                console.log(response);
                 this.toastr.error(response.error.error , 'Erreur',{timeOut: 2000});
             }
         })
 
       }
+    /*
+        @function closeModalAdd
+        @desc: close modal emit to parent
+    */
       closeModalAdd() {
-        console.log("close modal");
         this.closeModal.emit();
       }
 

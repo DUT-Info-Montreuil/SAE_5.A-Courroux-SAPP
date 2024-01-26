@@ -23,25 +23,30 @@ export class CourseDuplicateShowComponent implements OnInit{
     @Input() group_available: GroupAvailable[];
 
     @Output() updateGroup: EventEmitter<GroupAvailable> = new EventEmitter<GroupAvailable>();
-    // @Output() closeModal: EventEmitter<void> = new EventEmitter<void>();
-    // @Output() removeEvent: EventEmitter<Course> = new EventEmitter<Course>();
-    // @Output() refresh: EventEmitter<void> = new EventEmitter<void>();
-
-
-
-
 
 
     constructor() {}
 
-
+    /*
+        @function ngOnInit
+        @desc: on init
+    */
     ngOnInit() {
 
     }
 
+    /*
+        @function getGroupAvailable
+        @desc: get group available
+    */
     getGroupAvailable(group: Group){
       return this.group_available.find(g => g.group.id == group.id);
     }
+
+    /*
+        @function clickOnGroupAvailable
+        @desc: click on group available and emit event to parent
+    */
     clickOnGroupAvailable(group: GroupAvailable){
       group.available = !group.available;
       group.selected = !group.selected;
@@ -49,6 +54,10 @@ export class CourseDuplicateShowComponent implements OnInit{
       this.updateGroup.emit(group);
     }
 
+    /*
+        @function updateGroupAvailable
+        @desc: update group available and emit event to parent
+    */
     updateGroupAvailable(group: GroupAvailable){
       this.updateGroup.emit(group);
     }

@@ -36,7 +36,6 @@ export class CourseDuplicateComponent implements OnInit{
     showModalDuplicate: boolean;
     selectedGroups: number[] = [];
 
-    // groupe_available: Group[] = [];
     groupe_available: GroupAvailable[] = [];
 
 
@@ -48,15 +47,20 @@ export class CourseDuplicateComponent implements OnInit{
                 private toastr: ToastrService) {}
 
 
+    /*
+        @function ngOnInit
+        @desc: on init set group available
+    */
     ngOnInit() {
-
-        console.log("Groupes", this.groupes);
         this.getGroupAvailableForDuplicate();
     }
 
 
 
-
+    /*
+        @function onSubmitDuplicate
+        @desc: on submit form send duplicate course to api
+    */
       onSubmitDuplicate() {
         
         this.groupe_available.forEach(group => {
@@ -64,8 +68,6 @@ export class CourseDuplicateComponent implements OnInit{
             this.selectedGroups.push(group.group.id);
           }
         })
-        console.log("courseToDup", this.course);
-        console.log("SelectedGroups", this.selectedGroups);
         this.courseService.duplicate(this.course.id, this.selectedGroups).subscribe({
           next: response => {
             this.toastr.success("Duplication reussie");
@@ -81,17 +83,24 @@ export class CourseDuplicateComponent implements OnInit{
       );
       }
 
+      /*
+        @function groupsToDuplicateCourse
+        @param groupId: number
+        @desc: add or remove group to duplicate course
+      */
       groupsToDuplicateCourse(groupId: number) {
-        const index = this.selectedGroups.indexOf(groupId);
-        if (index === -1) {
-            // Si le groupe n'est pas déjà dans la liste, l'ajouter
-            this.selectedGroups.push(groupId);
-        } else {
-            // Si le groupe est déjà dans la liste, le retirer
-            this.selectedGroups.splice(index, 1);
-        }
-    }
+          const index = this.selectedGroups.indexOf(groupId);
+          if (index === -1) {
+              this.selectedGroups.push(groupId);
+          } else {
+              this.selectedGroups.splice(index, 1);
+          }
+      }
 
+      /*
+        @function getGroupAvailableForDuplicate
+        @desc: get group available for duplicate and set groupe_available
+      */
     getGroupAvailableForDuplicate() {
       const course_same_time = this.courses.filter(course => {
         return this.course.start_time >= course.start_time && this.course.start_time < course.end_time 
@@ -125,18 +134,20 @@ export class CourseDuplicateComponent implements OnInit{
 
           const other_children = this.groupes.filter(group => group.id_group_parent === children_current.id);
           group_children = group_children.concat(other_children);
-          console.log("look", group_children[0])
           group_children.shift();
         }
       }
       );
-      console.log("Groupes indisponibles", group_unavailable)
       const groupe_available = this.groupes.filter(group => !group_unavailable.find(group_unavailable => group_unavailable.id === group.id));
       this.groupe_available = this.transformToGroupAvailable(groupe_available);
-      console.log("Groupes disponibles", this.groupe_available)
-
     }
 
+    /*
+      @function transformToGroupAvailable
+      @param groups: Group[]
+      @return GroupAvailable[]
+      @desc: transform group to group available entity
+    */
     transformToGroupAvailable(groups: Group[]): GroupAvailable[] {
       const group_available: GroupAvailable[] = [];
       groups.forEach(group_current => {
@@ -151,14 +162,23 @@ export class CourseDuplicateComponent implements OnInit{
       return group_available
     }
 
+    /*
+      @function getParentsGroupAvailable
+      @return GroupAvailable[]
+      @desc: get parents group available
+    */
     getParentsGroupAvailable(){
       
       return this.groupe_available.filter(group => group.parent  === undefined);
     
     }
 
+    /*
+      @function updateGroupAvailable
+      @param group: GroupAvailable
+      @desc: update group available and parent group available and children group available
+    */
     updateGroupAvailable(group: GroupAvailable){
-      console.log("herreee")
       let group_find = this.groupe_available.find(group_available => group_available.group.id === group.group.id)!;
       group_find = group;
 
@@ -178,7 +198,6 @@ export class CourseDuplicateComponent implements OnInit{
         else {
           parent_find.available = group.available;
         }
-        console.log("change parent", parent_find.group.name, parent_find.available)
         parent = parent_find.parent;
       }
 
@@ -187,10 +206,8 @@ export class CourseDuplicateComponent implements OnInit{
         const child = children[0];
         const child_find = this.groupe_available.find(group_available => group_available.group.id === child.id)!;
         child_find.available = group.available;
-        console.log("change child", child_find.group.name, child_find.available)
         children.shift();
       }
-      console.log("here", this.groupe_available)
     }
 
 
