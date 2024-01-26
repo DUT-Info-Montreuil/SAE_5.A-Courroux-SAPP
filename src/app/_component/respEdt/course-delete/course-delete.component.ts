@@ -18,7 +18,11 @@ export class CourseDeleteComponent {
     private courseService: CourseService,
     private toastr: ToastrService
   ) {}
-
+  
+  /*
+    @function deleteCourse
+    @desc: delete course and emit event to parent
+  */
   deleteCourse() {
     this.courseService.deleteCourse(this.course).subscribe({
       next: course => {

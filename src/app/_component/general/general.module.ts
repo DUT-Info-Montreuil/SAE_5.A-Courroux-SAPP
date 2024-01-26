@@ -19,14 +19,8 @@ import { TeacherModule } from '../teacher/teacher.module';
     UsersModule,
     EdtModule,
     TeacherModule
-    // WeekCalendarComponent,
-    // WeekViewCalendarComponent
   ],
   providers: [
-    
-    // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-
-
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

@@ -17,6 +17,10 @@ export class Calendar{
 
     constructor(private userService: UserService) { }
 
+    /*
+        @function ngOnInit
+        @desc: on init
+    */
     ngOnInit() {
         this.loading = true
         this.userService.getIdentify().subscribe({

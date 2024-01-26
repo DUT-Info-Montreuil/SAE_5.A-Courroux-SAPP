@@ -26,10 +26,18 @@ export class ChoiceCourseComponent implements OnInit {
 
   constructor(private zone: NgZone) {}
 
+  /*
+    @function ngOnInit
+    @desc: on init
+  */
   ngOnInit() {
     this.getGroupAvailableForDuplicate();
   }
 
+  /*
+    @function closeModal
+    @desc: close modal
+  */
   closeModal() {
     this.closeModalEmitter.emit();
   }

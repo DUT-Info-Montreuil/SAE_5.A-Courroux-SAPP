@@ -28,8 +28,12 @@ export class CourseAddComponent implements OnInit {
     private formBuilder: FormBuilder,
     private courseService: CourseService,
     private toastr: ToastrService
-    ) {}
-
+  ) {}
+  
+  /*
+    @function ngOnInit
+    @desc: on init form
+  */
   ngOnInit() {
     this.courseForm = this.formBuilder.group({
       id_enseignant: ['', []],
@@ -43,12 +47,22 @@ export class CourseAddComponent implements OnInit {
     });
   }
 
+  /*
+    @function toggleEvaluation
+    @desc: toggle evaluation value in form
+  */
   toggleEvaluation() {
     this.courseForm.patchValue({
       evaluation: !this.courseForm.value.evaluation
     });
   }
 
+  /*
+    @function validateSelect
+    @param control: AbstractControl
+    @param object: any[]
+    @desc: validate select value in form obligatory
+  */
   validateSelect(control: AbstractControl, object: any[]): { [key: string]: boolean } | null {
     const selectedValue = control.value;
     if (!selectedValue) {
@@ -57,6 +71,12 @@ export class CourseAddComponent implements OnInit {
     return null;
   }
 
+  /*
+    @function createDateObject
+    @param dateString: string
+    @param timeString: string
+    @desc: create date object from string date and time
+  */
   createDateObject(dateString: string, timeString: string): Date {
     const [year, month, day] = dateString.split('-').map(Number);
     const [hours, minutes] = timeString.split(':').map(Number);
@@ -64,6 +84,10 @@ export class CourseAddComponent implements OnInit {
     return dateObject;
   }
 
+  /*
+    @function onSubmit
+    @desc: on submit form send course to parent and close modal
+  */
   onSubmit() {
     if (this.courseForm.invalid) {
       return;
@@ -86,6 +110,10 @@ export class CourseAddComponent implements OnInit {
     });
   }
 
+  /*
+    @function closeModalAdd
+    @desc: close modal emit to parent
+  */
   closeModalAdd() {
     this.closeModal.emit();
   }

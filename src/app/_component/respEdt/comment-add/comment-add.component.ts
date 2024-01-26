@@ -26,16 +26,26 @@ export class CommentAddComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
+    
+  /*
+      @function ngOnInit
+      @desc: on init form
+  */
   ngOnInit() {
-    if (!this.comment) {
+    if (!this.comment){
       this.comment = new WeekComment();
     }
 
     this.commentForm = this.formBuilder.group({
-      content: [this.comment.content, []],
+      content: [this.comment.content, [
+      ]],
     });
   }
-
+    
+  /*
+      @function onSubmit
+      @desc: on submit form send comment
+  */
   onSubmit() {
     if (this.commentForm.invalid) {
       return;
@@ -59,7 +69,10 @@ export class CommentAddComponent implements OnInit {
       },
     });
   }
-
+  /*
+    @function closeModalAdd
+    @desc: close modal emit to parent
+  */
   closeModalAdd() {
     this.closeModal.emit();
   }

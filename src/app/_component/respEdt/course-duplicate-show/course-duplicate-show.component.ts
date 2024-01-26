@@ -16,16 +16,28 @@ export class CourseDuplicateShowComponent {
 
   constructor() {}
 
+  /*
+    @function getGroupAvailable
+    @desc: get group available
+  */
   getGroupAvailable(group: Group){
     return this.group_available.find(g => g.group.id == group.id);
   }
 
+  /*
+    @function clickOnGroupAvailable
+    @desc: click on group available and emit event to parent
+  */
   clickOnGroupAvailable(group: GroupAvailable){
     group.available = !group.available;
     group.selected = !group.selected;
     this.updateGroup.emit(group);
   }
 
+  /*
+    @function updateGroupAvailable
+    @desc: update group available and emit event to parent
+  */
   updateGroupAvailable(group: GroupAvailable){
     this.updateGroup.emit(group);
   }

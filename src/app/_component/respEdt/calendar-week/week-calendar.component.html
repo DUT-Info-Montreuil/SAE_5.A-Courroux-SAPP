@@ -8,6 +8,7 @@
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 mt-5 mb-5">Aujourd'hui</button>
                 <button id="next" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view" [excludeDays]="[0, 6]" (click)="loadEvents()"
                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r mr-5 mt-5 mb-5">Prochain</button>
+                
             </div>
 
             <div *ngIf="viewPhone" class="flex flex-row items-center pe-5">
@@ -157,19 +158,11 @@
     <course-add [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalAdd()"></course-add>
 </ng-container> 
 
-<!-- <ng-container *ngIf="showModalMod" >
-    <course-edit [course]="courseForEdit" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModal)="closeModalMod()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></course-edit>
-</ng-container> -->
 
 <ng-container>
     <copy-course [courses]="courses" [displayedDates]="generateWeekDays()" [showModal]="showModalCopy" [showModalPaste]="showModalPaste" [promotion]="promoSelected" (selectedDaysOutput)="onChangeSelectedDays($event)" [selectedDays]="selectedDays" (closeModal)="closeModalCopy()" (closeModalP)="closeModalPaste()" (refresh)="loadEvents()" (setPaste)="setPasteEnable($event)"></copy-course>
 </ng-container>
-<!-- 
-<ng-container *ngIf="showModalStats">
-    <stats-teacher [idTeacher]="idUser" (closeModal)="closeModalStats()"></stats-teacher>
-</ng-container> -->
+
 <ng-container *ngIf="showModalChoice">
     <choice-course [course]="courseForEdit!" [courses]="courses" [teachers]="teachers" [resources]="ressourcesShow" [salles]="salles" [groupes]="group_show" (courseEvent)="addCourse($event)" (closeModalEmitter)="closeModalChoice()" (removeEvent)="removeCourse($event)" (refresh)="loadEvents()"></choice-course>
-
-    <!-- <choice-course *ngIf="showModalChoice" (closeModalEmitter)="closeModalChoice()"></choice-course> -->
 </ng-container>

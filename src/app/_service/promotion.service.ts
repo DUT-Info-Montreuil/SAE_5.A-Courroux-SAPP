@@ -14,10 +14,22 @@ export class PromotionService {
     private promoRefreshSource = new Subject<void>();
     promoRefresh$ = this.promoRefreshSource.asObservable();
 
+
+    /*
+        @function notifyPromoRefresh
+        @return void
+        @desc: notify all subscribers that a promotion has been updated
+    */
     notifyPromoRefresh() {
         this.promoRefreshSource.next();
     }
 
+
+    /*
+        @function getPromotions
+        @return Observable<Promotion[]>
+        @desc: get all promotions
+    */
     getPromotions(): Observable<Promotion[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotions`;
         return this.http.get<Promotion[]>(url, this.utilsService.getJsonHeader())
@@ -25,6 +37,13 @@ export class PromotionService {
             retry(1)
         );
       }
+
+    /*
+        @function addPromotion
+        @param promotion: Promotion
+        @return Observable<Promotion>
+        @desc: add a promotion
+    */
     addPromotion(promotion: Promotion): Observable<Promotion> {
         const promotionData = this.parsePromotion(promotion);
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotion`;
@@ -33,6 +52,13 @@ export class PromotionService {
             retry(1)
         );
       }
+
+    /*
+        @function updatePromotion
+        @param promotion: Promotion
+        @return Observable<Promotion>
+        @desc: update a promotion
+    */
     updatePromotion(promotion: Promotion): Observable<Promotion> {
         const promotionData = this.parsePromotion(promotion);
 
@@ -42,6 +68,14 @@ export class PromotionService {
             retry(1)
         );
       }
+
+
+    /*
+        @function getPromotion
+        @param id: number
+        @return Observable<Promotion>
+        @desc: get a promotion
+    */
     getPromotion(id: number): Observable<Promotion> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/promotion/${id}`;
         return this.http.get<Promotion>(url, this.utilsService.getJsonHeader())
@@ -50,6 +84,13 @@ export class PromotionService {
         );
     }
 
+
+    /*
+        @function parsePromotion
+        @param promotion: Promotion
+        @return any
+        @desc: parse a promotion to send to API
+    */
     parsePromotion(promotion: Promotion): any {
         return {
             "niveau": promotion.niveau,

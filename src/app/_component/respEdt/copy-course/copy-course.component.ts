@@ -44,6 +44,11 @@ export class CopyCourseComponent{
     this.setWeekDays();
   }
 
+  /*
+    @function ngOnChanges
+    @param changes: SimpleChanges
+    @desc: on changes displayedDates
+  */
   ngOnChanges(changes: SimpleChanges) {
     if (changes['displayedDates']) {
       const newDisplayedDates = changes['displayedDates'].currentValue;
@@ -51,11 +56,19 @@ export class CopyCourseComponent{
     }
   }
 
+  /*
+    @function closeModalCopy
+    @desc: close modal copy
+  */
   closeModalCopy() {
     this.showModal=false;
     this.closeModal.emit();
   }
 
+  /*
+    @function closeModalPaste
+    @desc: close modal paste and reset selected days
+  */
   closeModalPaste() {
     this.showModalPaste=false;
     this.closeModalP.emit();
@@ -65,6 +78,10 @@ export class CopyCourseComponent{
     });
   }
 
+  /*
+    @function onSubmitCopy
+    @desc: on submit copy send selected days to parent
+  */
   onSubmitCopy() {
     this.closeModalCopy();
     this.weekdays.forEach((weekday) => weekday.selected=false);
@@ -77,6 +94,10 @@ export class CopyCourseComponent{
     this.setPaste.emit(true);
   }
 
+  /*
+    @function onSubmitPaste
+    @desc: on submit paste send selected days to parent
+  */
   onSubmitPaste() {
     if(this.selectedDays.length===0) {
       this.toastr.error("Veuillez sélectionner au moins un jour");
@@ -88,10 +109,20 @@ export class CopyCourseComponent{
     }  
   }
 
+  /*
+    @function isOneDaySelected
+    @return boolean
+    @desc: check if one day is selected
+  */
   oneDaySelected(): boolean {
     return this.weekdays.filter(day => day.selected).length >= 1;
   }
-
+  
+  /*
+    @function updateSelection
+    @param day: { name: string, selected: boolean, date: Date }
+    @desc: update selection of days and add to selectedDays
+  */
   updateSelection(day: { name: string, selected: boolean, date: Date }) {
     if (this.selectedDays.length >= 2) {
       this.selectedDays.splice(0, 2);
@@ -102,9 +133,8 @@ export class CopyCourseComponent{
       });
     }
 
-    day.selected = !day.selected; // Inverse l'état de sélection du jour
+    day.selected = !day.selected;
 
-    // Trouve une entrée existante avec le même nom
     const existingEntryIndex = this.selectedDays.findIndex(existingDay => existingDay.name === day.name);
 
     if (day.selected) {
@@ -122,6 +152,12 @@ export class CopyCourseComponent{
     }
   }
 
+  /*
+    @function isSelectedDay
+    @param day: { name: string, selected: boolean, date: Date }
+    @return boolean
+    @desc: check if day is selected
+  */
   isSelectedDay(day: { name: string, selected: boolean, date: Date }): boolean {
     if (this.selectedDays.length == 2) {
       return this.selectedDays[0].date >= day.date && this.selectedDays[1].date <= day.date 
@@ -133,6 +169,10 @@ export class CopyCourseComponent{
     return false;
   }
 
+  /*
+    @function setWeekDays
+    @desc: set weekdays with displayedDates
+  */
   setWeekDays() {
     for (let i = 0; i < this.weekdays.length; i++) {
       this.weekdays[i].date = this.displayedDates[i];
@@ -142,6 +182,10 @@ export class CopyCourseComponent{
     this.sun = this.displayedDates[6];
   }
   
+  /*
+    @function paste
+    @desc: paste course with selected days
+  */
   paste() {
     let sAndHdays = this.findSmallestAndHighestDate();
     let dateAttempt = this.formatDate(this.selectedStartDateToAttempt);
@@ -159,6 +203,11 @@ export class CopyCourseComponent{
     });
   }
 
+  /*
+    @function findSmallestAndHighestDate
+    @return string[]
+    @desc: find smallest and highest date of selected days
+  */
   findSmallestAndHighestDate() {
     let smallestDate: Date = this.selectedDays[0].date;
     let highestDate: Date = this.selectedDays[0].date;
@@ -202,7 +251,14 @@ export class CopyCourseComponent{
     newDate.setDate(newDate.getDate() + daysToAdd);
     return newDate;
   }
-
+  
+  /*
+    @function getDifferenceInDays
+    @param date1: Date
+    @param date2: Date
+    @return number
+    @desc: get difference in days between two dates
+  */
   getDifferenceInDays(date1: Date, date2: Date): number {
     const timeDifference = new Date(this.selectedDays[0].date).getTime() - new Date(this.selectedDays[1].date).getTime();
     // Convertissez la différence en jours
@@ -210,6 +266,12 @@ export class CopyCourseComponent{
     return Math.round(daysDifference);
   }
 
+  /*
+    @function isPasteDay
+    @param weekday: { name: string, selected: boolean, date: Date }
+    @return boolean
+    @desc: check if weekday is paste day
+  */
   isPasteDay(weekday: { name: string, selected: boolean, date: Date }): boolean{
     if (this.selectedStartDateToAttempt) {
       if (this.selectedDays.length == 2) {
@@ -222,6 +284,11 @@ export class CopyCourseComponent{
     return false;
   }
 
+  /*
+    @function selectWeekday
+    @param weekday: { name: string, selected: boolean, date: Date }
+    @desc: select weekday and set selectedStartDateToAttempt
+  */
   selectWeekday(weekday: { name: string, selected: boolean, date: Date }): void {
     this.weekdays.forEach(day => {
       if (day !== weekday) {
@@ -232,6 +299,12 @@ export class CopyCourseComponent{
     this.selectedStartDateToAttempt = weekday.date;
   }
 
+  /*
+    @function formatDate
+    @param date: any
+    @return string
+    @desc: format date to string yyyy-MM-dd
+  */
   formatDate(date: any): string {
     date = new Date(date); // Convertit date en Date si ce n'est pas déjà le cas
     const year = date.getFullYear();

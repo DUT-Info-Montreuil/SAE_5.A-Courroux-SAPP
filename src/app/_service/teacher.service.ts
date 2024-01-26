@@ -14,10 +14,23 @@ export class TeacherService {
     private profRefreshSource = new Subject<void>();
     profRefresh$ = this.profRefreshSource.asObservable();
 
+
+    /*
+        @function notifyProfRefresh
+        @return void
+        @desc: notify all subscribers that a teacher has been updated
+    */
     notifyProfRefresh(){
         this.profRefreshSource.next();
     }
 
+
+
+    /*
+        @function getTeachers
+        @return Observable<Teacher[]>
+        @desc: get all teachers
+    */
     getTeachers(): Observable<Teacher[]> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teachers`;
         return this.http.get<Teacher[]>(url, this.utilsService.getJsonHeader())
@@ -25,6 +38,14 @@ export class TeacherService {
             retry(1)
         );
     }
+
+
+    /*
+        @function addTeacher
+        @param teacher: Teacher
+        @return Observable<Teacher>
+        @desc: add a teacher
+    */
     addTeacher(teacher: Teacher): Observable<Teacher> {
 
         const teacherData = this.parseAddTeacher(teacher);
@@ -35,6 +56,13 @@ export class TeacherService {
             retry(1)
         );
     }
+
+    /*
+        @function updateTeacher
+        @param teacher: Teacher
+        @return Observable<Teacher>
+        @desc: update a teacher
+    */
     updateTeacher(teacher: Teacher): Observable<Teacher> {
 
         const teacherData = this.parseUpdateTeacher(teacher);
@@ -45,6 +73,13 @@ export class TeacherService {
             retry(1)
         );
     }
+
+    /*
+        @function getTeacher
+        @param id: number
+        @return Observable<Teacher>
+        @desc: get a teacher
+    */
     getTeacher(id: number): Observable<Teacher> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher/${id}`;
         return this.http.get<Teacher>(url, this.utilsService.getJsonHeader())
@@ -52,6 +87,14 @@ export class TeacherService {
             retry(1)
         );
     }
+
+
+    /*
+        @function deleteTeacher
+        @param id: number
+        @return Observable<Teacher>
+        @desc: delete a teacher
+    */
     deleteTeacher(id: number): Observable<Teacher> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/teacher/${id}`;
         return this.http.delete<Teacher>(url, this.utilsService.getJsonHeader())
@@ -59,6 +102,14 @@ export class TeacherService {
             retry(1)
         );
     }
+
+
+    /*
+        @function parseUpdateTeacher
+        @param teacher: Teacher
+        @return any
+        @desc: parse a teacher to fit the API
+    */
 
     parseUpdateTeacher(teacher: Teacher): any {
         return {
@@ -70,6 +121,13 @@ export class TeacherService {
         }
     }
 
+
+    /*
+        @function parseAddTeacher
+        @param teacher: Teacher
+        @return any
+        @desc: parse a teacher to fit the API
+    */
     parseAddTeacher(teacher: Teacher): any {
         return {
             "name": teacher.staff.user.name,

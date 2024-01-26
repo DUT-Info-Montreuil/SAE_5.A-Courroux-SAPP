@@ -19,6 +19,14 @@ export class AuthInterceptor implements HttpInterceptor {
     private router: Router
   ) {}
 
+
+  /*
+      @function intercept
+      @param req: HttpRequest<any>
+      @param next: HttpHandler
+      @return Observable<HttpEvent<Object>>
+      @desc: intercept all request and add token in header
+  */
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
     let authReq = req
     const token = this.storageService.getToken()
@@ -42,7 +50,14 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(() => error)
     }));
   }
+  
 
+  /*
+      @function getCookie
+      @param name: string
+      @return string | null
+      @desc: get cookie by name
+  */
   private getCookie(name: string): string | null {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
     return match ? decodeURIComponent(match[2]) : null;

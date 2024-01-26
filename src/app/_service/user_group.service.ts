@@ -14,10 +14,24 @@ export class UserGroupService {
     private userGroupeRefreshSource = new Subject<void>();
     userGroupeRefresh$ = this.userGroupeRefreshSource.asObservable();
 
+
+    /*
+        @function notifyUserGroupRefresh
+        @return void
+        @desc: notify all subscribers that a user group has been updated
+    */
     notifyUserGroupRefresh() {
         this.userGroupeRefreshSource.next();
     }
 
+
+    /*
+        @function addStudentToGroup
+        @param idStudent: number
+        @param idGroupe: number
+        @return Observable<any>
+        @desc: add a student to a group
+    */
     addStudentToGroup(idStudent: number, idGroupe: number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/addGroupeEtudiant`;
         const requestData = {
@@ -34,6 +48,13 @@ export class UserGroupService {
             );
     }
 
+
+    /*
+        @function deleteUserFromGroup
+        @param idStudent: number
+        @return Observable<any>
+        @desc: delete a student from a group
+    */
     deleteUserFromGroup(idStudent: number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/delete/${idStudent}`;
         return this.http.delete<any>(url, this.utilsService.getJsonHeader())
@@ -42,6 +63,13 @@ export class UserGroupService {
         );
     }
 
+
+    /*
+        @function getStudentsFromGroup
+        @param idGroup: number
+        @return Observable<any>
+        @desc: get all students from a group
+    */
     getStudentsFromGroup(idGroup: number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/groupe/${idGroup}`;
         return this.http.get<any>(url, this.utilsService.getJsonHeader())
@@ -50,6 +78,15 @@ export class UserGroupService {
         );
     }
 
+
+    /*
+        @function modifyGroupStudent
+        @param idStudent: number
+        @param newIdGroupe: number
+        @param idGroupe: number
+        @return Observable<any>
+        @desc: modify a student from a group
+    */
     modifyGroupStudent(idStudent: number, newIdGroupe: number, idGroupe: number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/modify/${idStudent}/${newIdGroupe}/${idGroupe}`;
         return this.http.put<any>(url, this.utilsService.getJsonHeader())
@@ -58,6 +95,16 @@ export class UserGroupService {
         );
     }
 
+
+    /*
+        @function migratePromotion
+        @param idEtudiants: number[]
+        @param idAncPromo: number
+        @param idNvPromo: number
+        @param idResp: number
+        @return Observable<any>
+        @desc: migrate a promotion
+    */
     migratePromotion(idEtudiants: number[], idAncPromo:number, idNvPromo: number, idResp:number): Observable<any> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/usergroupe/migrate`;
 

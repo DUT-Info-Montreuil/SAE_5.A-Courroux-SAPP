@@ -12,6 +12,12 @@ export class UserService {
 
     constructor(private http: HttpClient, private utilsService: UtilsService) { }
 
+
+    /*
+        @function getIdentify
+        @return Observable<User>
+        @desc: get user from API according to token
+    */
     getIdentify(): Observable<User> {
         let url = `${this.utilsService.getEndPoint().apiUrl}/identify`;
         return this.http.get<User>(url, this.utilsService.getJsonHeader())
